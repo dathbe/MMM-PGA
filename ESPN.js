@@ -177,7 +177,7 @@ module.exports = {
 
             returnValue = player.status.displayThru + append;
 
-        } else if (displayValue == "F") {
+                } else if (displayValue == "F") {
             returnValue = displayValue;
         } else if (player.status.thru <= 17 && player.status.thru >= 1) {
             returnValue = displayValue + append;
