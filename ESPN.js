@@ -26,6 +26,7 @@ module.exports = {
         //For now there are two events one is cancelled and one is active so just search through and skip
         //the cancelled event and sho for non cancelled event
 
+        // Return the event with the biggest purse that is not canceled
         var purses = []
         for (j = 0; j < ESPNObj.length; j++) {
             if (ESPNObj[j].status.type.name != "STATUS_CANCELED") {
