@@ -26,13 +26,15 @@ module.exports = {
         //For now there are two events one is cancelled and one is active so just search through and skip
         //the cancelled event and sho for non cancelled event
 
-        //for (j = 0; j < ESPNObj.length; j++) {
-            event = ESPNObj[0];
-            var eventStatus = event.status.type.name;
-            if (eventStatus != "STATUS_CANCELED") {
-                event = ESPNObj[0];
+        for (j = 0; j < ESPNObj.length; j++) {
+            if (ESPNObj[j].status.type.name != "STATUS_CANCELED") {
+                event = ESPNObj[j];
+                break;
             }
-        //}
+            else if (j + 1 == ESPNObj.length) {
+              event = ESPNObj[0];
+            }
+        }
 
         tournament = {};
 
