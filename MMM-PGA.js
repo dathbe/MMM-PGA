@@ -136,12 +136,13 @@ Module.register("MMM-PGA", {
     },
 
     //Create a TH of the Leader Board
-    buildTh: function (val, left = false, span =1) {
+    buildTh: function (val, left = false, span = 1, right = false) {
 
         var th = document.createElement("th");
         th.classList.add(this.fontClass, "bright");
         if (this.config.colored) th.classList.add("th-color");
         if (left) th.classList.add("th-left-aligned");
+        if (right) th.classList.add("th-right-aligned");
         if (span >1) th.colSpan = span;
 
         th.innerHTML = val;
@@ -248,10 +249,10 @@ Module.register("MMM-PGA", {
         if (tournament.playoff){
             lbhead.appendChild(this.buildTh(""));
         }
-        lbhead.appendChild(this.buildTh("Player Name", true, namespan));
+        lbhead.appendChild(this.buildTh("Player Name", left=true, namespan));
         lbhead.appendChild(this.buildTh("R"+tournament.currentRound));
         lbhead.appendChild(this.buildTh("TOTAL"));
-        lbhead.appendChild(this.buildTh("THRU"));
+        lbhead.appendChild(this.buildTh("THRU", false, 1, true));
 
         //Body of the Table Loop through the Players add a Row For Each Player        
         var lastpos = 0;

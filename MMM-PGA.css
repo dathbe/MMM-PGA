@@ -33,7 +33,7 @@
   text-align: center;
 }
 
-.MMM-PGA .leaderboard-table .th-left-aligned{
+.MMM-PGA .leaderboard-table .th-left-aligned {
   text-align: left;
 }
 
@@ -50,7 +50,8 @@
   text-align: center;
 }
 
-.MMM-PGA .leaderboard-table .td-right-aligned{
+.MMM-PGA .leaderboard-table .td-right-aligned,
+.MMM-PGA .leaderboard-table .th-right-aligned {
   text-align: right;
 }
 
