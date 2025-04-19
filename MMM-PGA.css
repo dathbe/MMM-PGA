@@ -48,7 +48,10 @@
 }
 .MMM-PGA .leaderboard-table .td-center-aligned{
   text-align: center;
+}
 
+.MMM-PGA .leaderboard-table .td-right-aligned{
+  text-align: right;
 }
 
 .MMM-PGA .leaderboard-table .td-total-under{

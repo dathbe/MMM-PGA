@@ -295,7 +295,7 @@ Module.register("MMM-PGA", {
             cl = this.getScoreColorClass(player.score);
             cl.push("td-center-aligned");
             lbrow.appendChild(this.buildTD(player.score, cl));
-            lbrow.appendChild(this.buildTD(player.thru, ["td-center-aligned"]));
+            lbrow.appendChild(this.buildTD(player.thru, ["td-right-aligned"]));
             
         }
 
