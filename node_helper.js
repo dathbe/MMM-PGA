@@ -90,6 +90,7 @@ module.exports = NodeHelper.create({
             //Each client will make a call at startupß
             this.getPGAData(this.config.numTournaments);
             if (this.config.rapidAPIKey !== 'rapid-api-key' && this.config.showRankings) {
+	      console.warn(`Somehow rapidAPIKey is ${this.config.rapidAPIKey} (should be \'rapid-api-key\') and showRankings is ${this.config.showRankings} (should be false)`)
               this.getRankingData(this.config.maxNumRankings, this.config.rapidAPIKey);
             }
         }
