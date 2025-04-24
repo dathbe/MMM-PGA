@@ -1,4 +1,4 @@
-
+const Log = require('logger')
 const flags = require('./flags.js');
 const moment = require('moment');
 
@@ -14,7 +14,7 @@ module.exports = {
         const urlFED = this.rapidUrl + currentYear;
 
           var rapidKey = rapidAPIKey;
-          console.log("FEDEX MMM-PGA retrieving FedEx Cup Standings");
+          Log.log("FEDEX MMM-PGA retrieving FedEx Cup Standings");
 
               const response = await fetch(urlFED, {
                   method: 'GET',
@@ -48,8 +48,8 @@ module.exports = {
                     }
                 } 
               } catch (error) {
-                console.error("Unable to display FEDEX Cup rankings: " + payload.message);
-                console.error("URL fetch response: " + response.statusText);
+                Log.error("Unable to display FEDEX Cup rankings: " + payload.message);
+                Log.error("URL fetch response: " + response.statusText);
               }
               callback(fcRanking);
 

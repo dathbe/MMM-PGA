@@ -1,7 +1,5 @@
-
-
+const Log = require('logger')
 const flags = require('./flags.js');
-
 
 module.exports = {
 
@@ -42,8 +40,8 @@ module.exports = {
               }
             } 
           } catch (error) {
-            console.error("Unable to display OWGR rankings: " + payload.message);
-            console.error("URL fetch response: " + response.statusText);
+            Log.error("Unable to display OWGR rankings: " + payload.message);
+            Log.error("URL fetch response: " + response.statusText);
           }
       callback(owgrRanking);
 

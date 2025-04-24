@@ -1,4 +1,4 @@
-
+const Log = require('logger')
 const moment = require('moment');
 
 
@@ -11,12 +11,12 @@ module.exports = {
 
     async getTournamentData(callback) {
 
-        //console.log("ESPN MMM-PGA retrieving Tournament Data");
+        //Log.log("ESPN MMM-PGA retrieving Tournament Data");
 
         const response = await fetch(this.url, {
             method: 'get'
         })
-        console.debug(`[MMM-PGA] ${this.url} fetched`)
+        Log.debug(`[MMM-PGA] ${this.url} fetched`)
 
             const body = await response.json();
 
@@ -101,7 +101,7 @@ module.exports = {
             }
         }
         //Function to send SocketNotification with the Tournament Data
-        //console.debug(tournament)
+        //Log.debug(tournament)
         callback(tournament);
     },
 
@@ -111,7 +111,7 @@ module.exports = {
             const response = await fetch(this.tournamentsUrl, {
                 method: 'get',
             })
-            console.debug(`[MMM-PGA] ${this.tournamentsUrl} fetched`)
+            Log.debug(`[MMM-PGA] ${this.tournamentsUrl} fetched`)
 
             const body = await response.json();
 
@@ -146,7 +146,7 @@ module.exports = {
                 });
         }
 
-        //console.debug(tournaments)
+        //Log.debug(tournaments)
         callback(tournaments);
     },
 

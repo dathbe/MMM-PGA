@@ -4,6 +4,7 @@
  * By mcl8on
  *
  */
+const Log = require('logger')
 const NodeHelper = require('node_helper');
 var ESPN = require('./ESPN.js');
 const OWGR = require('./OWGR.js');
@@ -14,13 +15,13 @@ module.exports = NodeHelper.create({
     requiresVersion: '2.20.0', 
 
     start: function() {
-        console.log("Starting node_helper for: " + this.name); 
+        Log.log("Starting node_helper for: " + this.name); 
         this.expressApp.use(express.urlencoded({ extended: true }));
 		this.expressApp.post('/MMM-PGA-UpdateFavs', this._onUpdateFavs.bind(this));
     },
 
     _onUpdateFavs: function(req, res) {
-        console.log("MMM-PGA: Update favorites");
+        Log.log("MMM-PGA: Update favorites");
         this.sendSocketNotification("UPDATE_FAVORITES"); 
 		res.sendStatus(200);
 	},
@@ -77,7 +78,7 @@ module.exports = NodeHelper.create({
         var self = this;
 
         if (notification === 'CONFIG') {
-            console.debug ("[MMM-PGA] config received");
+            Log.debug ("[MMM-PGA] config received");
             this.config = payload;
             if (this.started !== true) {
               this.started = true;
@@ -90,7 +91,7 @@ module.exports = NodeHelper.create({
             //Each client will make a call at startupß
             this.getPGAData(this.config.numTournaments);
             if (this.config.rapidAPIKey !== 'rapid-api-key' && this.config.showRankings) {
-	      console.warn(`Somehow rapidAPIKey is ${this.config.rapidAPIKey} (should be \'rapid-api-key\') and showRankings is ${this.config.showRankings} (should be false)`)
+	      Log.warn(`Somehow rapidAPIKey is ${this.config.rapidAPIKey} (should be \'rapid-api-key\') and showRankings is ${this.config.showRankings} (should be false)`)
               this.getRankingData(this.config.maxNumRankings, this.config.rapidAPIKey);
             }
         }

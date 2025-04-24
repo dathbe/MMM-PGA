@@ -187,7 +187,7 @@ Module.register("MMM-PGA", {
         
         players.sort(function (a, b) { return a.sortOrder - b.sortOrder; });
 
-        console.log("MMM-PGA boardindex:" + this.boardIndex);
+        Log.debug("[MMM-PGA] boardindex:" + this.boardIndex);
 
         //If Favorites is enabled create Array with only the Favorites
         function includePlayer(player){
@@ -545,7 +545,7 @@ Module.register("MMM-PGA", {
 
     // this rotates your data
     scheduleCarousel: function () {
-        console.debug("[MMM-PGA] schedule carousel");
+        Log.debug("[MMM-PGA] schedule carousel");
         this.rotateInterval = setInterval(() => {
 
             if (this.config.favorites.length == 0) {
@@ -589,7 +589,7 @@ Module.register("MMM-PGA", {
             this.updateDom(this.config.animationSpeed);
         }
         else if (notification =="UPDATE_FAVORITES") {
-            console.log("MMM-PGA: Update Favorites");
+            Log.debug("[MMM-PGA] Update Favorites");
             this.updateFavorites();
         }
         else {
