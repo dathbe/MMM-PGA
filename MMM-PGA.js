@@ -282,9 +282,12 @@ Module.register("MMM-PGA", {
                 var pind = (player.playoff)?"►":"";
                 lbrow.appendChild(this.buildTD(pind,["td-playoff"]));
             }
-            if (this.config.showFlags) {
+            if (this.config.showFlags && player.flagHref !== '') {
                 var fHTML = this.flaghtml.replace("http", player.flagHref);
                 lbrow.appendChild(this.buildTD(fHTML,["td-img"]));               
+            }
+            else if (player.flagHref === '') {
+              lbrow.appendChild(this.buildTD(''));
             }
             lbrow.appendChild(this.buildTD(player.name));
 
@@ -549,7 +552,7 @@ Module.register("MMM-PGA", {
 
     // this rotates your data
     scheduleCarousel: function () {
-        console.log("schedule carousle MMM-PGA");
+        console.debug("[MMM-PGA] schedule carousel");
         this.rotateInterval = setInterval(() => {
 
             if (this.config.favorites.length == 0) {

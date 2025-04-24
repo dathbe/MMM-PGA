@@ -4,17 +4,18 @@ const moment = require('moment');
 
 module.exports = {
 
-    url: "https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga",
+    url: "https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga&event=401703508",
     //url: "https://site.api.espn.com/apis/site/v2/sports/golf/leaderboard?event=401219795",
     urlTournamentList: "https://www.espn.com/golf/schedule/_/tour/pga?_xhr=pageContent&offset=-04%3A00",
 
     async getTournamentData(callback) {
 
-        console.log("ESPN MMM-PGA retrieving Tournament Data");
+        //console.log("ESPN MMM-PGA retrieving Tournament Data");
 
         const response = await fetch(this.url, {
             method: 'get'
         })
+        console.debug(`[MMM-PGA] ${this.url} fetched`)
 
             const body = await response.json();
 
@@ -22,9 +23,7 @@ module.exports = {
 
         var event = null;
 
-        //TODO quick fix for 10/27 must change eventually to suppourt multiple events at the same time
-        //For now there are two events one is cancelled and one is active so just search through and skip
-        //the cancelled event and sho for non cancelled event
+        //TODO change eventually to suppourt multiple events at the same time
 
         // Return the event with the biggest purse that is not canceled
         var purses = []
@@ -67,21 +66,41 @@ module.exports = {
                 if (espnPlayer.status.playoff)
                     tournament.playoff = true;
 
+
+                // Adapt for team events
+                if (espnPlayer.athlete) {
+                  var name = espnPlayer.athlete.displayName
+                  var flagHref = espnPlayer.athlete.flag.href
+                  var playerID = espnPlayer.athlete.id
+                }
+                else if (espnPlayer.team) {
+                  name = espnPlayer.team.displayName
+                  flagHref = ''
+                  playerID = espnPlayer.id
+                }
+                else {
+                  name = 'Name not avail.'
+                  flagHref = ''
+                  playerID = 'n/a'
+                }
+                
+                
                 tournament.players.push({
-                    "name": espnPlayer.athlete.displayName,
+                    "name": name,
                     "position": espnPlayer.status.position.displayName,
                     "posId": parseInt(espnPlayer.status.position.id),
-                    "flagHref": espnPlayer.athlete.flag.href,
+                    "flagHref": flagHref,
                     "score": espnPlayer.statistics[0].displayValue,
                     "thru": this.getPlayerThru(espnPlayer),
                     "roundScore": this.getRoundScore(espnPlayer, tournament.currentRound),
-                    "id": espnPlayer.athlete.id,
+                    "id": playerID,
                     "sortOrder": espnPlayer.sortOrder,
                     "playoff": espnPlayer.status.playoff
                 });
             }
         }
         //Function to send SocketNotification with the Tournament Data
+        //console.debug(tournament)
         callback(tournament);
     },
 
