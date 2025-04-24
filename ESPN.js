@@ -4,9 +4,10 @@ const moment = require('moment');
 
 module.exports = {
 
-    url: "https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga&event=401703508",
+    url: "https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga", // &event=401703508
+    tournamentsUrl: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/pga/tourschedule',
     //url: "https://site.api.espn.com/apis/site/v2/sports/golf/leaderboard?event=401219795",
-    urlTournamentList: "https://www.espn.com/golf/schedule/_/tour/pga?_xhr=pageContent&offset=-04%3A00",
+    //urlTournamentList: "https://www.espn.com/golf/schedule/_/tour/pga?_xhr=pageContent&offset=-04%3A00",
 
     async getTournamentData(callback) {
 
@@ -107,13 +108,14 @@ module.exports = {
     async getTournaments(numTournaments, callback) {
         var totalTourn = 0
 
-            const response = await fetch(this.url, {
+            const response = await fetch(this.tournamentsUrl, {
                 method: 'get',
             })
+            console.debug(`[MMM-PGA] ${this.tournamentsUrl} fetched`)
 
             const body = await response.json();
 
-        var ESPNObj = body.events;
+        var ESPNObj = body.seasons[0].events;
 
         //Only look at future Tournaments
         ESPNObj = ESPNObj.filter(function (tournament) {
@@ -130,20 +132,21 @@ module.exports = {
 
         for (i = 0; i < totalTourn; i++) {
             var tournament = ESPNObj[i];
-            var tourName = tournament.name ? tournament.name : ""
+            var tourName = tournament.label ? tournament.label : ""
                 var strDate = tournament.startDate ? tournament.startDate : ""
                 var nDate = tournament.endDate ? tournament.endDate : ""
-                var venue = tournament.locations[0] ? tournament.locations[0].venue.fullName : ""
+                var venue = tournament.locations[0] ? tournament.locations[0] : ""
                 tournaments.push({
                     "name": tourName, //tournament.name,
                     "date": this.getEventDate(strDate, nDate), //tournament.startDate,tournament.endDate),
                     "location": venue, //tournament.locations[0].venue.fullName,
                     "purse": this.setUndefStr(tournament.purse, "TBD"),
-                    "defendingChamp": this.setUndefStr(tournament.athlete.name)
+                    "defendingChamp": tournament.defendingChampion ? this.setUndefStr(tournament.defendingChampion.displayName) : ""
 
                 });
         }
 
+        //console.debug(tournaments)
         callback(tournaments);
     },
 

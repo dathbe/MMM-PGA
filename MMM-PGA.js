@@ -302,7 +302,6 @@ Module.register("MMM-PGA", {
             lbrow.appendChild(this.buildTD(player.thru, ["td-right-aligned"]));
             
         }
-
         return leaderboard;
     },
 
@@ -504,14 +503,8 @@ Module.register("MMM-PGA", {
             return wrapper;
         }
 
-
-
-
         var tourney = this.tournament;
         var tourneyScheduled = (tourney.statusCode == "STATUS_SCHEDULED");
-
-
-
 
         var showActive = (!tourneyScheduled && this.config.showBoards);
 
@@ -573,7 +566,7 @@ Module.register("MMM-PGA", {
     socketNotificationReceived: function (notification, payload) {
         
         if (notification === "PGA_RESULT") {
-            this.tournament =payload;
+            this.tournament = payload;
             this.loaded=true;
             if (this.rotateInterval == null) {
                 this.scheduleCarousel();
