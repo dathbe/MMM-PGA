@@ -63,8 +63,20 @@ Whats New?
 
 # Installation
 
-1. Navigate into the MagicMirror/modules and execute
-2. Execute `git clone https://github.com/mumblebaj/MMM-PGA`
+```bash
+cd ~/MagicMirror/modules
+git clone https://github.com/dathbe/MMM-PGA
+cd MMM-PGA
+npm ci --omit=dev
+```
+
+# Update
+
+```bash
+cd ~/MagicMirror/modules/MMM-PGA
+git pull
+npm ci --omit=dev
+```
 
 # Configuration
 
