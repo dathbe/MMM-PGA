@@ -1,4 +1,4 @@
-var boards = null
+// var boards = null
 
 function readTextFile(file, callback) {
   var rawFile = new XMLHttpRequest()
@@ -14,17 +14,17 @@ function readTextFile(file, callback) {
 function displayFavs() {
   for (var i = 0; i < this.boards.length; i++) {
     var board = this.boards[i]
-    div = document.createElement('div')
+    var div = document.createElement('div')
     div.innerHTML = board.headerName
     document.body.appendChild(div)
 
-    for (j = 0; j < board.favoriteList.length; j++) {
+    for (let j = 0; j < board.favoriteList.length; j++) {
       var fav = board.favoriteList[j]
-      playerdiv = document.createElement('div')
+      var playerdiv = document.createElement('div')
       playerdiv.innerHTML = fav
       div.appendChild(playerdiv)
 
-      btn = document.createElement('button')
+      var btn = document.createElement('button')
       btn.innerHTML = 'button'
 
       div.appendChild(btn)

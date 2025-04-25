@@ -881,7 +881,7 @@ module.exports = {
 
   getFlagURL(name) {
     name = name.replace(/\s+/g, '')
-    flagurl = this.players[name]
+    var flagurl = this.players[name]
 
     return (typeof flagurl == 'undefined') ? './modules/MMM-PGA/images/whiteflag.png' : flagurl
   },

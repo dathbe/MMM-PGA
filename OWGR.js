@@ -26,7 +26,7 @@ module.exports = {
     try {
       if (payload.results.rankings.length > 1) {
         for (var i = 0; i < payload.results.rankings.length; i++) {
-          flagName = payload.results.rankings[i].player_name.replace(/\s/g, '')
+          var flagName = payload.results.rankings[i].player_name.replace(/\s/g, '')
           owgrRanking.rankings.push({
             name: payload.results.rankings[i].player_name,
             curPosition: payload.results.rankings[i].position,
@@ -42,6 +42,7 @@ module.exports = {
     catch (error) {
       Log.error('Unable to display OWGR rankings: ' + payload.message)
       Log.error('URL fetch response: ' + response.statusText)
+      Log.error('Error: ' + error)
     }
     callback(owgrRanking)
   },

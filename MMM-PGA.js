@@ -48,8 +48,6 @@ Module.register('MMM-PGA', {
   start: function () {
     Log.info('Starting module: ' + this.name)
 
-    var self = this
-
     // Image Set Up
     this.pgalogohtml = '<img src=\'./modules/MMM-PGA/images/PGAlogo.png\' alt=\'\' align=bottom height=15 width=15></img> '
     this.flaghtml = '<img src=\'http\' alt=\'\' align=top height=22 width=22></img>'
@@ -157,7 +155,7 @@ Module.register('MMM-PGA', {
     colorClass = ''
 
     if (this.config.colored) {
-      if (val == 'E') colorClass = 'td-total-even'
+      if (val == 'E') var colorClass = 'td-total-even'
       if (val.charAt(0) == '-' && val.length > 1) colorClass = 'td-total-under'
       if (val.charAt(0) == '+') colorClass = 'td-total-above'
       if (colorClass.length > 0) cl.push(colorClass)
@@ -172,7 +170,9 @@ Module.register('MMM-PGA', {
 
     var players = tournament.players
 
-    players.sort(function (a, b) { return a.sortOrder - b.sortOrder })
+    players.sort(function (a, b) {
+      return a.sortOrder - b.sortOrder
+    })
 
     Log.debug('[MMM-PGA] boardindex:' + this.boardIndex)
 
@@ -181,14 +181,14 @@ Module.register('MMM-PGA', {
       return self.config.favorites[self.boardIndex - 1].favoriteList.includes(player.id)
     }
     while (this.boardIndex >= 1) {
-      favs = players.filter(includePlayer)
+      var favs = players.filter(includePlayer)
       if (favs.length == 0) {
         this.boardIndex++
         if (this.boardIndex == this.numBoards) this.boardIndex = 0
       }
       else {
         players = favs
-        len = players.length
+        var len = players.length
         break
       }
     }
@@ -206,7 +206,7 @@ Module.register('MMM-PGA', {
     var boardName = document.createElement('span')
     // Set  Board header Text
     if (this.boardIndex == 0) {
-      boardHeader = this.leaderboardHeader
+      var boardHeader = this.leaderboardHeader
     }
     else {
       boardHeader = this.config.favorites[this.boardIndex - 1].headerName
@@ -224,7 +224,7 @@ Module.register('MMM-PGA', {
     lbTable.classList.add('leaderboard-table')
     leaderboard.appendChild(lbTable)
 
-    namespan = 1
+    var namespan = 1
     if (this.config.showFlags) namespan++
     // if (tournament.playoff) namespan++;
 
@@ -235,14 +235,14 @@ Module.register('MMM-PGA', {
     if (tournament.playoff) {
       lbhead.appendChild(this.buildTh(''))
     }
-    lbhead.appendChild(this.buildTh('Player Name', left = true, namespan))
+    lbhead.appendChild(this.buildTh('Player Name', true, namespan))
     lbhead.appendChild(this.buildTh('R' + tournament.currentRound))
     lbhead.appendChild(this.buildTh('TOTAL'))
     lbhead.appendChild(this.buildTh('THRU', false, 1, true))
 
     // Body of the Table Loop through the Players add a Row For Each Player
     var lastpos = 0
-    for (i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       var player = players[i]
       var playerpos = player.posId
 
@@ -274,7 +274,7 @@ Module.register('MMM-PGA', {
       }
       lbrow.appendChild(this.buildTD(player.name))
 
-      cl = this.getScoreColorClass(player.roundScore)
+      var cl = this.getScoreColorClass(player.roundScore)
       cl.push('td-center-aligned')
       lbrow.appendChild(this.buildTD(player.roundScore, cl))
 
@@ -387,12 +387,12 @@ Module.register('MMM-PGA', {
     rankHead.appendChild(this.buildRankingTh('This<br>Week'))
     rankHead.appendChild(this.buildRankingTh('Last<br>Week'))
 
-    thPlayerName = this.buildRankingTh('Player Name')
+    var thPlayerName = this.buildRankingTh('Player Name')
     thPlayerName.classList.add('player-name')
     if (this.config.showFlags) thPlayerName.colSpan = 2
     rankHead.appendChild(thPlayerName)
 
-    heading = rankings.pointsHeading
+    var heading = rankings.pointsHeading
     heading = heading.replace(' ', '<br>')
     rankHead.appendChild(this.buildRankingTh(heading))
 
@@ -400,7 +400,7 @@ Module.register('MMM-PGA', {
 
     var numplayers = (this.config.numRankings < this.config.maxNumRankings) ? this.config.numRankings : this.config.maxNumRankings
 
-    for (i = 0; i < numplayers; i++) {
+    for (let i = 0; i < numplayers; i++) {
       var player = rankings.rankings[i]
       var rankRow = document.createElement('tr')
       rankTable.appendChild(rankRow)
@@ -409,13 +409,13 @@ Module.register('MMM-PGA', {
       rankRow.appendChild(this.buildRankingTD(player.lwPosition))
 
       if (this.config.showFlags) {
-        flagHtml = this.flaghtml.replace('http', player.flagUrl)
-        flagtd = this.buildRankingTD(flagHtml)
+        var flagHtml = this.flaghtml.replace('http', player.flagUrl)
+        var flagtd = this.buildRankingTD(flagHtml)
         flagtd.classList.add('img')
         rankRow.appendChild(flagtd)
       }
 
-      tdPlayerName = this.buildRankingTD(player.name)
+      var tdPlayerName = this.buildRankingTD(player.name)
       tdPlayerName.classList.add('player-name')
       rankRow.appendChild(tdPlayerName)
       rankRow.appendChild(this.buildRankingTD(player.points))
@@ -428,14 +428,14 @@ Module.register('MMM-PGA', {
     var header = document.createElement('header')
 
     if (showActive) {
-      headerText = this.config.header
+      var headerText = this.config.header
     }
     else {
       if (this.nonActiveIndex == 0) {
         headerText = this.upcomingTournamentHeader
       }
       else {
-        obj = Object.entries(this.rankingObjs)[this.nonActiveIndex - 1][1]
+        var obj = Object.entries(this.rankingObjs)[this.nonActiveIndex - 1][1]
         headerText = obj.headerTxt
       }
     }
@@ -450,8 +450,6 @@ Module.register('MMM-PGA', {
   /* Main Magic Mirror module to build the Contect of the module */
 
   getDom: function () {
-    var self = this
-
     var wrapper = document.createElement('div')
     wrapper.className = 'wrapper'
     wrapper.style.maxWidth = this.config.maxWidth
@@ -476,10 +474,10 @@ Module.register('MMM-PGA', {
     // If Tounament not in Progress Show the upcoming tournaments and rankings
     if (!showActive) {
       if (this.nonActiveIndex == 0) {
-        list = this.buildTournamentList(this.tournaments)
+        var list = this.buildTournamentList(this.tournaments)
       }
       else {
-        rankingObj = Object.entries(this.rankingObjs)[this.nonActiveIndex - 1][1].rankingObj
+        var rankingObj = Object.entries(this.rankingObjs)[this.nonActiveIndex - 1][1].rankingObj
         list = this.buildRankList(rankingObj)
       }
 
@@ -489,8 +487,8 @@ Module.register('MMM-PGA', {
 
     // Tounament is in progress and Module is confugred to show boards
     // So build the boards
-    curTourneyList = [tourney]
-    tdetails = this.buildTournamentList(curTourneyList, false)
+    var curTourneyList = [tourney]
+    var tdetails = this.buildTournamentList(curTourneyList, false)
     wrapper.appendChild(tdetails)
 
     if (this.config.showBoards) {
@@ -512,7 +510,7 @@ Module.register('MMM-PGA', {
         this.boardIndex = (this.boardIndex == this.numBoards - 1) ? 0 : this.boardIndex + 1
       }
 
-      numRankingObj = Object.keys(this.rankingObjs).length
+      var numRankingObj = Object.keys(this.rankingObjs).length
       this.nonActiveIndex = (this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
 
       this.updateDom(this.config.animationSpeed)

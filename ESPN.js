@@ -26,7 +26,7 @@ module.exports = {
 
     // Return the event with the biggest purse that is not canceled
     var purses = []
-    for (j = 0; j < ESPNObj.length; j++) {
+    for (let j = 0; j < ESPNObj.length; j++) {
       if (ESPNObj[j].status.type.name != 'STATUS_CANCELED') {
         purses.push(Number(ESPNObj[j].displayPurse.replaceAll('$', '').replaceAll(',', '')))
       }
@@ -38,7 +38,7 @@ module.exports = {
       event = ESPNObj[0]
     }
 
-    tournament = {}
+    var tournament = {}
 
     // Tournament Details
     tournament.name = event.shortName
@@ -123,9 +123,9 @@ module.exports = {
       totalTourn = numTournaments
     }
 
-    tournaments = []
+    var tournaments = []
 
-    for (i = 0; i < totalTourn; i++) {
+    for (let i = 0; i < totalTourn; i++) {
       var tournament = ESPNObj[i]
       var tourName = tournament.label ? tournament.label : ''
       var strDate = tournament.startDate ? tournament.startDate : ''
@@ -148,8 +148,8 @@ module.exports = {
   getCurrentRound: function (event) {
     // logic to handle playoffs For now we only showing information pertaininhg to rounds in regulation
 
-    currentRound = event.competitions[0].status ? event.competitions[0].status.period : ''
-    totalRounds = event.tournament.numberOfRounds
+    var currentRound = event.competitions[0].status ? event.competitions[0].status.period : ''
+    var totalRounds = event.tournament.numberOfRounds
     return (currentRound <= totalRounds) ? currentRound : totalRounds
   },
 
@@ -190,7 +190,7 @@ module.exports = {
 
     var teeTime = moment(displayValue, 'YYYY-MM-DD HH:mm:ss Z')
     if (typeof displayValue == 'undefined' || displayValue == null) {
-      returnValue = player.status.displayThru + append
+      var returnValue = player.status.displayThru + append
     }
     else if (displayValue == 'F') {
       returnValue = displayValue

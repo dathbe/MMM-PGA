@@ -34,7 +34,7 @@ module.exports = {
     try {
       if (payload.results.rankings.length > 1) {
         for (var i = 0; i < payload.results.rankings.length; i++) {
-          flagName = payload.results.rankings[i].player_name.replace(/\s/g, '')
+          var flagName = payload.results.rankings[i].player_name.replace(/\s/g, '')
           var lstposition = payload.results.rankings[i].position + payload.results.rankings[i].movement
           fcRanking.rankings.push({
             name: payload.results.rankings[i].player_name,
@@ -51,6 +51,7 @@ module.exports = {
     catch (error) {
       Log.error('Unable to display FEDEX Cup rankings: ' + payload.message)
       Log.error('URL fetch response: ' + response.statusText)
+      Log.error('Error: ' + error)
     }
     callback(fcRanking)
   },
