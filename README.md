@@ -5,62 +5,6 @@ A [MagicMirror²](https://magicmirror.builders) Module to show Upcoming PGA Tour
 [![Platform](https://img.shields.io/badge/platform-MagicMirror-informational)](https://MagicMirror.builders)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
-# Release Notes
-
-Whats New?
-
-## Dependencies
-- None!
-
-## Updates
-
-### v1.3.1 2025/04/02
-- Update Fedex url
-
-### v1.3.0 2024/02/03
-- Removed request
-- Add node-fetch@2.6.1
-- Remove jsdom
-- Change FEDEXCUP and OWGR to RapidAPI due to changes to original websites and scraping them
-- [Golf Leaderboard Data](https://rapidapi.com/sportcontentapi/api/golf-leaderboard-data) Key Required
-- Get a key by subscribing to the following API on RapidAPI: [Golf Leaderboard Data](https://rapidapi.com/sportcontentapi/api/golf-leaderboard-data) 
-- New option added to config: rapidAPIKey
-
-# Screen Shots
-
-## Upcoming Tournament View
-
-### With Location
-
-![image](images/screenshot-1.png)
-
-### No Locations
-
-![image](images/screenshot-2.png)
-
-### Fedex Cup Standings
-![image](images/screenshot-3.png)
-
-### OWGR with Large Font
-
-![image](images/screenshot-4.png)
-
-## Leader Board View
-
-### Color With Flags Large Font
-![image](images/screenshot-5.png)
-
-
-### No Color With Flag
-
-![image](images/screenshot-6.png)
-
-
-
-## My Favorites View No Flags No Purse
-![image](images/screenshot-7.png)
-
-
 # Installation
 
 ```bash
@@ -125,6 +69,41 @@ Option|Description
 		},	
 	
 ```
+
+# Screen Shots
+
+## Upcoming Tournament View
+
+### With Location
+
+![image](images/screenshot-1.png)
+
+### No Locations
+
+![image](images/screenshot-2.png)
+
+### Fedex Cup Standings
+![image](images/screenshot-3.png)
+
+### OWGR with Large Font
+
+![image](images/screenshot-4.png)
+
+## Leader Board View
+
+### Color With Flags Large Font
+![image](images/screenshot-5.png)
+
+
+### No Color With Flag
+
+![image](images/screenshot-6.png)
+
+
+
+## My Favorites View No Flags No Purse
+![image](images/screenshot-7.png)
+
 
 
 # Remote Favorites
