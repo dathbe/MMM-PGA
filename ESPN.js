@@ -1,7 +1,6 @@
 const Log = require('logger')
 const moment = require('moment');
 
-
 module.exports = {
 
     url: "https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga", // &event=401703508
