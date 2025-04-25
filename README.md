@@ -130,7 +130,7 @@ if you cannot find the id in the file you can always look up a player online.
 1. Goto to http://www.espn.com/golf/players
 2. Find the player you want to add to your favorites
 3. Click on the player name
-4. The id will show up in the url. For example the url for Tiger Woodsis http://www.espn.com/golf/player/_/id/462/tiger-woods His player ID would be 462
+4. The id will show up in the url. For example the url for Tiger Woods is http://www.espn.com/golf/player/_/id/462/tiger-woods His player ID would be 462
 
 ## Contributing
 
