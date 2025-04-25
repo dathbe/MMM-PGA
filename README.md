@@ -139,9 +139,3 @@ if you cannot find the id in the file you can always look up a player online.
 1. Find the player you want to add to your favorites
 1. Click on the player name
 1. The id will show up in the url. For example the url for Tiger Woodsis http://www.espn.com/golf/player/_/id/462/tiger-woods His player ID would be 462
-
-# Planned Enhancements
-
-* Working on creating a web page that will allow me to update the favorites
-* Need to allow logic to handle multiple events occuring at the same time. This is somewhat difficult to do now since it doesn't happen that often and I'm not sure what the data will look like
-* Need to add logic for when a Tournament is played across multiple courses. 
