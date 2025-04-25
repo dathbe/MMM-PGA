@@ -28,7 +28,7 @@ git pull
 
 ## Configuration
 
-```
+```js
 {
   module: 'MMM-PGA',
   position: "top_left",
@@ -131,3 +131,33 @@ if you cannot find the id in the file you can always look up a player online.
 2. Find the player you want to add to your favorites
 3. Click on the player name
 4. The id will show up in the url. For example the url for Tiger Woodsis http://www.espn.com/golf/player/_/id/462/tiger-woods His player ID would be 462
+
+## Contributing
+
+If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/dathbe/MMM-PGA/issues) in this repository.
+
+Pull requests are of course also very welcome 🙂
+
+### Code of Conduct
+
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
+### Developer commands
+
+You will need to first install the dev dependencies:
+
+```bash
+cd ~/MagicMirror/modules/MMM-PGA
+npm ci
+```
+
+- `npm run lint` - Run linting checks.
+- `npm run lint:fix` - Fix automatically fixable linting errors.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
+
+## Thank You
+
+Special thank you to [mcl8on](https://github.com/mcl8on) and [mumblebaj](https://github.com/mumblebaj/), who created the original versions of this module and did most of the work.
