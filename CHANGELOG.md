@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Add changelog
 - Update license
+- Update package.json
 - Remove package-lock from .gitignore
 - Small cleanup
 
