@@ -1,25 +1,36 @@
 {
   "name": "mmm-pga",
-  "version": "1.3.2",
-  "description": "This a module for MagicMirror² <br>\r https://magicmirror.builders <br>\r https://github.com/MichMich/MagicMirror",
-  "main": "MMM-PGA.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "2.0.0",
+  "description": "A MagicMirror² module to display PGA leaderboards, tournaments, and rankings",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mumblebaj/MMM-PGA.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/mumblebaj/MMM-PGA/issues"
+    "url": "git+https://github.com/dathbe/MMM-PGA.git"
   },
   "keywords": [
     "MagicMirror",
+    "Module",
+    "Sports",
     "PGA",
     "Golf",
     "Sport"
   ],
-  "homepage": "https://github.com/mumblebaj/MMM-PGA#readme"
+  "author": "mcl8on",
+  "contributors": [
+    "mcl8on",
+    "mumblebaj",
+    "dathbe",
+    "mattpclayton"
+  ],
+  "scripts": {
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "test": "npm run lint"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@stylistic/eslint-plugin": "^4.2.0",
+    "eslint": "^9.25.1",
+    "globals": "^16.0.0"
+  }
 }

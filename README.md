@@ -2,64 +2,10 @@
 
 A [MagicMirror²](https://magicmirror.builders) Module to show Upcoming PGA Tournaments. Once the tournament starts a configurable Leader Board will be shown along with scores for your favorite golfers.
 
-[![Platform](https://img.shields.io/badge/platform-MagicMirror-informational)](https://MagicMirror.builders)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
-
-# Release Notes
-
-Whats New?
-
-## Dependencies
-- None!
-
-## Updates
-
-### v1.3.1 2025/04/02
-- Update Fedex url
-
-### v1.3.0 2024/02/03
-- Removed request
-- Add node-fetch@2.6.1
-- Remove jsdom
-- Change FEDEXCUP and OWGR to RapidAPI due to changes to original websites and scraping them
-- [Golf Leaderboard Data](https://rapidapi.com/sportcontentapi/api/golf-leaderboard-data) Key Required
-- Get a key by subscribing to the following API on RapidAPI: [Golf Leaderboard Data](https://rapidapi.com/sportcontentapi/api/golf-leaderboard-data) 
-- New option added to config: rapidAPIKey
-
-# Screen Shots
-
-## Upcoming Tournament View
-
-### With Location
-
 ![image](images/screenshot-1.png)
 
-### No Locations
-
-![image](images/screenshot-2.png)
-
-### Fedex Cup Standings
-![image](images/screenshot-3.png)
-
-### OWGR with Large Font
-
-![image](images/screenshot-4.png)
-
-## Leader Board View
-
-### Color With Flags Large Font
-![image](images/screenshot-5.png)
-
-
-### No Color With Flag
-
-![image](images/screenshot-6.png)
-
-
-
-## My Favorites View No Flags No Purse
-![image](images/screenshot-7.png)
-
+[![Platform](https://img.shields.io/badge/platform-MagicMirror²-informational)](https://MagicMirror.builders)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
 
 # Installation
 
@@ -98,7 +44,6 @@ Option|Description
 `favorites`| Array of favorite boards to show. Each favorite board has a headerName and a favoriteList an array of player ids(String). See sample configuration for details. All the players in the favorite board object will be displayed on the board if they are playing in the current tournament. See section below on how to find the playerid of your favorite players <br> <br> _Type:_ `Array` of favorite board `[ Object ]` <br> Defaults to an empty array.
 `remoteFavoritesFile`| Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the favorites configuration. If this option is set the favorites defined in the config will be ignored. If you chose to read the file from the internet the format will be a url. <br><br>For example reading the file from dropbox would look something like this <br> `"https://dl.dropboxusercontent.com/s/7########favorites.json"` <br><br>If using a local file setting would look like this <br> `"utilities/favorites.json"` <br> where the favorites file is stored in a directory name utilities under the MMM-PGA folder<br><br>Type: String containing url to favorites file.<br> Defaults to null
 
-
 # Example Configuration
 
 ```
@@ -126,6 +71,36 @@ Option|Description
 	
 ```
 
+# Screen Shots
+
+## Upcoming Tournament View
+
+### With Location
+
+![image](images/screenshot-8.png)
+
+### No Locations
+
+![image](images/screenshot-2.png)
+
+### Fedex Cup Standings
+![image](images/screenshot-3.png)
+
+### OWGR with Large Font
+
+![image](images/screenshot-4.png)
+
+## Leader Board View
+
+### Color With Flags Large Font
+![image](images/screenshot-1.png)
+
+### No Color With Flag
+
+![image](images/screenshot-6.png)
+
+## My Favorites View No Flags No Purse
+![image](images/screenshot-7.png)
 
 # Remote Favorites
 
@@ -144,8 +119,6 @@ With all that being said this is probally overkill. You can always just restart 
 
 Because the data fot OWGR and Fedex Cup comes from different sources than the rest of the data in the module I had to create some pretty hookie code in order to display flags in the rankings. If i am unable to locate a flag for a player it will just display a white flag (I surender lol). I did some pretty extensive testing on this and I dont think it will happen often but if it becaomes an issue I will address it with a future release.
 
-
-
 # Getting the Player ID of your favorite players
 
 ## Option 1
@@ -160,9 +133,3 @@ if you cannot find the id in the file you can always look up a player online.
 1. Find the player you want to add to your favorites
 1. Click on the player name
 1. The id will show up in the url. For example the url for Tiger Woodsis http://www.espn.com/golf/player/_/id/462/tiger-woods His player ID would be 462
-
-# Planned Enhancements
-
-* Working on creating a web page that will allow me to update the favorites
-* Need to allow logic to handle multiple events occuring at the same time. This is somewhat difficult to do now since it doesn't happen that often and I'm not sure what the data will look like
-* Need to add logic for when a Tournament is played across multiple courses. 

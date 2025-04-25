@@ -6,10 +6,11 @@
  */
 const Log = require('logger')
 const NodeHelper = require('node_helper');
+const express = require("express");
+
 var ESPN = require('./ESPN.js');
 const OWGR = require('./OWGR.js');
 const FEDEXCUP = require('./FEDEXCUP.js');
-const express = require("express");
 
 module.exports = NodeHelper.create({
     requiresVersion: '2.20.0', 

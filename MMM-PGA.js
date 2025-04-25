@@ -1,10 +1,8 @@
-
 /* Magic Mirror
  * Module: MMM-PGA
  *
  * By mcl8on
  */
-
 
 Module.register("MMM-PGA", {
 
