@@ -22,7 +22,7 @@ Module.register('MMM-PGA', {
     colored: true,
     showBoards: true,
     showLocation: true,
-    showPurse: true,
+    showPurse: false,
     numTournaments: 3,
     showRankings: false,
     numRankings: 5,
