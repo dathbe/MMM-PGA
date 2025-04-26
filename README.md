@@ -36,12 +36,7 @@ git pull
   position: "top_left",
   maxWidth: "100%",
   config: {
-    numRankings: 10,
-    numTournaments: 5,
     showLogo: true,
-    showFlags: true,
-    rapidAPIKey: "your-rapidapi-key-here",
-    remoteFavoritesFile: "utilities/favorites.json" //"https://dl.dropboxusercontent.com/s/7my######/favorites.json"
   }
 },	
 ```
@@ -49,29 +44,28 @@ git pull
 | Option                | Description
 | ------                | -----------
 | **For Leaderboards**
+| `showBoards`          | Whether to show the Leaderboard and favorites for and Active tournament. If set to false the module will just show the current tournament. See Upcoming tournament screen shot above.<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `numLeaderboard`      | The number of places to show on the leaderboard<br> <br> _Type:_ `Number`<br><br>**Type:** `int` <br> **Default value:** `5`
+| `maxLeaderboard`      | The maximum number of players to show on the leaderboard. For example if `numLeaderboard` is set to 5 and `maxLeaderboard` is set to 10 <br> * If there are currently 9 players in the top 5 with ties then 9 players will be displayed <br> * If there are 12 players in the top 3 only 10 players will be shown and the last two players tied for 3rd will not be displayed. The order of the players is determined by the Data provider(ESPN)<br><br>**Type:** `int` <br> **Default value:** `10`
+| `includeTies`         | Whether to include more than `numLeaderboard` players due to ties. If false only `numLeaderboard` players will be shown and `maxLeaderboard` will be irrelevant.<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `showFlags`           | Shows the flag of the players country next to the player in the leaderboards<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `showLocation`        | Whether to show the location of the tournament in the tournament details header. If set to true the location will appear under the tournament name in a smaller lighter font.<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `showPurse`           | Whether to show the purse information in the tournament details header. If using a larger font hiding the purse leads to a cleaner format of the tournament details.<br><br>**Type:** `bool` <br> **Default value:** `true`
+| **For Favorites Boards**
+| `favorites`           | Array of favorite boards to show. Each favorite board has a headerName and a favoriteList an array of player ids(String). See sample configuration for details. All the players in the favorite board object will be displayed on the board if they are playing in the current tournament. See section below on how to find the playerid of your favorite players <br> <br> _Type:_ `Array` of favorite board `[ Object ]` <br> Defaults to an empty array.<br><br>**Type:** `array` <br> **Default value:** `[]` (empty)
+| `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the favorites configuration. If this option is set the favorites defined in the config will be ignored. If you chose to read the file from the internet the format will be a url. <br><br>For example reading the file from dropbox would look something like this <br> `"https://dl.dropboxusercontent.com/s/7########favorites.json"`<br><br>If using a local file setting would look like this <br> `"utilities/favorites.json"` <br> where the favorites file is stored in a directory name utilities under the MMM-PGA folder<br><br>Type: String containing url to favorites file.<br> Defaults to null<br>Examples:<br>`utilities/favorites.json`<br>`https://dl.dropboxusercontent.com/s/7my######/favorites.json`<br><br>**Type:** `string` <br> **Default value:** `null`
 | **For Rankings**
+| `showRankings`        | Whether to show FedEx Cup standings and Official World Go;g Rankings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments, FedEx Cup, and OWGR.<br><br>**Type:** `bool` <br> **Default value:** `false`
 | `rapidAPIKey`         | Your Rapid API key.  See https://rapidapi.com.  Required for FedEx and OWGR rankings.<br><br>**Type:** `string` <br> **Default value:** `''` (not set)
+| `numRankings`         | The number of players to show in the Fedex Cup and OWGR rankings. The number should be set between 1 and 50.<br><br>**Type:** `int` <br> **Default value:** `5`
 | **For Upcoming Tournaments**
 | `numTournaments`      | Number of upcoming tournaments to show when there is not an active tournment in progress or  `showBoards` is set false.<br><br>**Type:** `int` <br> **Default value:** `3`
 | **General Display Options**
+| `showLogo`            | Shows the PGA logo in the header<br><br>**Type:** `bool` <br> **Default value:** `false`
+| `largerFont`         | Whether to display larger fonts for the module. If set to false it will use the `xsmall` style defined by MagicMirror². If set to true it will use the `small` style defined by MagicMirror².<br><br>**Type:** `bool` <br> **Default value:** `false`
+| `colored`             | Whether to display colors. The fields  in the module that will display color are the Score and the Leader Board table headers<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `rotateInterval`      | Time (in milliseconds) to display a card from the module before rotating to the next card (only matters if there is more than one card to display).<br><br>**Type:** `int` <br> **Default value:** `30 * 1000` (30 seconds)
 | `animationSpeed`      | Speed to fade in and out.<br><br>**Type:** `int` <br> **Default value:** `0`
-| `showLocation`        | Whether to show the location of the tournament in the tournament details header. If set to true the location will appear under the tournament name in a smaller lighter font.<br><br>_Type:_ | `Boolean`<br>Defaults to true
-| `showPurse`           | Whether to show the purse information in the tournament details header. If using a larger font hiding the purse leads to a cleaner format of the tournament details.<br><br>Type: `Boolean`<br>Defaults to true
-| `showRankings`        | Whether to show FedEx Cup standings and Official World Go;g Rankings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments, FedEx Cup, and OWGR. <br><br>Type: `Boolean`<br>Defaults to true
-| `numRankings`         | The amount players to show in the Fedex Cup and OWGR rankings. The number should be set between 1 and 50.<br><br>Type: `Number`<br>Defaults to 5
-| `showBoards`          | Whether to show the Leaderboard and favorites for and Active tournament. If set to false the module will just show the current tournament. See Upcoming tournament screen shot above. <br> <br> _Type:_ | | | `Boolean`<br> Defaults to true
-| `numLeaderboard`      | The amount of places to show on the leaderboard<br> <br> _Type:_ `Number` <br> Defaults to 5
-| `maxLeaderboard`      | The maximum number of players to show on the leaderboard. For example if `numLeaderboard` is set to 5 and `maxLeaderboard` is set to 10 <br> * If there are currently 9 players in the top 5 with ties then 9 players will be displayed <br> * If there are 12 players in the top 3 only 10 players will be shown and the last two players tied for 3rd will not be displayed. The order of the players is determined by the Data provider(ESPN) <br>  <br> _Type:_ `Number`<br> Defaults to 10
-| `includeTies`         | Whether to include more than `numLeaderboard` players due to ties. If false only `numLeaderboard` players will be shown and `maxLeaderboard` will be irrelevant. <br> <br> _Type:_ `Boolean`<br> Defaults to true
-| `showLogo`            | Shows the PGA logo in the header<br><br>_Type:_ `Boolean` <br>Defaults to false
-| `showFlags`           | Shows the flag of the players country next to the player in the leaderboards<br><br>_Type:_ `Boolean` <br> Defaults to false
-| `largerFont`         | Whether to display larger fonts for the module. If set to false it will use the `xsmall` style defined by MagicMirror². If set to true it will use the `small` style defined by MagicMirror². <br><br>Type:           | `Boolean`<br>Defaults to false
-| `favorites`           | Array of favorite boards to show. Each favorite board has a headerName and a favoriteList an array of player ids(String). See sample configuration for details. All the players in the favorite board object will be displayed on the board if they are playing in the current tournament. See section below on how to find the playerid of your favorite players <br> <br> _Type:_ `Array` of favorite board `[ Object ]` <br> Defaults to an empty array.
-| `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the favorites configuration. If this option is set the favorites defined in the config will be ignored. If you chose to read the file from the internet the format will be a url. <br><br>For example reading the file from dropbox would look something like this <br> `"https://dl.dropboxusercontent.com/s/7########favorites.json"`<br><br>If using a local file setting would look like this <br> `"utilities/favorites.json"` <br> where the favorites file is stored in a directory name utilities under the MMM-PGA folder<br><br>Type: String containing url to favorites file.<br> Defaults to null
-
-| `colored`             | Whether to display colors. The fields  in the module that will display color are the Score and the Leader Board table headers <br> <br> _Type:_ `Boolean` <br> Defaults to true
-
 
 ## Screen Shots
 
