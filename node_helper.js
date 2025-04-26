@@ -1,4 +1,4 @@
-/* MagicMirror²
+ /* MagicMirror²
  * Module: MMM-PGA
  *
  * By mcl8on
@@ -86,7 +86,7 @@ module.exports = NodeHelper.create({
       // Load Data to begin with so we dont have to wait for next server load
       // Each client will make a call at startupß
       this.getPGAData(this.config.numTournaments)
-      if (this.config.rapidAPIKey !== 'rapid-api-key' && this.config.showRankings) {
+      if (this.config.rapidAPIKey !== '' && this.config.showRankings) {
         Log.warn(`Somehow rapidAPIKey is ${this.config.rapidAPIKey} (should be 'rapid-api-key') and showRankings is ${this.config.showRankings} (should be false)`)
         this.getRankingData(this.config.maxNumRankings, this.config.rapidAPIKey)
       }
