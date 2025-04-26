@@ -103,26 +103,20 @@ Module.register('MMM-PGA', {
     var self = this
     if (this.config.remoteFavoritesFile !== null) {
       this.getFavoriteFile(function (response) {
-        self.config.favorites = JSON.parse(response)
+        self.config.favorites = response
         self.numBoards = 1 + self.config.favorites.length
         self.boardIndex = 0
       })
     }
   },
 
-  getFavoriteFile: function (callback) {
-    var xobj = new XMLHttpRequest(),
-      isRemote = this.config.remoteFavoritesFile.indexOf('http://') === 0 || this.config.remoteFavoritesFile.indexOf('https://') === 0,
-      path = isRemote ? this.config.remoteFavoritesFile : this.file(this.config.remoteFavoritesFile)
+  async getFavoriteFile(callback) {
+    const isRemote = this.config.remoteFavoritesFile.indexOf('http://') === 0 || this.config.remoteFavoritesFile.indexOf('https://') === 0
+    const path = isRemote ? this.config.remoteFavoritesFile : this.file(this.config.remoteFavoritesFile)
 
-    xobj.overrideMimeType('application/json')
-    xobj.open('GET', path, true)
-    xobj.onreadystatechange = function () {
-      if (xobj.readyState === 4 && xobj.status === 200) {
-        callback(xobj.responseText)
-      }
-    }
-    xobj.send(null)
+    const response = await fetch(path)
+    const jsonResponse = await response.json()
+    callback(jsonResponse)
   },
 
   // Create a TH of the Leader Board

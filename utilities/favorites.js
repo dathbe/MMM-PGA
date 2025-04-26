@@ -1,16 +1,11 @@
-// var boards = null
-
-function readTextFile(file, callback) {
-  var rawFile = new XMLHttpRequest()
-  rawFile.overrideMimeType('application/json')
-  rawFile.open('GET', file, true)
-  rawFile.onreadystatechange = function () {
-    if (rawFile.readyState === 4 && rawFile.status == '200') {
-      callback(rawFile.responseText)
-    }
-  }
-  rawFile.send(null)
+async function readTextFile(file, callback) {
+  const response = await fetch(file)
+  const jsonResponse = await response.json()
+  console.log(jsonResponse)
+  console.log(typeof jsonResponse)
+  callback(jsonResponse)
 }
+
 function displayFavs() {
   for (var i = 0; i < this.boards.length; i++) {
     var board = this.boards[i]
@@ -34,7 +29,7 @@ function displayFavs() {
 
 var self = window
 readTextFile('favorites.json', function (text) {
-  self.boards = JSON.parse(text)
+  self.boards = text
   displayFavs()
   self.boards.pop()
   displayFavs()
