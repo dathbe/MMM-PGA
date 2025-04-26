@@ -4,6 +4,11 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0](https://github.com/dathbe/MMM-PGA/compare/v2.0.1...v2.1.0) - 2025-04-26
+
+- BREAKING CHANGE:  Some default options are updated to better present an out-of-the-box module
+- Update README
+
 ## [2.0.1](https://github.com/dathbe/MMM-PGA/compare/v2.0.0...v2.0.1) - 2025-04-25
 
 - Add ESLint and clean up code
