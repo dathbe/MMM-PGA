@@ -31,7 +31,7 @@ Module.register('MMM-PGA', {
     maxLeaderboard: 10,
     includeTies: true,
     showLogo: false,
-    showFlags: false,
+    showFlags: true,
     largerFont: false,
     remoteFavoritesFile: null,
     rapidAPIKey: '',
