@@ -48,11 +48,24 @@ git pull
 
 | Option                | Description
 | ------                | -----------
-| `numTournaments`      | Number of upcoming tournaments to show when there is not an active tournment in progress or  `showBoards` is set false. <br> <br> _Type:_`Number`<br>Defaults to 3
+
+| **For Leaderboards**
+
+| **For Rankings**
+| `rapidAPIKey`         | Your Rapid API key.  See https://rapidapi.com.  Required for FedEx and OWGR rankings.<br><br>**Type:** `string` <br> **Default value:** `''` (not set)
+
+| **For Upcoming Tournaments**
+| `numTournaments`      | Number of upcoming tournaments to show when there is not an active tournment in progress or  `showBoards` is set false.<br><br>**Type:** `int` <br> **Default value:** `3`
+
+| **General Display Options**
+| `rotateInterval`      | Time (in milliseconds) to display a card from the module before rotating to the next card (only matters if there is more than one card to display).<br><br>**Type:** `int` <br> **Default value:** `30 * 1000` (30 seconds)
+| `animationSpeed`      | Speed to fade in and out.<br><br>**Type:** `int` <br> **Default value:** `0`
+
+
 | `showLocation`        | Whether to show the location of the tournament in the tournament details header. If set to true the location will appear under the tournament name in a smaller lighter font.<br><br>_Type:_ | `Boolean`<br>Defaults to true
 | `showPurse`           | Whether to show the purse information in the tournament details header. If using a larger font hiding the purse leads to a cleaner format of the tournament details.<br><br>Type: `Boolean`<br>Defaults to true
 | `showRankings`        | Whether to show FedEx Cup standings and Official World Go;g Rankings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments, FedEx Cup, and OWGR. <br><br>Type: `Boolean`<br>Defaults to true
-| `rapidAPIKey`         | Your Rapid API key.  See https://rapidapi.com.  Required for FedEx and OWGR rankings.<br><br>**Type:** `string` <br> **Default value:** `''` (not set)
+
 | `numRankings`         | The amount players to show in the Fedex Cup and OWGR rankings. The number should be set between 1 and 50.<br><br>Type: `Number`<br>Defaults to 5
 | `showBoards`          | Whether to show the Leaderboard and favorites for and Active tournament. If set to false the module will just show the current tournament. See Upcoming tournament screen shot above. <br> <br> _Type:_ | | | `Boolean`<br> Defaults to true
 | `numLeaderboard`      | The amount of places to show on the leaderboard<br> <br> _Type:_ `Number` <br> Defaults to 5
@@ -63,8 +76,7 @@ git pull
 | `largerFont`         | Whether to display larger fonts for the module. If set to false it will use the `xsmall` style defined by MagicMirror². If set to true it will use the `small` style defined by MagicMirror². <br><br>Type:           | `Boolean`<br>Defaults to false
 | `favorites`           | Array of favorite boards to show. Each favorite board has a headerName and a favoriteList an array of player ids(String). See sample configuration for details. All the players in the favorite board object will be displayed on the board if they are playing in the current tournament. See section below on how to find the playerid of your favorite players <br> <br> _Type:_ `Array` of favorite board `[ Object ]` <br> Defaults to an empty array.
 | `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the favorites configuration. If this option is set the favorites defined in the config will be ignored. If you chose to read the file from the internet the format will be a url. <br><br>For example reading the file from dropbox would look something like this <br> `"https://dl.dropboxusercontent.com/s/7########favorites.json"`<br><br>If using a local file setting would look like this <br> `"utilities/favorites.json"` <br> where the favorites file is stored in a directory name utilities under the MMM-PGA folder<br><br>Type: String containing url to favorites file.<br> Defaults to null
-| `rotateInterval`      | Time (in milliseconds) to display a card from the module before rotating to the next card (only matters if there is more than one card to display).<br><br>**Type:** `int` <br> **Default value:** `30 * 1000` (30 seconds)
-| `animationSpeed`      | Speed to fade in and out.<br><br>**Type:** `int` <br> **Default value:** `0`
+
 | `colored`             | Whether to display colors. The fields  in the module that will display color are the Score and the Leader Board table headers <br> <br> _Type:_ `Boolean` <br> Defaults to true
 
 
