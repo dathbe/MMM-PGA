@@ -150,7 +150,7 @@ You will need to first install the dev dependencies:
 
 ```bash
 cd ~/MagicMirror/modules/MMM-PGA
-npm ci
+npm install
 ```
 
 - `npm run lint` - Run linting checks.
