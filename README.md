@@ -1,6 +1,8 @@
 # MMM-PGA
 
-A [MagicMirror²](https://magicmirror.builders) Module to show Upcoming PGA Tournaments. Once the tournament starts a configurable Leader Board will be shown along with scores for your favorite golfers.
+A [MagicMirror²](https://magicmirror.builders) module to display PGA leaderboards, tournaments, and rankings. 
+
+A configurable leaderboard can be shown with scores for your favorite golfers.
 
 [![Platform](https://img.shields.io/badge/platform-MagicMirror²-informational)](https://MagicMirror.builders)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
