@@ -4,7 +4,7 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.1](https://github.com/dathbe/MMM-PGA/compare/v2.0.0...v2.0.1) - 2025-04-XX
+## [2.0.1](https://github.com/dathbe/MMM-PGA/compare/v2.0.0...v2.0.1) - 2025-04-25
 
 - Add ESLint and clean up code
 - Replace XMLHttpRequest with fetch
