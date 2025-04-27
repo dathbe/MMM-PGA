@@ -53,7 +53,7 @@ module.exports = {
     const response = await fetch(this.owgrUrl + maxPlayers, {
       method: 'GET',
     })
-    Log.debug(`${this.owgrUrl} fetched`)
+    Log.debug(`[MMM-PGA] ${this.owgrUrl} fetched`)
 
     const payload = await response.json()
 
@@ -78,9 +78,9 @@ module.exports = {
       }
     }
     catch (error) {
-      Log.error('Unable to display OWGR rankings: ' + payload.message)
-      Log.error('URL fetch response: ' + response.statusText)
-      Log.error('Error: ' + error)
+      Log.error('[MMM-PGA] Unable to display OWGR rankings: ' + payload.message)
+      Log.error('[MMM-PGA] URL fetch response: ' + response.statusText)
+      Log.error('[MMM-PGA] Error: ' + error)
     }
     callback(owgrRanking)
   },

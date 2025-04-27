@@ -59,7 +59,6 @@ git pull
 | `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the favorites configuration. If this option is set the favorites defined in the config will be ignored. If you chose to read the file from the internet the format will be a url.<br><br>Examples:<br>- `utilities/favorites.json` (Local file. File path is relative to MMM-PGA folder, so this example would point to ~/MagicMirror/modules/MMM-PGA/utilities/favorites.json.)<br>- `https://dl.dropboxusercontent.com/s/7my######/favorites.json` (File stored in Drobbox)<br><br>**Type:** `string` <br> **Default value:** `null`
 | **For Rankings**
 | `showRankings`        | Whether to show FedEx Cup standings and Official World Go;g Rankings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments, FedEx Cup, and OWGR.<br><br>**Type:** `bool` <br> **Default value:** `false`
-| `rapidAPIKey`         | Your Rapid API key.  See https://rapidapi.com.  Required for FedEx and OWGR rankings.<br><br>**Type:** `string` <br> **Default value:** `''` (not set)
 | `numRankings`         | The number of players to show in the Fedex Cup and OWGR rankings. The number should be set between 1 and 50.<br><br>**Type:** `int` <br> **Default value:** `5`
 | **For Upcoming Tournaments**
 | `numTournaments`      | Number of upcoming tournaments to show when there is not an active tournment in progress or  `showBoards` is set false.<br><br>**Type:** `int` <br> **Default value:** `3`

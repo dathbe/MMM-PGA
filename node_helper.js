@@ -68,11 +68,11 @@ module.exports = NodeHelper.create({
       self.sendSocketNotification('OWGR_RANKING', owgrRanking)
     })
 
-    if (this.config.rapidAPIKey !== '') {
+    //if (this.config.rapidAPIKey !== '') {
       FEDEXCUP.getFedExCupData(maxNumRankings, rapidAPIKey, function (fcRanking) {
         self.sendSocketNotification('FEDEXCUP_RANKING', fcRanking)
       })
-    }
+    //}
   },
 
   socketNotificationReceived: function (notification, payload) {
