@@ -11,7 +11,7 @@ Module.register('MMM-PGA', {
   // Module config defaults.
   defaults: {
     useHeader: true,
-    header: 'PGA Tournanment',
+    header: 'PGA Tour',
     minWidth: '300px',
     rotateInterval: 30 * 1000,
     animationSpeed: 0, // fade in and out speed
@@ -49,7 +49,7 @@ Module.register('MMM-PGA', {
     Log.info('Starting module: ' + this.name)
 
     // Image Set Up
-    this.pgalogohtml = '<img src=\'./modules/MMM-PGA/images/PGAlogo.png\' alt=\'\' align=bottom height=15 width=15></img> '
+    this.pgalogohtml = '<img src=\'./modules/MMM-PGA/images/pga-tour-logo.svg\' alt=\'\' align=bottom height=15 width=15></img> '
     this.flaghtml = '<img src=\'http\' alt=\'\' align=top height=22 width=22></img>'
     this.grayScaleStyle = '<img style=\'filter:grayscale(1)\''
 

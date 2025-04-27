@@ -4,6 +4,9 @@ A [MagicMirror²](https://magicmirror.builders) module to display PGA leaderboar
 
 A configurable leaderboard can be shown with scores for your favorite golfers.
 
+**NOTE: with version 2.1.0, there are a handful of breaking changes when it comes to default config options.  This was done to give a better out-of-the-box experience for new users, but you may need to add config options if you were relying on the defaults.**
+Among the changed options, `showRankings` is now set to `false` by default to avoid the situation where a new user does not have an API key set, `showFlags` is set to `true` for a more visually interesting board, and `showPurse` is set to `false` to reduce clutter.  All of these can still be customized in your config.js file.
+
 [![Platform](https://img.shields.io/badge/platform-MagicMirror²-informational)](https://MagicMirror.builders)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
 
@@ -50,7 +53,7 @@ git pull
 | `includeTies`         | Whether to include more than `numLeaderboard` players due to ties. If false only `numLeaderboard` players will be shown and `maxLeaderboard` will be irrelevant.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `showFlags`           | Shows the flag of the players country next to the player in the leaderboards<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `showLocation`        | Whether to show the location of the tournament in the tournament details header. If set to true the location will appear under the tournament name in a smaller lighter font.<br><br>**Type:** `bool` <br> **Default value:** `true`
-| `showPurse`           | Whether to show the purse information in the tournament details header. If using a larger font hiding the purse leads to a cleaner format of the tournament details.<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `showPurse`           | Whether to show the purse information in the tournament details header. If using a larger font hiding the purse leads to a cleaner format of the tournament details.<br><br>**Type:** `bool` <br> **Default value:** `false`
 | **For Favorites Boards**
 | `favorites`           | Array of favorite boards to show. Each favorite board has a headerName and a favoriteList an array of player ids(String). See sample configuration for details. All the players in the favorite board object will be displayed on the board if they are playing in the current tournament. See section below on how to find the playerid of your favorite players.<br><br>**Type:** `array` <br> **Default value:** `[]` (empty)
 | `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the favorites configuration. If this option is set the favorites defined in the config will be ignored. If you chose to read the file from the internet the format will be a url.<br><br>Examples:<br>- `utilities/favorites.json` (Local file. File path is relative to MMM-PGA folder, so this example would point to ~/MagicMirror/modules/MMM-PGA/utilities/favorites.json.)<br>- `https://dl.dropboxusercontent.com/s/7my######/favorites.json` (File stored in Drobbox)<br><br>**Type:** `string` <br> **Default value:** `null`
