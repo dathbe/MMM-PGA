@@ -5,7 +5,7 @@ A [MagicMirror²](https://magicmirror.builders) module to display PGA leaderboar
 A configurable leaderboard can be shown with scores for your favorite golfers.
 
 **NOTE: with version 2.1.0, there are a handful of breaking changes when it comes to default config options.  This was done to give a better out-of-the-box experience for new users, but you may need to add config options if you were relying on the defaults.**
-Among the changed options, `showRankings` is now set to `false` by default to avoid the situation where a new user does not have an API key set, `showFlags` is set to `true` for a more visually interesting board, and `showPurse` is set to `false` to reduce clutter.  All of these can still be customized in your config.js file.
+Among the changed options, `showFlags` is set to `true` for a more visually interesting board, and `showPurse` is set to `false` to reduce clutter.  These can still be customized in your config.js file.
 
 [![Platform](https://img.shields.io/badge/platform-MagicMirror²-informational)](https://MagicMirror.builders)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
