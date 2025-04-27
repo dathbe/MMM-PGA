@@ -358,7 +358,7 @@ Module.register('MMM-PGA', {
     var arrowText = ''
 
     if (player.curPosition == player.lwPosition) {
-      arrowText = '<span>►</span>'
+      arrowText = (this.config.colored) ? '<span class=\'no-change\'>►</span>' : '<span>►</span>'
     }
     else if (parseInt(player.curPosition) < parseInt(player.lwPosition) || player.lwPosition == '') {
       arrowText = (this.config.colored) ? '<span class=\'up\'>▲</span>' : '<span>▲</span>'
@@ -367,7 +367,14 @@ Module.register('MMM-PGA', {
       arrowText = (this.config.colored) ? '<span class=\'down\'>▼</span>' : '<span>▼</span>'
     }
 
-    return (arrowText + player.curPosition)
+    if (player.curPosition < 10) {
+      var spacing = '&nbsp;&nbsp;'
+    }
+    else {
+      spacing = ''
+    }
+
+    return (arrowText + spacing + player.curPosition)
   },
 
   buildRankList: function (rankings) {
@@ -378,8 +385,14 @@ Module.register('MMM-PGA', {
     // Create Table headings
     var rankHead = document.createElement('tr')
     rankTable.appendChild(rankHead)
-    rankHead.appendChild(this.buildRankingTh('This<br>Week'))
-    rankHead.appendChild(this.buildRankingTh('Last<br>Week'))
+
+    var thCurrWeek = this.buildRankingTh('This<br>Week')
+    thCurrWeek.classList.add('current-week')
+    rankHead.appendChild(thCurrWeek)
+
+    var thLastWeek = this.buildRankingTh('Last<br>Week')
+    thLastWeek.classList.add('last-week')
+    rankHead.appendChild(thLastWeek)
 
     var thPlayerName = this.buildRankingTh('Player Name')
     thPlayerName.classList.add('player-name')
@@ -388,7 +401,9 @@ Module.register('MMM-PGA', {
 
     var heading = rankings.pointsHeading
     heading = heading.replace(' ', '<br>')
-    rankHead.appendChild(this.buildRankingTh(heading))
+    var thPoints = this.buildRankingTh(heading)
+    thPoints.classList.add('points')
+    rankHead.appendChild(thPoints)
 
     // Create Table Body
 
@@ -399,8 +414,19 @@ Module.register('MMM-PGA', {
       var rankRow = document.createElement('tr')
       rankTable.appendChild(rankRow)
 
-      rankRow.appendChild(this.buildRankingTD(this.getCurWeekText(player)))
-      rankRow.appendChild(this.buildRankingTD(player.lwPosition))
+      var tdCurrWeek = this.buildRankingTD(this.getCurWeekText(player))
+      tdCurrWeek.classList.add('current-week')
+      rankRow.appendChild(tdCurrWeek)
+
+      if (player.lwPosition < 10) {
+        var spacing = '&nbsp;&nbsp;'
+      }
+      else {
+        var spacing = ''
+      }
+      var tdLastWeek = this.buildRankingTD(spacing + player.lwPosition)
+      tdLastWeek.classList.add('last-week')
+      rankRow.appendChild(tdLastWeek)
 
       if (this.config.showFlags) {
         var flagHtml = this.flaghtml.replace('http', player.flagUrl)
@@ -412,7 +438,10 @@ Module.register('MMM-PGA', {
       var tdPlayerName = this.buildRankingTD(player.name)
       tdPlayerName.classList.add('player-name')
       rankRow.appendChild(tdPlayerName)
-      rankRow.appendChild(this.buildRankingTD(player.points))
+
+      var tdPoints = this.buildRankingTD(player.points)
+      tdPoints.classList.add('points')
+      rankRow.appendChild(tdPoints)
     }
 
     return rankTable
@@ -499,7 +528,7 @@ Module.register('MMM-PGA', {
 
   // this rotates your data
   scheduleCarousel: function () {
-    Log.debug('[MMM-PGA] schedule carousel')
+    //Log.debug('[MMM-PGA] schedule carousel')
     this.rotateInterval = setInterval(() => {
       if (this.config.favorites.length == 0) {
         this.boardIndex = 0
@@ -509,7 +538,7 @@ Module.register('MMM-PGA', {
       }
 
       var numRankingObj = Object.keys(this.rankingObjs).length
-      this.nonActiveIndex = (this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
+      this.nonActiveIndex = 1 //(this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
 
       this.updateDom(this.config.animationSpeed)
     }, this.config.rotateInterval)

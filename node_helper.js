@@ -22,7 +22,7 @@ module.exports = NodeHelper.create({
   },
 
   _onUpdateFavs: function (req, res) {
-    Log.log('MMM-PGA: Update favorites')
+    Log.log('[MMM-PGA] Update favorites')
     this.sendSocketNotification('UPDATE_FAVORITES')
     res.sendStatus(200)
   },
@@ -68,14 +68,16 @@ module.exports = NodeHelper.create({
       self.sendSocketNotification('OWGR_RANKING', owgrRanking)
     })
 
-    FEDEXCUP.getFedExCupData(maxNumRankings, rapidAPIKey, function (fcRanking) {
-      self.sendSocketNotification('FEDEXCUP_RANKING', fcRanking)
-    })
+    if (this.config.rapidAPIKey !== '') {
+      FEDEXCUP.getFedExCupData(maxNumRankings, rapidAPIKey, function (fcRanking) {
+        self.sendSocketNotification('FEDEXCUP_RANKING', fcRanking)
+      })
+    }
   },
 
   socketNotificationReceived: function (notification, payload) {
     if (notification === 'CONFIG') {
-      Log.debug ('[MMM-PGA] config received')
+      //Log.debug ('[MMM-PGA] config received')
       this.config = payload
       if (this.started !== true) {
         this.started = true
@@ -86,8 +88,7 @@ module.exports = NodeHelper.create({
       // Load Data to begin with so we dont have to wait for next server load
       // Each client will make a call at startupß
       this.getPGAData(this.config.numTournaments)
-      if (this.config.rapidAPIKey !== '' && this.config.showRankings) {
-        Log.warn(`Somehow rapidAPIKey is ${this.config.rapidAPIKey} (should be 'rapid-api-key') and showRankings is ${this.config.showRankings} (should be false)`)
+      if (this.config.showRankings) {
         this.getRankingData(this.config.maxNumRankings, this.config.rapidAPIKey)
       }
     }

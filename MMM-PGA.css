@@ -132,6 +132,22 @@
   padding-left: 5px;
 }
 
+.MMM-PGA .ranking-table th.current-week,
+.MMM-PGA .ranking-table td.current-week {
+  text-align: left;
+  padding-left: 0;
+}
+
+/* .MMM-PGA .ranking-table td.last-week {
+  text-align: right;
+} */
+
+.MMM-PGA .ranking-table th.points,
+.MMM-PGA .ranking-table td.points {
+  text-align: right;
+  padding-right: 0;
+}
+
 .MMM-PGA .ranking-table td.img{
   width: 25px;
   padding-right: 0px;
