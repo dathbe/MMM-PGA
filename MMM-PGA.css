@@ -14,11 +14,13 @@
   line-height: 18px;
   margin-top: 5px;
   margin-bottom: 5px;
-  border-bottom: solid 1px;
-  border-bottom: color rgb(223, 218, 218);
+  border-bottom: solid 1px #222;
   text-align: left;
   padding: 0;
+}
 
+.MMM-PGA .pga_header_wrapper {
+  border-bottom: solid 1px #222;
 }
 
 .MMM-PGA .leaderboard-separator .event-status{
@@ -92,10 +94,8 @@
   vertical-align: top;  
 }
 
-
 .MMM-PGA .tournament-table .border{
-  border-bottom: solid 1px;
-  border-bottom-color: rgb(34, 34, 34);
+  border-bottom: solid 1px #222;
 }
 
 .MMM-PGA .tournament-table td.date-cell{
@@ -123,8 +123,7 @@
 }
 
 .MMM-PGA .ranking-table td{
-  border-bottom: solid 1px;
-  border-bottom-color: rgb(34, 34, 34);
+  border-bottom: solid 1px #222;
   text-align: center;
 }
 
@@ -160,6 +159,14 @@
 .MMM-PGA .ranking-table .down{
   color: red;
 }
+
+.MMM-PGA .tourlogo {
+  height: 17px;
+  vertical-align: bottom;
+  margin: 0;
+  padding: 0;
+}
+
 
 
 

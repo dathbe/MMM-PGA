@@ -11,7 +11,7 @@ Module.register('MMM-PGA', {
   // Module config defaults.
   defaults: {
     useHeader: true,
-    header: 'PGA Tour',
+    header: 'PGA Tournament',
     minWidth: '300px',
     rotateInterval: 30 * 1000,
     animationSpeed: 0, // fade in and out speed
@@ -49,7 +49,7 @@ Module.register('MMM-PGA', {
     Log.info('Starting module: ' + this.name)
 
     // Image Set Up
-    this.pgalogohtml = '<img src=\'./modules/MMM-PGA/images/pga-tour-logo.svg\' alt=\'\' align=bottom height=15 width=15></img> '
+    this.pgalogohtml = '<img src=\'./modules/MMM-PGA/images/pga-tour-logo.svg\' class=\'tourlogo\'></img> '
     this.flaghtml = '<img src=\'http\' alt=\'\' align=top height=22 width=22></img>'
     this.grayScaleStyle = '<img style=\'filter:grayscale(1)\''
 
@@ -434,10 +434,14 @@ Module.register('MMM-PGA', {
       }
     }
 
-    header.innerHTML = headerText
+    header.classList.add('pga_header_wrapper')
+    headerTextSpan = document.createElement('span')
+    headerTextSpan.classList.add('pga_header')
+    headerTextSpan.innerHTML = headerText
     if (this.config.showLogo) {
-      header.innerHTML = this.pgalogohtml + header.innerHTML
+      headerTextSpan.innerHTML = this.pgalogohtml + headerTextSpan.innerHTML
     }
+    header.appendChild(headerTextSpan)
     return header
   },
 
