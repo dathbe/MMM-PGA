@@ -538,7 +538,7 @@ Module.register('MMM-PGA', {
       }
 
       var numRankingObj = Object.keys(this.rankingObjs).length
-      this.nonActiveIndex = 1 //(this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
+      this.nonActiveIndex = (this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
 
       this.updateDom(this.config.animationSpeed)
     }, this.config.rotateInterval)

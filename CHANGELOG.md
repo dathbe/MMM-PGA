@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [2.1.1](https://github.com/dathbe/MMM-PGA/compare/v2.1.0...v2.1.1) - 2025-04-XX
 
 - Update OWGR API - NO MORE RAPIDAPI KEY NEEDED!
+- Restore `showRankings` defualt to `true` now that key is not necessary for OWGR
 - New css classes added to the header to allow `custom.css` tweaks.
 - Small design changes
 
