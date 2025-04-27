@@ -422,7 +422,7 @@ Module.register('MMM-PGA', {
         var spacing = '&nbsp;&nbsp;'
       }
       else {
-        var spacing = ''
+        spacing = ''
       }
       var tdLastWeek = this.buildRankingTD(spacing + player.lwPosition)
       tdLastWeek.classList.add('last-week')
@@ -464,7 +464,7 @@ Module.register('MMM-PGA', {
     }
 
     header.classList.add('pga_header_wrapper')
-    headerTextSpan = document.createElement('span')
+    var headerTextSpan = document.createElement('span')
     headerTextSpan.classList.add('pga_header')
     headerTextSpan.innerHTML = headerText
     if (this.config.showLogo) {
@@ -528,7 +528,7 @@ Module.register('MMM-PGA', {
 
   // this rotates your data
   scheduleCarousel: function () {
-    //Log.debug('[MMM-PGA] schedule carousel')
+    // Log.debug('[MMM-PGA] schedule carousel')
     this.rotateInterval = setInterval(() => {
       if (this.config.favorites.length == 0) {
         this.boardIndex = 0

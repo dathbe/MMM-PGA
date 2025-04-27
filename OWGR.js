@@ -1,5 +1,5 @@
 const Log = require('logger')
-const flags = require('./flags.js')
+// const flags = require('./flags.js')
 
 module.exports = {
 
@@ -7,7 +7,7 @@ module.exports = {
   rapidUrl: 'https://golf-leaderboard-data.p.rapidapi.com/world-rankings',
   owgrUrl: 'https://apiweb.owgr.com/api/owgr/rankings/getRankings?regionId=0&pageNumber=1&countryId=0&sortString=Rank%20ASC&pageSize=',
 
-/*   async getOWGRData(maxPlayers, rapidAPIKey, callback) {
+  /*   async getOWGRData(maxPlayers, rapidAPIKey, callback) {
     var rapidKey = rapidAPIKey
     const response = await fetch(this.rapidUrl, {
       method: 'GET',
@@ -47,9 +47,9 @@ module.exports = {
     }
     callback(owgrRanking)
   }, */
-  
-    async getOWGRData(maxPlayers, rapidAPIKey, callback) {
-    //var rapidKey = rapidAPIKey
+
+  async getOWGRData(maxPlayers, rapidAPIKey, callback) {
+    // var rapidKey = rapidAPIKey
     const response = await fetch(this.owgrUrl + maxPlayers, {
       method: 'GET',
     })
@@ -63,8 +63,8 @@ module.exports = {
     }
     try {
       if (payload.rankingsList.length > 1) {
-        for (let i=0; i<payload.rankingsList.length; i++) {
-          //var flagName = payload.rankingsList[i].player.fullName(/\s/g, '')
+        for (let i = 0; i < payload.rankingsList.length; i++) {
+          // var flagName = payload.rankingsList[i].player.fullName(/\s/g, '')
           owgrRanking.rankings.push({
             name: payload.rankingsList[i].player.fullName,
             curPosition: payload.rankingsList[i].rank,

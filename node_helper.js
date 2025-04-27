@@ -1,4 +1,4 @@
- /* MagicMirror²
+/* MagicMirror²
  * Module: MMM-PGA
  *
  * By mcl8on
@@ -68,16 +68,16 @@ module.exports = NodeHelper.create({
       self.sendSocketNotification('OWGR_RANKING', owgrRanking)
     })
 
-    //if (this.config.rapidAPIKey !== '') {
-      FEDEXCUP.getFedExCupData(maxNumRankings, rapidAPIKey, function (fcRanking) {
-        self.sendSocketNotification('FEDEXCUP_RANKING', fcRanking)
-      })
-    //}
+    // if (this.config.rapidAPIKey !== '') {
+    FEDEXCUP.getFedExCupData(maxNumRankings, rapidAPIKey, function (fcRanking) {
+      self.sendSocketNotification('FEDEXCUP_RANKING', fcRanking)
+    })
+    // }
   },
 
   socketNotificationReceived: function (notification, payload) {
     if (notification === 'CONFIG') {
-      //Log.debug ('[MMM-PGA] config received')
+      // Log.debug ('[MMM-PGA] config received')
       this.config = payload
       if (this.started !== true) {
         this.started = true
