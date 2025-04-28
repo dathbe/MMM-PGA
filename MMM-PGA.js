@@ -17,8 +17,8 @@ Module.register('MMM-PGA', {
     animationSpeed: 0, // fade in and out speed
     initialLoadDelay: 4250,
     retryDelay: 2500,
-    updateInterval: 5 * 60 * 1000,
-    rankingsUpdateInterval: 240 * 60 * 1000,
+    updateInterval: 5 * 60 * 1000,  // every 5 minutes
+    rankingsUpdateInterval: 4 * 60 * 60 * 1000, // every 4 hours
     colored: true,
     showBoards: true,
     showLocation: true,
@@ -80,7 +80,6 @@ Module.register('MMM-PGA', {
     this.tournament = null
     this.tournaments = null
     this.loaded = false
-    this.tournamentsLoaded = false
     this.numBoards = 1 + this.config.favorites.length
 
     this.updateFavorites()
@@ -482,16 +481,18 @@ Module.register('MMM-PGA', {
     wrapper.style.maxWidth = this.config.maxWidth
 
     // If Data is not Loaded yet display the Loading Caption
-    if (!this.loaded || !this.tournamentsLoaded) {
-      wrapper.innerHTML = 'Loading . . .'
+    if (!this.loaded) {
+      wrapper.innerHTML = 'Loading MMM-PGA . . .'
       wrapper.classList.add('bright', 'light', 'small')
       return wrapper
     }
 
-    var tourney = this.tournament
-    var tourneyScheduled = (tourney.statusCode == 'STATUS_SCHEDULED')
-
-    var showActive = (!tourneyScheduled && this.config.showBoards)
+    if (this.tournament !== null && this.tournament.statusCode !== 'STATUS_SCHEDULED' && this.config.showBoards) {
+      var showActive = true
+    }
+    else {
+      showActive = false
+    }
 
     // creating the header
     if (this.config.useHeader != false) {
@@ -514,12 +515,12 @@ Module.register('MMM-PGA', {
 
     // Tounament is in progress and Module is confugred to show boards
     // So build the boards
-    var curTourneyList = [tourney]
+    var curTourneyList = [this.tournament]
     var tdetails = this.buildTournamentList(curTourneyList, false)
     wrapper.appendChild(tdetails)
 
     if (this.config.showBoards) {
-      var leaderboard = this.buildLeaderBoard(tourney)
+      var leaderboard = this.buildLeaderBoard(this.tournament)
       wrapper.appendChild(leaderboard)
     }
 
@@ -557,15 +558,26 @@ Module.register('MMM-PGA', {
 
     else if (notification == 'PGA_TOURNAMENT_LIST') {
       this.tournaments = payload
-      this.tournamentsLoaded = true
+      this.loaded = true
+      if (this.rotateInterval == null) {
+        this.scheduleCarousel()
+      }
       this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'OWGR_RANKING') {
       this.rankingObjs.owgr = { headerTxt: this.owgrHeader, rankingObj: payload }
+      this.loaded = true
+      if (this.rotateInterval == null) {
+        this.scheduleCarousel()
+      }
       this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'FEDEXCUP_RANKING') {
       this.rankingObjs.fedex = { headerTxt: this.fedexCupHeader, rankingObj: payload }
+      this.loaded = true
+      if (this.rotateInterval == null) {
+        this.scheduleCarousel()
+      }
       this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'UPDATE_FAVORITES') {

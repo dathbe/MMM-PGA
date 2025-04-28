@@ -32,10 +32,8 @@ module.exports = NodeHelper.create({
     // schedule the updates for Subsequent Loads
     var self = this
 
-    var num = this.config.numTournaments
-
     setInterval(() => {
-      self.getPGAData(num)
+      self.getLeaderboardData()
     }, self.config.updateInterval)
   },
 
@@ -48,13 +46,28 @@ module.exports = NodeHelper.create({
       self.getRankingData(self.config.maxNumRankings)
     }, self.config.rankingsUpdateInterval)
   },
+  
+  // Schedule the upcoming tourney updates. This is a much longer interval since the data only changes rarely
+  scheduleUpcomingTourneyUpdate: function () {
+    // schedule the updates for Subsequent Loads
 
-  getPGAData: function (numTournaments) {
+    var self = this
+    setInterval(() => {
+      self.getUpcomingTourneyData(self.config.numTournament)
+    }, self.config.rankingsUpdateInterval)
+  },
+
+  getLeaderboardData: function () {
     var self = this
 
     ESPN.getTournamentData(function (tournament) {
       self.sendSocketNotification('PGA_RESULT', tournament)
     })
+
+  },
+  
+  getUpcomingTourneyData: function (numTournaments) {
+    var self = this
 
     ESPN.getTournaments(numTournaments, function (tournaments) {
       self.sendSocketNotification('PGA_TOURNAMENT_LIST', tournaments)
@@ -77,17 +90,22 @@ module.exports = NodeHelper.create({
 
   socketNotificationReceived: function (notification, payload) {
     if (notification === 'CONFIG') {
-      // Log.debug ('[MMM-PGA] config received')
       this.config = payload
       if (this.started !== true) {
         this.started = true
-        this.scheduleUpdate()
-        this.scheduleRankingUpdate()
+        this.scheduleUpcomingTourneyUpdate()
+        if (this.config.showBoards) {
+          this.scheduleUpdate()
+        }
+        if (this.config.showRankings) {
+          this.scheduleRankingUpdate()
+        }
       }
-
+      
       // Load Data to begin with so we dont have to wait for next server load
-      // Each client will make a call at startupß
-      this.getPGAData(this.config.numTournaments)
+      // Each client will make a call at startup
+      this.getUpcomingTourneyData(this.config.numTournaments)
+      this.getLeaderboardData() // would be great to move this into a conditional block so it only runs if user wants boards, but the dom won't load if I do that; it only calls once on startup, so not the biggest deal
       if (this.config.showRankings) {
         this.getRankingData(this.config.maxNumRankings, this.config.rapidAPIKey)
       }
