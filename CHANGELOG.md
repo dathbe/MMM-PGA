@@ -30,6 +30,23 @@ Forked from [mumblebaj](https://github.com/mumblebaj/MMM-PGA).
 - Display higher purse tournament leaderboard when multiple tournaments being competed
 - Small css tweaks
 
+## 1.3.5
+
+- Remove reference to request
+- Update license to MIT
+
+## 1.3.4
+
+- Remove `node-fetch` from package.json
+
+## 1.3.3
+
+- Fix showRankings where if set it was still trying to fetch ranking data
+
+## 1.3.2
+
+- Update as per request in issue [#Issue2](https://github.com/mumblebaj/MMM-PGA/issues/2)
+
 ## 1.3.1 - 2025-04-02
 
 - Update Fedex URL
