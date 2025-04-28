@@ -4,6 +4,14 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1](https://github.com/dathbe/MMM-PGA/compare/v2.1.0...v2.1.1) - 2025-04-XX
+
+- Update OWGR API - NO MORE RAPIDAPI KEY NEEDED!
+- Update Fedex Cup API - NO MORE RAPIDAPI KEY NEEDED!
+- Restore `showRankings` defualt to `true` now that key is not necessary
+- New css classes added to the tables to allow `custom.css` tweaks.
+- Small design changes
+
 ## [2.1.0](https://github.com/dathbe/MMM-PGA/compare/v2.0.1...v2.1.0) - 2025-04-26
 
 - BREAKING CHANGE:  Some default options are updated to better present an out-of-the-box module

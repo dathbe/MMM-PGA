@@ -4,6 +4,9 @@ A [MagicMirror²](https://magicmirror.builders) module to display PGA leaderboar
 
 A configurable leaderboard can be shown with scores for your favorite golfers.
 
+**NOTE: with version 2.1.0, there are a handful of breaking changes when it comes to default config options.  This was done to give a better out-of-the-box experience for new users, but you may need to add config options if you were relying on the defaults.**
+Among the changed options, `showFlags` is set to `true` for a more visually interesting board, and `showPurse` is set to `false` to reduce clutter.  These can still be customized in your config.js file.
+
 [![Platform](https://img.shields.io/badge/platform-MagicMirror²-informational)](https://MagicMirror.builders)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
 
@@ -54,10 +57,9 @@ git pull
 | `header`              | The header text to display when the leaderboard is showing.<br><br>**Type:** `string` <br> **Default value:** `PGA TOURNAMENT`
 | **For Favorites Boards**
 | `favorites`           | Array of favorite boards to show. Each favorite board has a headerName and a favoriteList an array of player ids(String). See sample configuration for details. All the players in the favorite board object will be displayed on the board if they are playing in the current tournament. See section below on how to find the playerid of your favorite players.<br><br>**Type:** `array` <br> **Default value:** `[]` (empty)
-| `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the favorites configuration. If this option is set the favorites defined in the config will be ignored. If you chose to read the file from the internet the format will be a url.<br><br>Examples:<br>- `utilities/favorites.json` (Local file. File path is relative to MMM-PGA folder, so this example would point to ~/MagicMirror/modules/MMM-PGA/utilities/favorites.json.)<br>- `https://dl.dropboxusercontent.com/s/7my######/favorites.json` (File stored in Drobbox)<br><br>**Type:** `string` <br> **Default value:** `null`
+| `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the favorites configuration. If this option is set the favorites defined in the config will be ignored. If you chose to read the file from the internet the format will be a url.<br><br>Examples:<br>- `'utilities/favorites.json'` (Local file. File path is relative to MMM-PGA folder, so this example would point to ~/MagicMirror/modules/MMM-PGA/utilities/favorites.json.)<br>- `'https://dl.dropboxusercontent.com/s/7my######/favorites.json'` (File stored in Drobbox)<br><br>**Type:** `string` <br> **Default value:** `null`
 | **For Rankings**
 | `showRankings`        | Whether to show FedEx Cup standings and Official World Go;g Rankings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments, FedEx Cup, and OWGR.<br><br>**Type:** `bool` <br> **Default value:** `false`
-| `rapidAPIKey`         | Your Rapid API key.  See https://rapidapi.com.  Required for FedEx and OWGR rankings.<br><br>**Type:** `string` <br> **Default value:** `''` (not set)
 | `numRankings`         | The number of players to show in the Fedex Cup and OWGR rankings. The number should be set between 1 and 50.<br><br>**Type:** `int` <br> **Default value:** `5`
 | **For Upcoming Tournaments**
 | `numTournaments`      | Number of upcoming tournaments to show when there is not an active tournment in progress or  `showBoards` is set false.<br><br>**Type:** `int` <br> **Default value:** `3`
