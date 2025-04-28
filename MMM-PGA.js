@@ -1,8 +1,8 @@
 /* MagicMirror²
- * Module: MMM-PGA
- *
- * By mcl8on
- */
+* Module: MMM-PGA
+*
+* By mcl8on
+*/
 
 Module.register('MMM-PGA', {
 

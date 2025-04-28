@@ -39,6 +39,8 @@ git pull
   maxWidth: "100%",
   config: {
     showLogo: true,
+    showPurse: false,
+    showFlags: true,
   }
 },	
 ```
