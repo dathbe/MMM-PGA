@@ -1,8 +1,8 @@
 /* MagicMirror²
- * Module: MMM-PGA
- *
- * By mcl8on
- */
+* Module: MMM-PGA
+*
+* By mcl8on
+*/
 
 Module.register('MMM-PGA', {
 
@@ -22,7 +22,7 @@ Module.register('MMM-PGA', {
     colored: true,
     showBoards: true,
     showLocation: true,
-    showPurse: false,
+    showPurse: true,
     numTournaments: 3,
     showRankings: true,
     numRankings: 5,
@@ -31,7 +31,7 @@ Module.register('MMM-PGA', {
     maxLeaderboard: 10,
     includeTies: true,
     showLogo: false,
-    showFlags: true,
+    showFlags: false,
     largerFont: false,
     remoteFavoritesFile: null,
     rapidAPIKey: '',
