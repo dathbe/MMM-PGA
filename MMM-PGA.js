@@ -17,7 +17,7 @@ Module.register('MMM-PGA', {
     animationSpeed: 0, // fade in and out speed
     initialLoadDelay: 4250,
     retryDelay: 2500,
-    updateInterval: 5 * 60 * 1000,  // every 5 minutes
+    updateInterval: 5 * 60 * 1000, // every 5 minutes
     rankingsUpdateInterval: 4 * 60 * 60 * 1000, // every 4 hours
     colored: true,
     showBoards: true,

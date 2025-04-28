@@ -46,7 +46,7 @@ module.exports = NodeHelper.create({
       self.getRankingData(self.config.maxNumRankings)
     }, self.config.rankingsUpdateInterval)
   },
-  
+
   // Schedule the upcoming tourney updates. This is a much longer interval since the data only changes rarely
   scheduleUpcomingTourneyUpdate: function () {
     // schedule the updates for Subsequent Loads
@@ -63,9 +63,8 @@ module.exports = NodeHelper.create({
     ESPN.getTournamentData(function (tournament) {
       self.sendSocketNotification('PGA_RESULT', tournament)
     })
-
   },
-  
+
   getUpcomingTourneyData: function (numTournaments) {
     var self = this
 
@@ -101,7 +100,7 @@ module.exports = NodeHelper.create({
           this.scheduleRankingUpdate()
         }
       }
-      
+
       // Load Data to begin with so we dont have to wait for next server load
       // Each client will make a call at startup
       this.getUpcomingTourneyData(this.config.numTournaments)
