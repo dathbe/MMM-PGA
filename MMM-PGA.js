@@ -90,9 +90,9 @@ Module.register('MMM-PGA', {
     this.fontClass = (this.config.largerFont) ? 'small' : 'xsmall'
   },
 
-  stop: function () {
+/*   stop: function () {
     Log.info('Stopping module ' + this.name)
-  },
+  }, */
 
   // If Configured for a remote file retrieve the favorites from remote source
   // Set up the boared index and numboard properties
@@ -167,7 +167,7 @@ Module.register('MMM-PGA', {
       return a.sortOrder - b.sortOrder
     })
 
-    Log.debug('[MMM-PGA] boardindex:' + this.boardIndex)
+    Log.debug('[MMM-PGA] boardindex: ' + this.boardIndex)
 
     // If Favorites is enabled create Array with only the Favorites
     function includePlayer(player) {

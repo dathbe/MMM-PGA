@@ -6,7 +6,7 @@
  */
 const Log = require('logger')
 const NodeHelper = require('node_helper')
-const express = require('express')
+const express = require('express') // necessary?
 
 var ESPN = require('./ESPN.js')
 const OWGR = require('./OWGR.js')
@@ -17,6 +17,8 @@ module.exports = NodeHelper.create({
 
   start: function () {
     Log.log('Starting node_helper for: ' + this.name)
+    
+    // Does this do anything?
     this.expressApp.use(express.urlencoded({ extended: true }))
     this.expressApp.post('/MMM-PGA-UpdateFavs', this._onUpdateFavs.bind(this))
   },
