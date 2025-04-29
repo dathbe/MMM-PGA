@@ -68,7 +68,7 @@ git pull
 | **General Display Options**
 | `showLogo`            | Shows the PGA logo in the header<br><br>**Type:** `bool` <br> **Default value:** `false`
 | `largerFont`         | Whether to display larger fonts for the module. If set to false it will use the `xsmall` style defined by MagicMirror². If set to true it will use the `small` style defined by MagicMirror².<br><br>**Type:** `bool` <br> **Default value:** `false`
-| `colored`             | Whether to display colors. The fields  in the module that will display color are the Score and the Leader Board table headers<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `colored`             | Whether to display colors within the module in, for example, the scores and icons.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `rotateInterval`      | Time (in milliseconds) to display a card from the module before rotating to the next card (only matters if there is more than one card to display).<br><br>**Type:** `int` <br> **Default value:** `30 * 1000` (30 seconds)
 | `animationSpeed`      | Speed to fade in and out.<br><br>**Type:** `int` <br> **Default value:** `0`
 
