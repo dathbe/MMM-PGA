@@ -115,10 +115,6 @@ Because i did not want to update my file and then remember to run a curl request
 
 With all that being said this is probally overkill. You can always just restart the mirror and it will reload the favorites on startup.
 
-## Note on Flags
-
-Because the data fot OWGR and Fedex Cup comes from different sources than the rest of the data in the module I had to create some pretty hookie code in order to display flags in the rankings. If i am unable to locate a flag for a player it will just display a white flag (I surender lol). I did some pretty extensive testing on this and I dont think it will happen often but if it becaomes an issue I will address it with a future release.
-
 ## Getting the Player ID of your favorite players
 
 ### Option 1
