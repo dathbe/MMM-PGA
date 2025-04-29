@@ -78,15 +78,9 @@ git pull
 
 ### Upcoming Tournament View
 
-#### With Location
-
 ![image](images/screenshot-8.png)
 
-#### No Locations
-
-![image](images/screenshot-2.png)
-
-#### Fedex Cup Standings
+### Fedex Cup Standings
 ![image](images/screenshot-3.png)
 
 ### OWGR with Large Font
@@ -97,10 +91,6 @@ git pull
 
 ### Color With Flags Large Font
 ![image](images/screenshot-1.png)
-
-#### No Color With Flag
-
-![image](images/screenshot-6.png)
 
 ## Remote Favorites
 
