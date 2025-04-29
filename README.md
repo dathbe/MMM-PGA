@@ -74,7 +74,7 @@ git pull
 | `rotateInterval`      | Time (in milliseconds) to display a card from the module before rotating to the next card (only matters if there is more than one card to display).<br><br>**Type:** `int` <br> **Default value:** `30 * 1000` (30 seconds)
 | `animationSpeed`      | Speed to fade in and out.<br><br>**Type:** `int` <br> **Default value:** `0`
 
-## Screen Shots
+## Screenshots
 
 ### Upcoming Tournament View
 
