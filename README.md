@@ -100,9 +100,6 @@ git pull
 
 ![image](images/screenshot-6.png)
 
-### My Favorites View No Flags No Purse
-![image](images/screenshot-7.png)
-
 ## Remote Favorites
 
 I like to change my favorite boards every week depending on who is playing, fantasy lineups, betting etc... So I wanted a way where I could update my favorites without having to change my config om my MagicMirror². I also wanted the favorites to automatically be updated without having to restart my Mirror every time. I decided to add the abilty to send a post request to the MMM-PGA module that will cause it to reload the favorites information. I could have configured the module to just relaod favorite information eveyr 10 minutes or so but that would have been uneeded traffic. So if you update your remote favorites file the following command will cause MMM-PGA to relaod the favorites
