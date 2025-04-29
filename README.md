@@ -36,7 +36,6 @@ git pull
 {
   module: 'MMM-PGA',
   position: "top_left",
-  maxWidth: "100%",
   config: {
     showLogo: true,
     showPurse: false,
