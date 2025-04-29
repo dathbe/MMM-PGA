@@ -8,7 +8,6 @@
    min-width: 300px;
  }
 
-
 .MMM-PGA .leaderboard-separator{
   font-size: 15.5px;
   line-height: 18px;
@@ -183,7 +182,25 @@
   padding: 0;
 }
 
+.MMM-PGA td.location {
+  text-align: right;
+}
 
+.MMM-PGA td.broadcast {
+  text-align: center;
+}
+
+.MMM-PGA .invert {
+  filter: invert(100%);
+}
+
+.MMM-PGA td.broadcast img {
+  height: 12px;
+}
+
+/* table, th, td {
+  border: 1px solid;
+} */
 
 
 

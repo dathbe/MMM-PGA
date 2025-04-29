@@ -36,7 +36,7 @@ Module.register('MMM-PGA', {
     remoteFavoritesFile: null,
     rapidAPIKey: '',
     favorites: [],
-
+    showBroadcast: true,
   },
 
   getStyles: function () {
@@ -75,7 +75,7 @@ Module.register('MMM-PGA', {
 
     // Set up for Active tournament
     this.boardIndex = 0 // Starts with the Leaderboard
-    this.leaderboardHeader = 'LEADERBOARD'
+    this.leaderboardHeader = '&nbsp;'
     this.rotateInterval = null
     this.tournament = null
     this.tournaments = null
@@ -166,8 +166,6 @@ Module.register('MMM-PGA', {
     players.sort(function (a, b) {
       return a.sortOrder - b.sortOrder
     })
-
-    Log.debug('[MMM-PGA] boardindex: ' + this.boardIndex)
 
     // If Favorites is enabled create Array with only the Favorites
     function includePlayer(player) {
@@ -297,13 +295,14 @@ Module.register('MMM-PGA', {
       var dateTd = document.createElement('td')
       dateTd.classList.add(...firstRowClasses, 'date-cell')
       if (border) dateTd.classList.add('border')
-      if (this.config.showLocation) dateTd.rowSpan = 2
+      if (this.config.showLocation  && (!this.config.showBroadcast || tournament.broadcast === undefined)) dateTd.rowSpan = 2
       dateTd.innerHTML = tournament.date
       trow.appendChild(dateTd)
 
       var nameTd = document.createElement('td')
       nameTd.classList.add(...firstRowClasses)
       if (!this.config.showLocation && border) nameTd.classList.add('border')
+      if (!this.config.showLocation) dateTd.rowSpan = 2
       nameTd.innerHTML = tournament.name
       trow.appendChild(nameTd)
 
@@ -319,17 +318,43 @@ Module.register('MMM-PGA', {
       tourTable.appendChild(trow)
 
       // Second Row
-      if (this.config.showLocation) {
+      if (this.config.showLocation || this.config.showBroadcast) {
         var secondRow = document.createElement('tr')
-
         tourTable.appendChild(secondRow)
-
-        var locationTd = document.createElement('td')
-        locationTd.colSpan = 2
-        locationTd.classList.add('xsmall')
-        if (border) locationTd.classList.add('border')
-        locationTd.innerHTML = tournament.location
-        secondRow.appendChild(locationTd)
+        
+        if (this.config.showBroadcast && tournament.broadcast !== undefined) {
+          var broadcastTd = document.createElement('td')
+          //locationTd.colSpan = 2
+          broadcastTd.classList.add('xsmall')
+          broadcastTd.classList.add('broadcast')
+          if (border) broadcastTd.classList.add('border')
+          if(tournament.broadcast !== undefined) {
+            if (this.broadcastIcons[tournament.broadcast[0].toLowerCase()] !== undefined){
+              var broadcastImage = new Image()
+              broadcastImage.src = this.broadcastIcons[tournament.broadcast[0].toLowerCase()]
+              broadcastTd.appendChild(broadcastImage)
+            }
+            else if (this.broadcastIconsInvert[tournament.broadcast[0].toLowerCase()] !== undefined) {
+              broadcastTd.classList.add('invert')
+              var broadcastImage = new Image()
+              broadcastImage.src = this.broadcastIconsInvert[tournament.broadcast[0].toLowerCase()]
+              broadcastTd.appendChild(broadcastImage)
+            }
+            else {
+              broadcastTd.innerHTML = tournament.broadcast[0].toUpperCase()
+            }
+          }
+          secondRow.appendChild(broadcastTd)
+        }
+        if (this.config.showLocation) {
+          var locationTd = document.createElement('td')
+          locationTd.colSpan = 2
+          locationTd.classList.add('xsmall')
+          locationTd.classList.add('location')
+          if (border) locationTd.classList.add('border')
+          locationTd.innerHTML = tournament.location
+          secondRow.appendChild(locationTd)
+        }
       }
     }
 
@@ -587,5 +612,12 @@ Module.register('MMM-PGA', {
     else {
       this.updateDom(this.config.initialLoadDelay)
     }
+  },
+  
+  broadcastIcons: {
+    
+  },
+  broadcastIconsInvert: {
+    'cbs': 'https://upload.wikimedia.org/wikipedia/commons/e/ee/CBS_logo_%282020%29.svg',
   },
 })

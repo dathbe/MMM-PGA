@@ -50,6 +50,11 @@ module.exports = {
     tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
     tournament.currentRound = this.getCurrentRound(event)
     tournament.playoff = false
+    tournament.broadcast = []
+    for (let i=0; i<event.competitions[0].broadcasts.length; i++) {
+      tournament.broadcast.push(event.competitions[0].broadcasts[i].media.slug)
+    }
+    //Log.debug(tournament.broadcast)
 
     // Load the Players for the tournament
 
@@ -135,7 +140,7 @@ module.exports = {
         name: tourName, // tournament.name,
         date: this.getEventDate(strDate, nDate), // tournament.startDate,tournament.endDate),
         location: venue, // tournament.locations[0].venue.fullName,
-        purse: this.setUndefStr(tournament.purse, 'TBD'),
+        purse: this.setUndefStr(tournament.purse.displayValue, 'TBD'),
         defendingChamp: tournament.defendingChampion ? this.setUndefStr(tournament.defendingChampion.displayName) : '',
 
       })
