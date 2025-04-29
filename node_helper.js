@@ -17,7 +17,7 @@ module.exports = NodeHelper.create({
 
   start: function () {
     Log.log('Starting node_helper for: ' + this.name)
-    
+
     // Does this do anything?
     this.expressApp.use(express.urlencoded({ extended: true }))
     this.expressApp.post('/MMM-PGA-UpdateFavs', this._onUpdateFavs.bind(this))

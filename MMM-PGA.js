@@ -90,7 +90,7 @@ Module.register('MMM-PGA', {
     this.fontClass = (this.config.largerFont) ? 'small' : 'xsmall'
   },
 
-/*   stop: function () {
+  /*   stop: function () {
     Log.info('Stopping module ' + this.name)
   }, */
 
@@ -295,7 +295,7 @@ Module.register('MMM-PGA', {
       var dateTd = document.createElement('td')
       dateTd.classList.add(...firstRowClasses, 'date-cell')
       if (border) dateTd.classList.add('border')
-      if (this.config.showLocation  && (!this.config.showBroadcast || tournament.broadcast === undefined)) dateTd.rowSpan = 2
+      if (this.config.showLocation && (!this.config.showBroadcast || tournament.broadcast === undefined)) dateTd.rowSpan = 2
       dateTd.innerHTML = tournament.date
       trow.appendChild(dateTd)
 
@@ -321,22 +321,22 @@ Module.register('MMM-PGA', {
       if (this.config.showLocation || this.config.showBroadcast) {
         var secondRow = document.createElement('tr')
         tourTable.appendChild(secondRow)
-        
+
         if (this.config.showBroadcast && tournament.broadcast !== undefined) {
           var broadcastTd = document.createElement('td')
-          //locationTd.colSpan = 2
+          // locationTd.colSpan = 2
           broadcastTd.classList.add('xsmall')
           broadcastTd.classList.add('broadcast')
           if (border) broadcastTd.classList.add('border')
-          if(tournament.broadcast !== undefined) {
-            if (this.broadcastIcons[tournament.broadcast[0].toLowerCase()] !== undefined){
+          if (tournament.broadcast !== undefined) {
+            if (this.broadcastIcons[tournament.broadcast[0].toLowerCase()] !== undefined) {
               var broadcastImage = new Image()
               broadcastImage.src = this.broadcastIcons[tournament.broadcast[0].toLowerCase()]
               broadcastTd.appendChild(broadcastImage)
             }
             else if (this.broadcastIconsInvert[tournament.broadcast[0].toLowerCase()] !== undefined) {
               broadcastTd.classList.add('invert')
-              var broadcastImage = new Image()
+              broadcastImage = new Image()
               broadcastImage.src = this.broadcastIconsInvert[tournament.broadcast[0].toLowerCase()]
               broadcastTd.appendChild(broadcastImage)
             }
@@ -613,11 +613,11 @@ Module.register('MMM-PGA', {
       this.updateDom(this.config.initialLoadDelay)
     }
   },
-  
+
   broadcastIcons: {
-    
+
   },
   broadcastIconsInvert: {
-    'cbs': 'https://upload.wikimedia.org/wikipedia/commons/e/ee/CBS_logo_%282020%29.svg',
+    cbs: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/CBS_logo_%282020%29.svg',
   },
 })

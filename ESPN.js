@@ -51,10 +51,10 @@ module.exports = {
     tournament.currentRound = this.getCurrentRound(event)
     tournament.playoff = false
     tournament.broadcast = []
-    for (let i=0; i<event.competitions[0].broadcasts.length; i++) {
+    for (let i = 0; i < event.competitions[0].broadcasts.length; i++) {
       tournament.broadcast.push(event.competitions[0].broadcasts[i].media.slug)
     }
-    //Log.debug(tournament.broadcast)
+    // Log.debug(tournament.broadcast)
 
     // Load the Players for the tournament
 
