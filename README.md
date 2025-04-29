@@ -83,13 +83,12 @@ git pull
 ### Fedex Cup Standings
 ![image](images/screenshot-3.png)
 
-### OWGR with Large Font
+### OWGR
 
 ![image](images/screenshot-4.png)
 
-### Leader Board View
+### Leaderboard View
 
-### Color With Flags Large Font
 ![image](images/screenshot-1.png)
 
 ## Remote Favorites
