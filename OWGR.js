@@ -69,7 +69,7 @@ module.exports = {
             name: payload.rankingsList[i].player.fullName,
             curPosition: payload.rankingsList[i].rank,
             lwPosition: payload.rankingsList[i].lastWeekRank,
-            points: Number.parseFloat(payload.rankingsList[i].pointsAverage).toFixed(1),
+            points: Number.parseFloat(payload.rankingsList[i].pointsAverage).toFixed(3),
             flagUrl: `https://a.espncdn.com/i/teamlogos/countries/500/${payload.rankingsList[i].player.country.code3.toLowerCase()}.png`,
           })
           if (i == maxPlayers)
