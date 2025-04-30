@@ -15,7 +15,7 @@
   margin-bottom: 5px;
   border-bottom: solid 1px #222;
   text-align: left;
-  padding: 0;
+  padding-bottom: 5px;
 }
 
 .MMM-PGA .pga_header_wrapper {
@@ -211,8 +211,12 @@
     margin-bottom: 0;
 }
 
-tr {
+.MMM-PGA tr {
   margin-bottom: 10px;
+}
+
+.MMM-PGA .flag-cell img {
+  height: 22px;
 }
 
 

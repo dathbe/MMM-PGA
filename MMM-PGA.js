@@ -52,7 +52,7 @@ Module.register('MMM-PGA', {
 
     // Image Set Up
     this.pgalogohtml = '<img src=\'./modules/MMM-PGA/images/pga-tour-logo.svg\' class=\'tourlogo\'></img> '
-    this.flaghtml = '<img src=\'http\' alt=\'\' align=top height=22 width=22></img>'
+    this.flaghtml = '<img src=\'http\' alt=\'\' align=top></img>'
     this.grayScaleStyle = '<img style=\'filter:grayscale(1)\''
 
     if (this.config.showRankings === false) {
@@ -227,14 +227,32 @@ Module.register('MMM-PGA', {
     // Leader Board Table Header
     var lbhead = document.createElement('tr')
     lbTable.appendChild(lbhead)
-    lbhead.appendChild(this.buildTh('POS', true))
+    
+    var posTh = this.buildTh('POS', true)
+    posTh.classList.add('pos-cell')
+    lbhead.appendChild(posTh)
+    
     if (tournament.playoff) {
-      lbhead.appendChild(this.buildTh(''))
+      var playoffTh = this.buildTh('')
+      playoffTh.classList.add('playoff-cell')
+      lbhead.appendChild(playoffTh)
     }
-    lbhead.appendChild(this.buildTh('Player Name', true, namespan))
-    lbhead.appendChild(this.buildTh('R' + tournament.currentRound))
-    lbhead.appendChild(this.buildTh('TOTAL'))
-    lbhead.appendChild(this.buildTh('THRU', false, 1, true))
+    
+    var playerTh = this.buildTh('Player Name', true, namespan)
+    playerTh.classList.add('player-name')
+    lbhead.appendChild(playerTh)
+    
+    var roundTh = this.buildTh('R' + tournament.currentRound)
+    roundTh.classList.add('current-round')
+    lbhead.appendChild(roundTh)
+    
+    var totalTh = this.buildTh('TOTAL')
+    totalTh.classList.add('total-cell')
+    lbhead.appendChild(totalTh)
+    
+    var thruTh = this.buildTh('THRU', false, 1, true)
+    thruTh.classList.add('thru-cell')
+    lbhead.appendChild(thruTh)
 
     // Body of the Table Loop through the Players add a Row For Each Player
     var lastpos = 0
@@ -256,28 +274,30 @@ Module.register('MMM-PGA', {
       var lbrow = document.createElement('tr')
       lbTable.appendChild(lbrow)
 
-      lbrow.appendChild(this.buildTD(player.position))
+      lbrow.appendChild(this.buildTD(player.position, ['pos-cell']))
       if (tournament.playoff) {
         var pind = (player.playoff) ? '►' : ''
-        lbrow.appendChild(this.buildTD(pind, ['td-playoff']))
+        lbrow.appendChild(this.buildTD(pind, ['td-playoff', 'playoff-cell']))
       }
       if (this.config.showFlags && player.flagHref !== '') {
         var fHTML = this.flaghtml.replace('http', player.flagHref)
-        lbrow.appendChild(this.buildTD(fHTML, ['td-img']))
+        lbrow.appendChild(this.buildTD(fHTML, ['td-img', 'flag-cell']))
       }
       else if (player.flagHref === '') {
-        lbrow.appendChild(this.buildTD(''))
+        lbrow.appendChild(this.buildTD('', ['flag-cell']))
       }
-      lbrow.appendChild(this.buildTD(player.name))
+      lbrow.appendChild(this.buildTD(player.name, ['player-name']))
 
       var cl = this.getScoreColorClass(player.roundScore)
       cl.push('td-center-aligned')
+      cl.push('current-round')
       lbrow.appendChild(this.buildTD(player.roundScore, cl))
 
       cl = this.getScoreColorClass(player.score)
       cl.push('td-center-aligned')
+      cl.push('total-cell')
       lbrow.appendChild(this.buildTD(player.score, cl))
-      lbrow.appendChild(this.buildTD(player.thru, ['td-right-aligned']))
+      lbrow.appendChild(this.buildTD(player.thru, ['td-right-aligned', 'thru-cell']))
     }
     return leaderboard
   },
