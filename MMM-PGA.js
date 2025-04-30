@@ -24,7 +24,9 @@ Module.register('MMM-PGA', {
     showLocation: true,
     showPurse: true,
     numTournaments: 3,
-    showRankings: true,
+    showRankings: null,
+    showFedex: true,
+    showOWGR: true,
     numRankings: 5,
     maxNumRankings: 50,
     numLeaderboard: 5,
@@ -53,7 +55,10 @@ Module.register('MMM-PGA', {
     this.flaghtml = '<img src=\'http\' alt=\'\' align=top height=22 width=22></img>'
     this.grayScaleStyle = '<img style=\'filter:grayscale(1)\''
 
-    // Set up Flag configuration absed on settings
+    if (this.config.showRankings === false) {
+      this.config.showFedex = false
+      this.config.showOWGR = false
+    }
 
     if (!this.config.colored) {
       this.pgalogohtml = this.pgalogohtml.replace('<img', this.grayScaleStyle)
@@ -284,8 +289,6 @@ Module.register('MMM-PGA', {
     var tourTable = document.createElement('table')
     tourTable.classList.add('tournament-table')
 
-    var firstRowClasses = [this.fontClass, 'bright']
-
     for (var i in tournaments) {
       var tournament = tournaments[i]
 
@@ -293,14 +296,14 @@ Module.register('MMM-PGA', {
       tourTable.appendChild(trow)
 
       var dateTd = document.createElement('td')
-      dateTd.classList.add(...firstRowClasses, 'date-cell')
+      dateTd.classList.add(this.fontClass, 'date-cell', 'bright')
       if (border) dateTd.classList.add('border')
       if (this.config.showLocation && (!this.config.showBroadcast || tournament.broadcast === undefined)) dateTd.rowSpan = 2
       dateTd.innerHTML = tournament.date
       trow.appendChild(dateTd)
 
       var nameTd = document.createElement('td')
-      nameTd.classList.add(...firstRowClasses)
+      nameTd.classList.add(this.fontClass, 'bright', 'tournament-name')
       if (!this.config.showLocation && border) nameTd.classList.add('border')
       if (!this.config.showLocation) dateTd.rowSpan = 2
       nameTd.innerHTML = tournament.name
@@ -308,7 +311,7 @@ Module.register('MMM-PGA', {
 
       if (this.config.showPurse) {
         var purseTd = document.createElement('td')
-        purseTd.classList.add(...firstRowClasses, 'purse-cell')
+        purseTd.classList.add('xsmall', 'purse-cell')
         if (border) purseTd.classList.add('border')
         if (this.config.showLocation) purseTd.rowSpan = 2
         purseTd.innerHTML = 'Purse: ' + tournament.purse
@@ -325,8 +328,7 @@ Module.register('MMM-PGA', {
         if (this.config.showBroadcast && tournament.broadcast !== undefined) {
           var broadcastTd = document.createElement('td')
           // locationTd.colSpan = 2
-          broadcastTd.classList.add('xsmall')
-          broadcastTd.classList.add('broadcast')
+          broadcastTd.classList.add('xsmall', 'broadcast')
           if (border) broadcastTd.classList.add('border')
           if (tournament.broadcast !== undefined) {
             if (this.broadcastIcons[tournament.broadcast[0].toLowerCase()] !== undefined) {
@@ -349,8 +351,7 @@ Module.register('MMM-PGA', {
         if (this.config.showLocation) {
           var locationTd = document.createElement('td')
           locationTd.colSpan = 2
-          locationTd.classList.add('xsmall')
-          locationTd.classList.add('location')
+          locationTd.classList.add('xsmall', 'location')
           if (border) locationTd.classList.add('border')
           locationTd.innerHTML = tournament.location
           secondRow.appendChild(locationTd)
@@ -490,6 +491,8 @@ Module.register('MMM-PGA', {
     header.classList.add('pga_header_wrapper')
     var headerTextSpan = document.createElement('span')
     headerTextSpan.classList.add('pga_header')
+     headerTextSpan.classList.add('bright')
+/*    headerTextSpan.classList.add('small') */
     headerTextSpan.innerHTML = headerText
     if (this.config.showLogo) {
       headerTextSpan.innerHTML = this.pgalogohtml + headerTextSpan.innerHTML
@@ -508,7 +511,7 @@ Module.register('MMM-PGA', {
     // If Data is not Loaded yet display the Loading Caption
     if (!this.loaded) {
       wrapper.innerHTML = 'Loading MMM-PGA . . .'
-      wrapper.classList.add('bright', 'light', 'small')
+      wrapper.classList.add('light', 'small')
       return wrapper
     }
 

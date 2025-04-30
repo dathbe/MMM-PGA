@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [2.2.0](https://github.com/dathbe/MMM-PGA/compare/v2.1.1...v2.2.0) - 2025-04-XX
 
 - **NEW FEATURE**: Broadcast channel can be displayed with `showBroadcast`
+- **NEW FEATURE**: OWGR and Fedex standings can be separately enabled with `showOWGR` and `showFedex`, respectively.  Legacy `showRankings` will still enable or disable both together.
 - Reduce unnecessary API calls
 - Minor revisions to README
 - Small cosmetic tweaks

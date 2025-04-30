@@ -48,6 +48,16 @@ module.exports = NodeHelper.create({
       self.getRankingData(self.config.maxNumRankings)
     }, self.config.rankingsUpdateInterval)
   },
+  
+  // Schedule the Fedex Standings Updates. This is a much longer intervl since the data only changes weekly
+  scheduleFedexUpdate: function () {
+    // schedule the updates for Subsequent Loads
+
+    var self = this
+    setInterval(() => {
+      self.getFedexData(self.config.maxNumRankings)
+    }, self.config.rankingsUpdateInterval)
+  },
 
   // Schedule the upcoming tourney updates. This is a much longer interval since the data only changes rarely
   scheduleUpcomingTourneyUpdate: function () {
@@ -82,6 +92,11 @@ module.exports = NodeHelper.create({
       self.sendSocketNotification('OWGR_RANKING', owgrRanking)
     })
 
+  },
+  
+  getFedexData: function (maxNumRankings, rapidAPIKey) {
+    var self = this
+
     // if (this.config.rapidAPIKey !== '') {
     FEDEXCUP.getFedExCupData(maxNumRankings, rapidAPIKey, function (fcRanking) {
       self.sendSocketNotification('FEDEXCUP_RANKING', fcRanking)
@@ -98,7 +113,10 @@ module.exports = NodeHelper.create({
         if (this.config.showBoards) {
           this.scheduleUpdate()
         }
-        if (this.config.showRankings) {
+        if (this.config.showFedex) {
+          this.scheduleFedexUpdate()
+        }
+        if (this.config.showOWGR) {
           this.scheduleRankingUpdate()
         }
       }
@@ -107,7 +125,10 @@ module.exports = NodeHelper.create({
       // Each client will make a call at startup
       this.getUpcomingTourneyData(this.config.numTournaments)
       this.getLeaderboardData() // would be great to move this into a conditional block so it only runs if user wants boards, but the dom won't load if I do that; it only calls once on startup, so not the biggest deal
-      if (this.config.showRankings) {
+      if (this.config.showFedex) {
+        this.getFedexData(this.config.maxNumRankings, this.config.rapidAPIKey)
+      }
+      if (this.config.showOWGR) {
         this.getRankingData(this.config.maxNumRankings, this.config.rapidAPIKey)
       }
     }

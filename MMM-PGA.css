@@ -90,7 +90,7 @@
   padding-right: 2px;
   margin: 2px;
   text-align: left;
-  vertical-align: top;  
+  vertical-align: top;
 }
 
 .MMM-PGA .tournament-table .border{
@@ -101,6 +101,12 @@
   padding-right: 2px;
   margin: 2px;
   width: 30%;
+}
+
+.MMM-PGA .tournament-table td.date-cell,
+.MMM-PGA .tournament-table td.tournament-name,
+.MMM-PGA .tournament-table td.purse-cell {
+  padding-top: 5px;
 }
 
 .MMM-PGA .tournament-table td.purse-cell{
@@ -198,9 +204,15 @@
   height: 12px;
 }
 
-/* table, th, td {
-  border: 1px solid;
-} */
+.MMM-PGA header {
+    font-size: var(--font-size-small);
+    --font-size: 22px;
+    margin-bottom: 0;
+}
+
+tr {
+  margin-bottom: 10px;
+}
 
 
 
