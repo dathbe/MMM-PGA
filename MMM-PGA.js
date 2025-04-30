@@ -71,7 +71,7 @@ Module.register('MMM-PGA', {
 
     // Set up For Showing Info when a tournament is not active
     this.nonActiveIndex = 0 // Start With Tournament List
-    this.upcomingTournamentHeader = 'Upcoming PGA TOURNAMENTS'
+    this.upcomingTournamentHeader = 'PGA - Upcoming Tournaments'
     this.fedexCupHeader = 'FEDEX CUP STANDINGS'
     this.owgrHeader = 'OFFICIAL WORLD GOLF RANKING'
     this.rankingObjs = {}
