@@ -87,7 +87,7 @@
 }
 
 .MMM-PGA .tournament-table td{ 
-  padding-right: 2px;
+  padding-right: 0;
   margin: 2px;
   text-align: left;
   vertical-align: top;
@@ -110,7 +110,8 @@
 }
 
 .MMM-PGA .tournament-table td.purse-cell{
-  padding-right: 2px;
+  padding-right: 0;
+  padding-left: 10px;
   margin: 2px;
   text-align: right;
   white-space: nowrap;
@@ -118,7 +119,7 @@
 
 .MMM-PGA .tournament-table td.loc-cell{
   font-size: 12px;
-  padding-right: 2px;
+  padding-right: 0;
   margin: 2px;
   text-align: left;
 }
