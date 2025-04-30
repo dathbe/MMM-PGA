@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - **NEW FEATURE**: Broadcast channel can be displayed with `showBroadcast`
 - **NEW FEATURE**: OWGR and Fedex standings can be separately enabled with `showOWGR` and `showFedex`, respectively.  Legacy `showRankings` will still enable or disable both together.
+- BUG FIX: Fix display error when no purse information available for tournament
 - Reduce unnecessary API calls
 - Minor revisions to README
 - Small cosmetic tweaks

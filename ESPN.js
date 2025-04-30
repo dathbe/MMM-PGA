@@ -136,11 +136,15 @@ module.exports = {
       var strDate = tournament.startDate ? tournament.startDate : ''
       var nDate = tournament.endDate ? tournament.endDate : ''
       var venue = tournament.locations[0] ? tournament.locations[0] : ''
+      var purse = 'TBD'
+      if (tournament.purse && tournament.purse.displayValue) {
+        purse = tournament.purse.displayValue
+      }
       tournaments.push({
         name: tourName, // tournament.name,
         date: this.getEventDate(strDate, nDate), // tournament.startDate,tournament.endDate),
         location: venue, // tournament.locations[0].venue.fullName,
-        purse: this.setUndefStr(tournament.purse.displayValue, 'TBD'),
+        purse: purse,
         defendingChamp: tournament.defendingChampion ? this.setUndefStr(tournament.defendingChampion.displayName) : '',
 
       })
