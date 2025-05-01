@@ -115,6 +115,7 @@
   margin: 2px;
   text-align: right;
   white-space: nowrap;
+  vertical-align: bottom;
 }
 
 .MMM-PGA .tournament-table td.loc-cell{
