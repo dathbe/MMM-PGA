@@ -98,14 +98,22 @@ git pull
 If you want to add favorites to your config, it will be in the following format:
 
 ```js
-favorites: [
-    {   "headerName": "My Favorites",
-        "favoriteList": ["462", "5467", "4848", "6798", "9478","3470"]
-    },
-    {   "headerName": "Some Other Favs",
-        "favoriteList": ["5467","9025","4412121","4848"]
-    }
-],
+{
+  module: 'MMM-PGA',
+  position: "top_left",
+  config: {
+    favorites: [
+      {
+        "headerName": "My Favorites",
+        "favoriteList": ["462", "5467", "4848", "6798", "9478", "3470"]
+      },
+      {
+        "headerName": "Some Other Favs",
+        "favoriteList": ["5467", "9025", "4412121", "4848"]
+      }
+    ],
+  }
+},	
 ```
 
 ### Remote Favorites
