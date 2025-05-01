@@ -133,7 +133,7 @@ Module.register('MMM-PGA', {
 
   buildTD: function (val, classlist = []) {
     var td = document.createElement('td')
-    td.classList.add(this.fontClass, 'bright')
+    td.classList.add(this.fontClass)
     if (classlist.length > 0) td.classList.add(...classlist)
     td.innerHTML = val
 
@@ -218,29 +218,29 @@ Module.register('MMM-PGA', {
     // Leader Board Table Header
     var lbhead = document.createElement('tr')
     lbTable.appendChild(lbhead)
-    
+
     var posTh = this.buildTh('POS', true)
     posTh.classList.add('pos-cell')
     lbhead.appendChild(posTh)
-    
+
     if (tournament.playoff) {
       var playoffTh = this.buildTh('')
       playoffTh.classList.add('playoff-cell')
       lbhead.appendChild(playoffTh)
     }
-    
+
     var playerTh = this.buildTh('Player Name', true, namespan)
     playerTh.classList.add('player-name')
     lbhead.appendChild(playerTh)
-    
+
     var roundTh = this.buildTh('R' + tournament.currentRound)
     roundTh.classList.add('current-round')
     lbhead.appendChild(roundTh)
-    
+
     var totalTh = this.buildTh('TOTAL')
     totalTh.classList.add('total-cell')
     lbhead.appendChild(totalTh)
-    
+
     var thruTh = this.buildTh('THRU', false, 1, true)
     thruTh.classList.add('thru-cell')
     lbhead.appendChild(thruTh)
@@ -277,7 +277,7 @@ Module.register('MMM-PGA', {
       else if (player.flagHref === '') {
         lbrow.appendChild(this.buildTD('', ['flag-cell']))
       }
-      lbrow.appendChild(this.buildTD(player.name, ['player-name']))
+      lbrow.appendChild(this.buildTD(player.name, ['player-name', 'bright']))
 
       var cl = this.getScoreColorClass(player.roundScore)
       cl.push('td-center-aligned')
@@ -471,7 +471,7 @@ Module.register('MMM-PGA', {
       }
 
       var tdPlayerName = this.buildRankingTD(player.name)
-      tdPlayerName.classList.add('player-name')
+      tdPlayerName.classList.add('player-name', 'bright')
       rankRow.appendChild(tdPlayerName)
 
       var tdPoints = this.buildRankingTD(player.points)
@@ -500,9 +500,8 @@ Module.register('MMM-PGA', {
 
     header.classList.add('pga_header_wrapper')
     var headerTextSpan = document.createElement('span')
-    headerTextSpan.classList.add('pga_header')
-     headerTextSpan.classList.add('bright')
-/*    headerTextSpan.classList.add('small') */
+    headerTextSpan.classList.add('pga_header', 'bright')
+    // headerTextSpan.classList.add('small')
     headerTextSpan.innerHTML = headerText
     if (this.config.showLogo) {
       headerTextSpan.innerHTML = this.pgalogohtml + headerTextSpan.innerHTML

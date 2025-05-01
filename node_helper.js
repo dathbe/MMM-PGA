@@ -48,7 +48,7 @@ module.exports = NodeHelper.create({
       self.getRankingData(self.config.maxNumRankings)
     }, self.config.rankingsUpdateInterval)
   },
-  
+
   // Schedule the Fedex Standings Updates. This is a much longer intervl since the data only changes weekly
   scheduleFedexUpdate: function () {
     // schedule the updates for Subsequent Loads
@@ -91,9 +91,8 @@ module.exports = NodeHelper.create({
     OWGR.getOWGRData(maxNumRankings, rapidAPIKey, function (owgrRanking) {
       self.sendSocketNotification('OWGR_RANKING', owgrRanking)
     })
-
   },
-  
+
   getFedexData: function (maxNumRankings, rapidAPIKey) {
     var self = this
 
