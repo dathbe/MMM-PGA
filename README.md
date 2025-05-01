@@ -131,15 +131,15 @@ A [players.md](players.md) file is also included with a list of players along wi
 
 ### Updating Favorites
 
-I decided to add the abilty to send a post request to the MMM-PGA module that will cause it to reload the favorites information. I could have configured the module to just relaod favorite information eveyr 10 minutes or so but that would have been uneeded traffic. So if you update your remote favorites file the following command will cause MMM-PGA to relaod the favorites
+You can send a post request to the MMM-PGA module that will cause it to reload the favorites information from any remote file using the following command:
 
 `curl -X POST  http://localhost:8080/MMM-PGA-UpdateFavs` 
 
-you can use localhost if running the command from the host where the mirror is installed or you can add the ip address/hostname to the url and run it from any machine on your network. Make sure to configure your mirror to allow calls from other nmachine if doing this.
+You can use `localhost` if running the command from the host where the mirror is installed or you can replace `localhost` with the ip address/hostname of your mirror and run it from any machine on your network. Make sure to configure your mirror to allow calls from other nmachine if doing this.
 
-Because i did not want to update my file and then remember to run a curl request every time. I wrote i python script to check if my favorites file had changed and if it did it will send the appropriate post. I run this script in cron and it will automatifcally update my mirror every time the file changes. I have included the python script in the utilities directory under the MMM-PGA module. There is also a sample favorites.json file stored there.
+There is an example [python script](utilities/monFile.py) you can adapt, which will check if a specified favorites file has changed and, if so, send the appropriate post. You could run this script in cron and it will automatifcally update my mirror every time the file changes.
 
-You can always just restart the mirror and it will reload the favorites on startup.
+You can always just restart the mirror and it will reload the favorites on startup.  (It would not be particularly difficult to add a timer to the module to check for updates to the file. Open an issue if you think this is something that should be added.)
 
 ## Contributing
 
