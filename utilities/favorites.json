@@ -1,8 +1,10 @@
 [
-    {   "headerName": "My Favorites",
-        "favoriteList": ["462", "5467", "4848", "6798", "9478","3470"]
-    },
-    {   "headerName": "Some Other Favs",
-        "favoriteList": ["5467","9025","4412121","4848"]
-    }
+  {
+    "headerName": "My Favorites",
+    "favoriteList": ["462", "5467", "4848", "6798", "9478","3470"]
+  },
+  {
+    "headerName": "Some Other Favs",
+    "favoriteList": ["5467","9025","4412121","4848"]
+  }
 ]
