@@ -116,9 +116,20 @@ If you want to add favorites to your config, it will be in the following format:
 },	
 ```
 
-### Remote Favorites
+### Getting the ID of Your Favorite Players
 
-I like to change my favorite boards every week depending on who is playing, fantasy lineups, betting etc... So I wanted a way where I could update my favorites without having to change my config om my MagicMirror². I also wanted the favorites to automatically be updated without having to restart my Mirror every time. I decided to add the abilty to send a post request to the MMM-PGA module that will cause it to reload the favorites information. I could have configured the module to just relaod favorite information eveyr 10 minutes or so but that would have been uneeded traffic. So if you update your remote favorites file the following command will cause MMM-PGA to relaod the favorites
+You can look up a player on ESPN's website.  The easiest way is as follows:
+
+1. Goto to [https://www.espn.com/golf/leaderboard](https://www.espn.com/golf/leaderboard)
+2. Find the player you want to add to your favorites
+3. Right-click on the player's name and open the link in a new tab (or just hover over the name and the destination url may appear at the bottom of your browser window, depending on your browser settings)
+4. The id will show up in the url. For example the url for Scottie Scheffler is `https://www.espn.com/golf/player/_/id/9478/scottie-scheffler`. His player ID is be `9478`
+
+A [players.md](players.md) file is also included with a list of players along with their associated id.  But this list will not be updated, so many newer players will not be listed.
+
+### Updating Favorites
+
+I decided to add the abilty to send a post request to the MMM-PGA module that will cause it to reload the favorites information. I could have configured the module to just relaod favorite information eveyr 10 minutes or so but that would have been uneeded traffic. So if you update your remote favorites file the following command will cause MMM-PGA to relaod the favorites
 
 `curl -X POST  http://localhost:8080/MMM-PGA-UpdateFavs` 
 
@@ -126,22 +137,7 @@ you can use localhost if running the command from the host where the mirror is i
 
 Because i did not want to update my file and then remember to run a curl request every time. I wrote i python script to check if my favorites file had changed and if it did it will send the appropriate post. I run this script in cron and it will automatifcally update my mirror every time the file changes. I have included the python script in the utilities directory under the MMM-PGA module. There is also a sample favorites.json file stored there.
 
-With all that being said this is probally overkill. You can always just restart the mirror and it will reload the favorites on startup.
-
-### Getting the Player ID of your favorite players
-
-#### Option 1
-
-A file is included (players.md) with a list of players along with their associated id.
-
-#### Option 2
-
-if you cannot find the id in the file you can always look up a player online.
-
-1. Goto to http://www.espn.com/golf/players
-2. Find the player you want to add to your favorites
-3. Click on the player name
-4. The id will show up in the url. For example the url for Tiger Woods is http://www.espn.com/golf/player/_/id/462/tiger-woods His player ID would be 462
+You can always just restart the mirror and it will reload the favorites on startup.
 
 ## Contributing
 
