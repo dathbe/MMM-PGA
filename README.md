@@ -57,8 +57,8 @@ git pull
 | `header`              | The header text to display when the leaderboard is showing.<br><br>**Type:** `string` <br> **Default value:** `PGA TOURNAMENT`
 | `showBroadcast`       | Whether to show the broadcast channel for the tournament.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | **For Favorites Boards**
-| `favorites`           | Array of favorite boards to show. Each favorite board has a headerName and a favoriteList an array of player ids(String). See sample configuration for details. All the players in the favorite board object will be displayed on the board if they are playing in the current tournament. See section below on how to find the playerid of your favorite players.<br><br>**Type:** `array` <br> **Default value:** `[]` (empty)
-| `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the favorites configuration. If this option is set the `favorites` defined in the config will be ignored.<br><br>Examples:<br>- `'utilities/favorites.json'` (Local file. File path is relative to MMM-PGA folder, so this example would point to ~/MagicMirror/modules/MMM-PGA/utilities/favorites.json.)<br>- `'https://dl.dropboxusercontent.com/s/7my######/favorites.json'` (File stored in Dropbox)<br><br>**Type:** `string` <br> **Default value:** `null`
+| `favorites`           | Array of favorite players to display on one or more boards. Each favorite board has a `headerName` and a `favoriteList` array of player ids. See below for details. Players in the favorite board object will be displayed on the board if they are playing in the current tournament.  Favorite boards will rotate along with the overall leaderboard.<br><br>**Type:** `array` <br> **Default value:** `[]` (empty)
+| `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the `favorites` configuration. If this option is set any `favorites` defined in the config will be ignored.<br><br>Examples:<br>- `'utilities/favorites.json'` (Local file. File path is relative to MMM-PGA folder, so this example would point to ~/MagicMirror/modules/MMM-PGA/utilities/favorites.json.)<br>- `'https://dl.dropboxusercontent.com/s/7my######/favorites.json'` (File stored in Dropbox)<br><br>**Type:** `string` <br> **Default value:** `null`
 | **For Rankings**
 | `showFedex`        | Whether to show FedEx Cup standings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments and selected rankings.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `showOWGR`        | Whether to show Official World Golf Rankings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments and selected rankings.<br><br>**Type:** `bool` <br> **Default value:** `true`
@@ -92,6 +92,21 @@ git pull
 ![image](images/screenshot-1.png)
 
 ## A Word on Favorites
+
+### Favorites in the Config
+
+If you want to add favorites to your config, it will be in the following format:
+
+```js
+favorites: [
+    {   "headerName": "My Favorites",
+        "favoriteList": ["462", "5467", "4848", "6798", "9478","3470"]
+    },
+    {   "headerName": "Some Other Favs",
+        "favoriteList": ["5467","9025","4412121","4848"]
+    }
+],
+```
 
 ### Remote Favorites
 
