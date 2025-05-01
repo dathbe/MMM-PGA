@@ -91,11 +91,11 @@ git pull
 
 ![image](images/screenshot-1.png)
 
-## A Word on Favorites
+## Working with Favorites
 
-### Favorites in the Config
+### Setting Favorites
 
-If you want to add favorites to your config, it will be in the following format:
+If you want to add `favorites` to your config, it will be in the following format:
 
 ```js
 {
@@ -115,6 +115,8 @@ If you want to add favorites to your config, it will be in the following format:
   }
 },	
 ```
+
+You can also use a `remoteFavoritesFile`, either locally on using a url.  The format of the file is essentially the same as setting the `favorites` option directly.  An example file can be found at [utilities/favorites.json](utilities/favorites.json).
 
 ### Getting the ID of Your Favorite Players
 
