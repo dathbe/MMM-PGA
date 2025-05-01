@@ -403,7 +403,7 @@ Module.register('MMM-PGA', {
     var arrowText = ''
 
     if (player.curPosition == player.lwPosition) {
-      arrowText = (this.config.colored) ? '<span class=\'no-change\'>►</span>' : '<span>►</span>'
+      arrowText = (this.config.colored) ? '<span class=\'no-change dimmed\'>►</span>' : '<span>►</span>'
     }
     else if (parseInt(player.curPosition) < parseInt(player.lwPosition) || player.lwPosition == '') {
       arrowText = (this.config.colored) ? '<span class=\'up\'>▲</span>' : '<span>▲</span>'
@@ -470,7 +470,7 @@ Module.register('MMM-PGA', {
         spacing = ''
       }
       var tdLastWeek = this.buildRankingTD(spacing + player.lwPosition)
-      tdLastWeek.classList.add('last-week')
+      tdLastWeek.classList.add('last-week', 'dimmed')
       rankRow.appendChild(tdLastWeek)
 
       if (this.config.showFlags) {
@@ -531,7 +531,7 @@ Module.register('MMM-PGA', {
     // If Data is not Loaded yet display the Loading Caption
     if (!this.loaded) {
       wrapper.innerHTML = 'Loading MMM-PGA . . .'
-      wrapper.classList.add('light', 'small')
+      wrapper.classList.add('light', 'small', 'dimmed')
       return wrapper
     }
 

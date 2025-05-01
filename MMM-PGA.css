@@ -219,7 +219,7 @@
   height: 22px;
 }
 
-
-
-
-
+.MMM-PGA .pos-cell,
+.MMM-PGA .current-round {
+  padding-right: 10px;
+}
