@@ -516,7 +516,7 @@ Module.register('MMM-PGA', {
   getDom: function () {
     var wrapper = document.createElement('div')
     wrapper.className = 'wrapper'
-    if (this.config.colored) {
+    if (!this.config.colored) {
       wrapper.classList.add('grayscale')
     }
     wrapper.style.maxWidth = this.config.maxWidth
