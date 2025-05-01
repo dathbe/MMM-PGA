@@ -4,7 +4,7 @@ A [MagicMirror²](https://magicmirror.builders) module to display PGA leaderboar
 
 A configurable leaderboard can be shown with scores for your favorite golfers.
 
-**NOTE: With version 2.1.1, an API key is no longer needed!
+**NOTE: from version 2.1.1, an API key is no longer needed!
 
 [![Platform](https://img.shields.io/badge/platform-MagicMirror²-informational)](https://MagicMirror.builders)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
