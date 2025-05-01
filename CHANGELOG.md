@@ -4,13 +4,13 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.2.0](https://github.com/dathbe/MMM-PGA/compare/v2.1.1...v2.2.0) - 2025-04-XX
+## [2.2.0](https://github.com/dathbe/MMM-PGA/compare/v2.1.1...v2.2.0) - 2025-05-01
 
 - **NEW FEATURE**: Broadcast channel can be displayed with `showBroadcast`
 - **NEW FEATURE**: OWGR and Fedex standings can be separately enabled with `showOWGR` and `showFedex`, respectively.  Legacy `showRankings` will still enable or disable both together.
 - BUG FIX: Fix display error when no purse information available for tournament
 - Reduce unnecessary API calls
-- Minor revisions to README
+- Improvements to README
 - Small cosmetic tweaks
 
 ## [2.1.1](https://github.com/dathbe/MMM-PGA/compare/v2.1.0...v2.1.1) - 2025-04-28
