@@ -17,14 +17,16 @@ Module.register('MMM-PGA', {
     animationSpeed: 0, // fade in and out speed
     initialLoadDelay: 4250,
     retryDelay: 2500,
-    updateInterval: 5 * 60 * 1000,
-    rankingsUpdateInterval: 240 * 60 * 1000,
+    updateInterval: 5 * 60 * 1000, // every 5 minutes
+    rankingsUpdateInterval: 4 * 60 * 60 * 1000, // every 4 hours
     colored: true,
     showBoards: true,
     showLocation: true,
     showPurse: true,
     numTournaments: 3,
-    showRankings: true,
+    showRankings: null,
+    showFedex: true,
+    showOWGR: true,
     numRankings: 5,
     maxNumRankings: 50,
     numLeaderboard: 5,
@@ -36,7 +38,7 @@ Module.register('MMM-PGA', {
     remoteFavoritesFile: null,
     rapidAPIKey: '',
     favorites: [],
-
+    showBroadcast: true,
   },
 
   getStyles: function () {
@@ -50,14 +52,11 @@ Module.register('MMM-PGA', {
 
     // Image Set Up
     this.pgalogohtml = '<img src=\'./modules/MMM-PGA/images/pga-tour-logo.svg\' class=\'tourlogo\'></img> '
-    this.flaghtml = '<img src=\'http\' alt=\'\' align=top height=22 width=22></img>'
-    this.grayScaleStyle = '<img style=\'filter:grayscale(1)\''
+    this.flaghtml = '<img src=\'http\' alt=\'\' align=top></img>'
 
-    // Set up Flag configuration absed on settings
-
-    if (!this.config.colored) {
-      this.pgalogohtml = this.pgalogohtml.replace('<img', this.grayScaleStyle)
-      this.flaghtml = this.flaghtml.replace('<img', this.grayScaleStyle)
+    if (this.config.showRankings === false) {
+      this.config.showFedex = false
+      this.config.showOWGR = false
     }
 
     if (this.config.largerFont) {
@@ -66,7 +65,7 @@ Module.register('MMM-PGA', {
 
     // Set up For Showing Info when a tournament is not active
     this.nonActiveIndex = 0 // Start With Tournament List
-    this.upcomingTournamentHeader = 'Upcoming PGA TOURNAMENTS'
+    this.upcomingTournamentHeader = 'PGA - Upcoming Tournaments'
     this.fedexCupHeader = 'FEDEX CUP STANDINGS'
     this.owgrHeader = 'OFFICIAL WORLD GOLF RANKING'
     this.rankingObjs = {}
@@ -75,12 +74,11 @@ Module.register('MMM-PGA', {
 
     // Set up for Active tournament
     this.boardIndex = 0 // Starts with the Leaderboard
-    this.leaderboardHeader = 'LEADERBOARD'
+    this.leaderboardHeader = '&nbsp;'
     this.rotateInterval = null
     this.tournament = null
     this.tournaments = null
     this.loaded = false
-    this.tournamentsLoaded = false
     this.numBoards = 1 + this.config.favorites.length
 
     this.updateFavorites()
@@ -91,9 +89,9 @@ Module.register('MMM-PGA', {
     this.fontClass = (this.config.largerFont) ? 'small' : 'xsmall'
   },
 
-  stop: function () {
+  /*   stop: function () {
     Log.info('Stopping module ' + this.name)
-  },
+  }, */
 
   // If Configured for a remote file retrieve the favorites from remote source
   // Set up the boared index and numboard properties
@@ -122,8 +120,7 @@ Module.register('MMM-PGA', {
   // Create a TH of the Leader Board
   buildTh: function (val, left = false, span = 1, right = false) {
     var th = document.createElement('th')
-    th.classList.add(this.fontClass, 'bright')
-    if (this.config.colored) th.classList.add('th-color')
+    th.classList.add(this.fontClass, 'bright', 'th-color')
     if (left) th.classList.add('th-left-aligned')
     if (right) th.classList.add('th-right-aligned')
     if (span > 1) th.colSpan = span
@@ -136,7 +133,7 @@ Module.register('MMM-PGA', {
 
   buildTD: function (val, classlist = []) {
     var td = document.createElement('td')
-    td.classList.add(this.fontClass, 'bright')
+    td.classList.add(this.fontClass)
     if (classlist.length > 0) td.classList.add(...classlist)
     td.innerHTML = val
 
@@ -148,12 +145,10 @@ Module.register('MMM-PGA', {
 
     colorClass = ''
 
-    if (this.config.colored) {
-      if (val == 'E') var colorClass = 'td-total-even'
-      if (val.charAt(0) == '-' && val.length > 1) colorClass = 'td-total-under'
-      if (val.charAt(0) == '+') colorClass = 'td-total-above'
-      if (colorClass.length > 0) cl.push(colorClass)
-    }
+    if (val == 'E') var colorClass = 'td-total-even'
+    if (val.charAt(0) == '-' && val.length > 1) colorClass = 'td-total-under'
+    if (val.charAt(0) == '+') colorClass = 'td-total-above'
+    if (colorClass.length > 0) cl.push(colorClass)
 
     return cl
   },
@@ -167,8 +162,6 @@ Module.register('MMM-PGA', {
     players.sort(function (a, b) {
       return a.sortOrder - b.sortOrder
     })
-
-    Log.debug('[MMM-PGA] boardindex:' + this.boardIndex)
 
     // If Favorites is enabled create Array with only the Favorites
     function includePlayer(player) {
@@ -225,14 +218,32 @@ Module.register('MMM-PGA', {
     // Leader Board Table Header
     var lbhead = document.createElement('tr')
     lbTable.appendChild(lbhead)
-    lbhead.appendChild(this.buildTh('POS', true))
+
+    var posTh = this.buildTh('POS', true)
+    posTh.classList.add('pos-cell')
+    lbhead.appendChild(posTh)
+
     if (tournament.playoff) {
-      lbhead.appendChild(this.buildTh(''))
+      var playoffTh = this.buildTh('')
+      playoffTh.classList.add('playoff-cell')
+      lbhead.appendChild(playoffTh)
     }
-    lbhead.appendChild(this.buildTh('Player Name', true, namespan))
-    lbhead.appendChild(this.buildTh('R' + tournament.currentRound))
-    lbhead.appendChild(this.buildTh('TOTAL'))
-    lbhead.appendChild(this.buildTh('THRU', false, 1, true))
+
+    var playerTh = this.buildTh('Player Name', true, namespan)
+    playerTh.classList.add('player-name')
+    lbhead.appendChild(playerTh)
+
+    var roundTh = this.buildTh('R' + tournament.currentRound)
+    roundTh.classList.add('current-round')
+    lbhead.appendChild(roundTh)
+
+    var totalTh = this.buildTh('TOTAL')
+    totalTh.classList.add('total-cell')
+    lbhead.appendChild(totalTh)
+
+    var thruTh = this.buildTh('THRU', false, 1, true)
+    thruTh.classList.add('thru-cell')
+    lbhead.appendChild(thruTh)
 
     // Body of the Table Loop through the Players add a Row For Each Player
     var lastpos = 0
@@ -254,28 +265,30 @@ Module.register('MMM-PGA', {
       var lbrow = document.createElement('tr')
       lbTable.appendChild(lbrow)
 
-      lbrow.appendChild(this.buildTD(player.position))
+      lbrow.appendChild(this.buildTD(player.position, ['pos-cell']))
       if (tournament.playoff) {
         var pind = (player.playoff) ? '►' : ''
-        lbrow.appendChild(this.buildTD(pind, ['td-playoff']))
+        lbrow.appendChild(this.buildTD(pind, ['td-playoff', 'playoff-cell']))
       }
       if (this.config.showFlags && player.flagHref !== '') {
         var fHTML = this.flaghtml.replace('http', player.flagHref)
-        lbrow.appendChild(this.buildTD(fHTML, ['td-img']))
+        lbrow.appendChild(this.buildTD(fHTML, ['td-img', 'flag-cell']))
       }
       else if (player.flagHref === '') {
-        lbrow.appendChild(this.buildTD(''))
+        lbrow.appendChild(this.buildTD('', ['flag-cell']))
       }
-      lbrow.appendChild(this.buildTD(player.name))
+      lbrow.appendChild(this.buildTD(player.name, ['player-name', 'bright']))
 
       var cl = this.getScoreColorClass(player.roundScore)
       cl.push('td-center-aligned')
+      cl.push('current-round')
       lbrow.appendChild(this.buildTD(player.roundScore, cl))
 
       cl = this.getScoreColorClass(player.score)
       cl.push('td-center-aligned')
+      cl.push('total-cell')
       lbrow.appendChild(this.buildTD(player.score, cl))
-      lbrow.appendChild(this.buildTD(player.thru, ['td-right-aligned']))
+      lbrow.appendChild(this.buildTD(player.thru, ['td-right-aligned', 'thru-cell']))
     }
     return leaderboard
   },
@@ -287,8 +300,6 @@ Module.register('MMM-PGA', {
     var tourTable = document.createElement('table')
     tourTable.classList.add('tournament-table')
 
-    var firstRowClasses = [this.fontClass, 'bright']
-
     for (var i in tournaments) {
       var tournament = tournaments[i]
 
@@ -296,21 +307,22 @@ Module.register('MMM-PGA', {
       tourTable.appendChild(trow)
 
       var dateTd = document.createElement('td')
-      dateTd.classList.add(...firstRowClasses, 'date-cell')
+      dateTd.classList.add(this.fontClass, 'date-cell', 'bright')
       if (border) dateTd.classList.add('border')
-      if (this.config.showLocation) dateTd.rowSpan = 2
+      if (this.config.showLocation && (!this.config.showBroadcast || tournament.broadcast === undefined)) dateTd.rowSpan = 2
       dateTd.innerHTML = tournament.date
       trow.appendChild(dateTd)
 
       var nameTd = document.createElement('td')
-      nameTd.classList.add(...firstRowClasses)
+      nameTd.classList.add(this.fontClass, 'bright', 'tournament-name')
       if (!this.config.showLocation && border) nameTd.classList.add('border')
+      if (!this.config.showLocation) dateTd.rowSpan = 2
       nameTd.innerHTML = tournament.name
       trow.appendChild(nameTd)
 
       if (this.config.showPurse) {
         var purseTd = document.createElement('td')
-        purseTd.classList.add(...firstRowClasses, 'purse-cell')
+        purseTd.classList.add('xsmall', 'purse-cell')
         if (border) purseTd.classList.add('border')
         if (this.config.showLocation) purseTd.rowSpan = 2
         purseTd.innerHTML = 'Purse: ' + tournament.purse
@@ -320,17 +332,41 @@ Module.register('MMM-PGA', {
       tourTable.appendChild(trow)
 
       // Second Row
-      if (this.config.showLocation) {
+      if (this.config.showLocation || this.config.showBroadcast) {
         var secondRow = document.createElement('tr')
-
         tourTable.appendChild(secondRow)
 
-        var locationTd = document.createElement('td')
-        locationTd.colSpan = 2
-        locationTd.classList.add('xsmall')
-        if (border) locationTd.classList.add('border')
-        locationTd.innerHTML = tournament.location
-        secondRow.appendChild(locationTd)
+        if (this.config.showBroadcast && tournament.broadcast !== undefined) {
+          var broadcastTd = document.createElement('td')
+          // locationTd.colSpan = 2
+          broadcastTd.classList.add('xsmall', 'broadcast')
+          if (border) broadcastTd.classList.add('border')
+          if (tournament.broadcast !== undefined) {
+            if (this.broadcastIcons[tournament.broadcast[0].toLowerCase()] !== undefined) {
+              var broadcastImage = new Image()
+              broadcastImage.src = this.broadcastIcons[tournament.broadcast[0].toLowerCase()]
+              broadcastTd.appendChild(broadcastImage)
+            }
+            else if (this.broadcastIconsInvert[tournament.broadcast[0].toLowerCase()] !== undefined) {
+              broadcastTd.classList.add('invert')
+              broadcastImage = new Image()
+              broadcastImage.src = this.broadcastIconsInvert[tournament.broadcast[0].toLowerCase()]
+              broadcastTd.appendChild(broadcastImage)
+            }
+            else {
+              broadcastTd.innerHTML = tournament.broadcast[0].toUpperCase()
+            }
+          }
+          secondRow.appendChild(broadcastTd)
+        }
+        if (this.config.showLocation) {
+          var locationTd = document.createElement('td')
+          locationTd.colSpan = 2
+          locationTd.classList.add('xsmall', 'location')
+          if (border) locationTd.classList.add('border')
+          locationTd.innerHTML = tournament.location
+          secondRow.appendChild(locationTd)
+        }
       }
     }
 
@@ -340,8 +376,7 @@ Module.register('MMM-PGA', {
   // Create a TH of the Leader Board
   buildRankingTh: function (val) {
     var th = document.createElement('th')
-    th.classList.add(this.fontClass)
-    if (this.config.colored) th.classList.add('color-headings')
+    th.classList.add(this.fontClass, 'color-headings')
     th.innerHTML = val
     return th
   },
@@ -358,13 +393,13 @@ Module.register('MMM-PGA', {
     var arrowText = ''
 
     if (player.curPosition == player.lwPosition) {
-      arrowText = (this.config.colored) ? '<span class=\'no-change\'>►</span>' : '<span>►</span>'
+      arrowText = '<span class=\'no-change dimmed\'>►</span>'
     }
     else if (parseInt(player.curPosition) < parseInt(player.lwPosition) || player.lwPosition == '') {
-      arrowText = (this.config.colored) ? '<span class=\'up\'>▲</span>' : '<span>▲</span>'
+      arrowText = '<span class=\'up\'>▲</span>'
     }
     else if (parseInt(player.curPosition) > parseInt(player.lwPosition)) {
-      arrowText = (this.config.colored) ? '<span class=\'down\'>▼</span>' : '<span>▼</span>'
+      arrowText = '<span class=\'down\'>▼</span>'
     }
 
     if (player.curPosition < 10) {
@@ -425,18 +460,18 @@ Module.register('MMM-PGA', {
         spacing = ''
       }
       var tdLastWeek = this.buildRankingTD(spacing + player.lwPosition)
-      tdLastWeek.classList.add('last-week')
+      tdLastWeek.classList.add('last-week', 'dimmed')
       rankRow.appendChild(tdLastWeek)
 
       if (this.config.showFlags) {
         var flagHtml = this.flaghtml.replace('http', player.flagUrl)
         var flagtd = this.buildRankingTD(flagHtml)
-        flagtd.classList.add('img')
+        flagtd.classList.add('img', 'flag-cell')
         rankRow.appendChild(flagtd)
       }
 
       var tdPlayerName = this.buildRankingTD(player.name)
-      tdPlayerName.classList.add('player-name')
+      tdPlayerName.classList.add('player-name', 'bright')
       rankRow.appendChild(tdPlayerName)
 
       var tdPoints = this.buildRankingTD(player.points)
@@ -465,7 +500,8 @@ Module.register('MMM-PGA', {
 
     header.classList.add('pga_header_wrapper')
     var headerTextSpan = document.createElement('span')
-    headerTextSpan.classList.add('pga_header')
+    headerTextSpan.classList.add('pga_header', 'bright')
+    // headerTextSpan.classList.add('small')
     headerTextSpan.innerHTML = headerText
     if (this.config.showLogo) {
       headerTextSpan.innerHTML = this.pgalogohtml + headerTextSpan.innerHTML
@@ -479,19 +515,24 @@ Module.register('MMM-PGA', {
   getDom: function () {
     var wrapper = document.createElement('div')
     wrapper.className = 'wrapper'
+    if (!this.config.colored) {
+      wrapper.classList.add('grayscale')
+    }
     wrapper.style.maxWidth = this.config.maxWidth
 
     // If Data is not Loaded yet display the Loading Caption
-    if (!this.loaded || !this.tournamentsLoaded) {
-      wrapper.innerHTML = 'Loading . . .'
-      wrapper.classList.add('bright', 'light', 'small')
+    if (!this.loaded) {
+      wrapper.innerHTML = 'Loading MMM-PGA . . .'
+      wrapper.classList.add('light', 'small', 'dimmed')
       return wrapper
     }
 
-    var tourney = this.tournament
-    var tourneyScheduled = (tourney.statusCode == 'STATUS_SCHEDULED')
-
-    var showActive = (!tourneyScheduled && this.config.showBoards)
+    if (this.tournament !== null && this.tournament.statusCode !== 'STATUS_SCHEDULED' && this.config.showBoards) {
+      var showActive = true
+    }
+    else {
+      showActive = false
+    }
 
     // creating the header
     if (this.config.useHeader != false) {
@@ -514,12 +555,12 @@ Module.register('MMM-PGA', {
 
     // Tounament is in progress and Module is confugred to show boards
     // So build the boards
-    var curTourneyList = [tourney]
+    var curTourneyList = [this.tournament]
     var tdetails = this.buildTournamentList(curTourneyList, false)
     wrapper.appendChild(tdetails)
 
     if (this.config.showBoards) {
-      var leaderboard = this.buildLeaderBoard(tourney)
+      var leaderboard = this.buildLeaderBoard(this.tournament)
       wrapper.appendChild(leaderboard)
     }
 
@@ -557,15 +598,26 @@ Module.register('MMM-PGA', {
 
     else if (notification == 'PGA_TOURNAMENT_LIST') {
       this.tournaments = payload
-      this.tournamentsLoaded = true
+      this.loaded = true
+      if (this.rotateInterval == null) {
+        this.scheduleCarousel()
+      }
       this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'OWGR_RANKING') {
       this.rankingObjs.owgr = { headerTxt: this.owgrHeader, rankingObj: payload }
+      this.loaded = true
+      if (this.rotateInterval == null) {
+        this.scheduleCarousel()
+      }
       this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'FEDEXCUP_RANKING') {
       this.rankingObjs.fedex = { headerTxt: this.fedexCupHeader, rankingObj: payload }
+      this.loaded = true
+      if (this.rotateInterval == null) {
+        this.scheduleCarousel()
+      }
       this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'UPDATE_FAVORITES') {
@@ -575,5 +627,12 @@ Module.register('MMM-PGA', {
     else {
       this.updateDom(this.config.initialLoadDelay)
     }
+  },
+
+  broadcastIcons: {
+
+  },
+  broadcastIconsInvert: {
+    cbs: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/CBS_logo_%282020%29.svg',
   },
 })

@@ -3,7 +3,7 @@ const moment = require('moment')
 
 module.exports = {
 
-  url: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga', // &event=401703508
+  url: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga', // &event=401703505
   tournamentsUrl: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/pga/tourschedule',
   // url: "https://site.api.espn.com/apis/site/v2/sports/golf/leaderboard?event=401219795",
   // urlTournamentList: "https://www.espn.com/golf/schedule/_/tour/pga?_xhr=pageContent&offset=-04%3A00",
@@ -50,6 +50,11 @@ module.exports = {
     tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
     tournament.currentRound = this.getCurrentRound(event)
     tournament.playoff = false
+    tournament.broadcast = []
+    for (let i = 0; i < event.competitions[0].broadcasts.length; i++) {
+      tournament.broadcast.push(event.competitions[0].broadcasts[i].media.slug)
+    }
+    // Log.debug(tournament.broadcast)
 
     // Load the Players for the tournament
 
@@ -131,11 +136,15 @@ module.exports = {
       var strDate = tournament.startDate ? tournament.startDate : ''
       var nDate = tournament.endDate ? tournament.endDate : ''
       var venue = tournament.locations[0] ? tournament.locations[0] : ''
+      var purse = 'TBD'
+      if (tournament.purse && tournament.purse.displayValue) {
+        purse = tournament.purse.displayValue
+      }
       tournaments.push({
         name: tourName, // tournament.name,
         date: this.getEventDate(strDate, nDate), // tournament.startDate,tournament.endDate),
         location: venue, // tournament.locations[0].venue.fullName,
-        purse: this.setUndefStr(tournament.purse, 'TBD'),
+        purse: purse,
         defendingChamp: tournament.defendingChampion ? this.setUndefStr(tournament.defendingChampion.displayName) : '',
 
       })

@@ -36,102 +36,110 @@ git pull
 {
   module: 'MMM-PGA',
   position: "top_left",
-  maxWidth: "100%",
   config: {
     showLogo: true,
     showPurse: false,
     showFlags: true,
   }
-},	
+},
 ```
 
 | Option                | Description
 | ------                | -----------
 | **For Leaderboards**
-| `showBoards`          | Whether to show the Leaderboard and favorites for and Active tournament. If set to false the module will just show the current tournament. See Upcoming tournament screen shot above.<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `showBoards`          | Whether to show the Leaderboard and favorites for and active tournament. If set to false the module will just show the current tournament. See Upcoming tournament screen shot above.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `numLeaderboard`      | The number of places to show on the leaderboard<br><br>**Type:** `int` <br> **Default value:** `5`
 | `maxLeaderboard`      | The maximum number of players to show on the leaderboard. For example if `numLeaderboard` is set to 5 and `maxLeaderboard` is set to 10 <br> * If there are currently 9 players in the top 5 with ties then 9 players will be displayed <br> * If there are 12 players in the top 3 only 10 players will be shown and the last two players tied for 3rd will not be displayed. The order of the players is determined by the Data provider(ESPN)<br><br>**Type:** `int` <br> **Default value:** `10`
 | `includeTies`         | Whether to include more than `numLeaderboard` players due to ties. If false only `numLeaderboard` players will be shown and `maxLeaderboard` will be irrelevant.<br><br>**Type:** `bool` <br> **Default value:** `true`
-| `showFlags`           | Shows the flag of the players country next to the player in the leaderboards<br><br>**Type:** `bool` <br> **Default value:** `true`
-| `showLocation`        | Whether to show the location of the tournament in the tournament details header. If set to true the location will appear under the tournament name in a smaller lighter font.<br><br>**Type:** `bool` <br> **Default value:** `true`
-| `showPurse`           | Whether to show the purse information in the tournament details header. If using a larger font hiding the purse leads to a cleaner format of the tournament details.<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `showFlags`           | Shows the flag of the player's country next to the player in the leaderboards<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `showLocation`        | Whether to show the location of the tournament in the tournament details header. (Also affects Upcoming tournament view.)<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `showPurse`           | Whether to show the purse information in the tournament details header. (Also affects Upcoming tournament view.)<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `header`              | The header text to display when the leaderboard is showing.<br><br>**Type:** `string` <br> **Default value:** `PGA TOURNAMENT`
+| `showBroadcast`       | Whether to show the broadcast channel for the tournament.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | **For Favorites Boards**
-| `favorites`           | Array of favorite boards to show. Each favorite board has a headerName and a favoriteList an array of player ids(String). See sample configuration for details. All the players in the favorite board object will be displayed on the board if they are playing in the current tournament. See section below on how to find the playerid of your favorite players.<br><br>**Type:** `array` <br> **Default value:** `[]` (empty)
-| `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the favorites configuration. If this option is set the favorites defined in the config will be ignored. If you chose to read the file from the internet the format will be a url.<br><br>Examples:<br>- `'utilities/favorites.json'` (Local file. File path is relative to MMM-PGA folder, so this example would point to ~/MagicMirror/modules/MMM-PGA/utilities/favorites.json.)<br>- `'https://dl.dropboxusercontent.com/s/7my######/favorites.json'` (File stored in Drobbox)<br><br>**Type:** `string` <br> **Default value:** `null`
+| `favorites`           | Array of favorite players to display on one or more boards. Each favorite board has a `headerName` and a `favoriteList` array of player ids. See below for details. Players in the favorite board object will be displayed on the board if they are playing in the current tournament.  Favorite boards will rotate along with the overall leaderboard.<br><br>**Type:** `array` <br> **Default value:** `[]` (empty)
+| `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the `favorites` configuration. If this option is set any `favorites` defined in the config will be ignored.<br><br>Examples:<br>- `'utilities/favorites.json'` (Local file. File path is relative to MMM-PGA folder, so this example would point to ~/MagicMirror/modules/MMM-PGA/utilities/favorites.json.)<br>- `'https://dl.dropboxusercontent.com/s/7my######/favorites.json'` (File stored in Dropbox)<br><br>**Type:** `string` <br> **Default value:** `null`
 | **For Rankings**
-| `showRankings`        | Whether to show FedEx Cup standings and Official World Go;g Rankings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments, FedEx Cup, and OWGR.<br><br>**Type:** `bool` <br> **Default value:** `false`
+| `showFedex`        | Whether to show FedEx Cup standings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments and selected rankings.<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `showOWGR`        | Whether to show Official World Golf Rankings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments and selected rankings.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `numRankings`         | The number of players to show in the Fedex Cup and OWGR rankings. The number should be set between 1 and 50.<br><br>**Type:** `int` <br> **Default value:** `5`
 | **For Upcoming Tournaments**
 | `numTournaments`      | Number of upcoming tournaments to show when there is not an active tournment in progress or  `showBoards` is set false.<br><br>**Type:** `int` <br> **Default value:** `3`
+| `showLocation`        | Works the same as on Leaderboards (see above)
+| `showPurse`           | Works the same as on Leaderboards (see above)
 | **General Display Options**
 | `showLogo`            | Shows the PGA logo in the header<br><br>**Type:** `bool` <br> **Default value:** `false`
 | `largerFont`         | Whether to display larger fonts for the module. If set to false it will use the `xsmall` style defined by MagicMirror². If set to true it will use the `small` style defined by MagicMirror².<br><br>**Type:** `bool` <br> **Default value:** `false`
-| `colored`             | Whether to display colors. The fields  in the module that will display color are the Score and the Leader Board table headers<br><br>**Type:** `bool` <br> **Default value:** `true`
+| `colored`             | Whether to display colors within the module in, for example, the scores and icons.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `rotateInterval`      | Time (in milliseconds) to display a card from the module before rotating to the next card (only matters if there is more than one card to display).<br><br>**Type:** `int` <br> **Default value:** `30 * 1000` (30 seconds)
 | `animationSpeed`      | Speed to fade in and out.<br><br>**Type:** `int` <br> **Default value:** `0`
 
-## Screen Shots
+## Screenshots
 
 ### Upcoming Tournament View
 
-#### With Location
-
 ![image](images/screenshot-8.png)
 
-#### No Locations
-
-![image](images/screenshot-2.png)
-
-#### Fedex Cup Standings
+### Fedex Cup Standings
 ![image](images/screenshot-3.png)
 
-### OWGR with Large Font
+### OWGR
 
 ![image](images/screenshot-4.png)
 
-### Leader Board View
+### Leaderboard View
 
-### Color With Flags Large Font
 ![image](images/screenshot-1.png)
 
-#### No Color With Flag
+## Working with Favorites
 
-![image](images/screenshot-6.png)
+### Setting Favorites
 
-### My Favorites View No Flags No Purse
-![image](images/screenshot-7.png)
+If you want to add `favorites` to your config, it will be in the following format:
 
-## Remote Favorites
+```js
+{
+  module: 'MMM-PGA',
+  position: "top_left",
+  config: {
+    favorites: [
+      {
+        "headerName": "My Favorites",
+        "favoriteList": ["462", "5467", "4848", "6798", "9478", "3470"]
+      },
+      {
+        "headerName": "Some Other Favs",
+        "favoriteList": ["5467", "9025", "4412121", "4848"]
+      }
+    ],
+  }
+},	
+```
 
-I like to change my favorite boards every week depending on who is playing, fantasy lineups, betting etc... So I wanted a way where I could update my favorites without having to change my config om my MagicMirror². I also wanted the favorites to automatically be updated without having to restart my Mirror every time. I decided to add the abilty to send a post request to the MMM-PGA module that will cause it to reload the favorites information. I could have configured the module to just relaod favorite information eveyr 10 minutes or so but that would have been uneeded traffic. So if you update your remote favorites file the following command will cause MMM-PGA to relaod the favorites
+You can also use a `remoteFavoritesFile`, either locally on using a url.  The format of the file is essentially the same as setting the `favorites` option directly.  An example file can be found at [utilities/favorites.json](utilities/favorites.json).
+
+### Getting the ID of Your Favorite Players
+
+You can look up a player on ESPN's website.  The easiest way is as follows:
+
+1. Goto to [https://www.espn.com/golf/leaderboard](https://www.espn.com/golf/leaderboard)
+2. Find the player you want to add to your favorites
+3. Right-click on the player's name and open the link in a new tab (or just hover over the name and the destination url may appear at the bottom of your browser window, depending on your browser settings)
+4. The id will show up in the url. For example the url for Scottie Scheffler is `https://www.espn.com/golf/player/_/id/9478/scottie-scheffler`. His player ID is be `9478`
+
+A [players.md](players.md) file is also included with a list of players along with their associated id.  But this list will not be updated, so many newer players will not be listed.
+
+### Updating Favorites
+
+You can send a post request to the MMM-PGA module that will cause it to reload the favorites information from any remote file using the following command:
 
 `curl -X POST  http://localhost:8080/MMM-PGA-UpdateFavs` 
 
-you can use localhost if running the command from the host where the mirror is installed or you can add the ip address/hostname to the url and run it from any machine on your network. Make sure to configure your mirror to allow calls from other nmachine if doing this.
+You can use `localhost` if running the command from the host where the mirror is installed or you can replace `localhost` with the ip address/hostname of your mirror and run it from any machine on your network. Make sure to configure your mirror to allow calls from other nmachine if doing this.
 
-Because i did not want to update my file and then remember to run a curl request every time. I wrote i python script to check if my favorites file had changed and if it did it will send the appropriate post. I run this script in cron and it will automatifcally update my mirror every time the file changes. I have included the python script in the utilities directory under the MMM-PGA module. There is also a sample favorites.json file stored there.
+There is an example [python script](utilities/monFile.py) you can adapt, which will check if a specified favorites file has changed and, if so, send the appropriate post. You could run this script in cron and it will automatifcally update my mirror every time the file changes.
 
-With all that being said this is probally overkill. You can always just restart the mirror and it will reload the favorites on startup.
-
-## Note on Flags
-
-Because the data fot OWGR and Fedex Cup comes from different sources than the rest of the data in the module I had to create some pretty hookie code in order to display flags in the rankings. If i am unable to locate a flag for a player it will just display a white flag (I surender lol). I did some pretty extensive testing on this and I dont think it will happen often but if it becaomes an issue I will address it with a future release.
-
-## Getting the Player ID of your favorite players
-
-### Option 1
-
-A file is included (players.md) with a list of players along with their associated id.
-
-### Option 2
-
-if you cannot find the id in the file you can always look up a player online.
-
-1. Goto to http://www.espn.com/golf/players
-2. Find the player you want to add to your favorites
-3. Click on the player name
-4. The id will show up in the url. For example the url for Tiger Woods is http://www.espn.com/golf/player/_/id/462/tiger-woods His player ID would be 462
+You can always just restart the mirror and it will reload the favorites on startup.  (It would not be particularly difficult to add a timer to the module to check for updates to the file. Open an issue if you think this is something that should be added.)
 
 ## Contributing
 
