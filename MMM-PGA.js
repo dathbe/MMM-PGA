@@ -53,16 +53,10 @@ Module.register('MMM-PGA', {
     // Image Set Up
     this.pgalogohtml = '<img src=\'./modules/MMM-PGA/images/pga-tour-logo.svg\' class=\'tourlogo\'></img> '
     this.flaghtml = '<img src=\'http\' alt=\'\' align=top></img>'
-    this.grayScaleStyle = '<img style=\'filter:grayscale(1)\''
 
     if (this.config.showRankings === false) {
       this.config.showFedex = false
       this.config.showOWGR = false
-    }
-
-    if (!this.config.colored) {
-      this.pgalogohtml = this.pgalogohtml.replace('<img', this.grayScaleStyle)
-      this.flaghtml = this.flaghtml.replace('<img', this.grayScaleStyle)
     }
 
     if (this.config.largerFont) {
@@ -126,8 +120,7 @@ Module.register('MMM-PGA', {
   // Create a TH of the Leader Board
   buildTh: function (val, left = false, span = 1, right = false) {
     var th = document.createElement('th')
-    th.classList.add(this.fontClass, 'bright')
-    if (this.config.colored) th.classList.add('th-color')
+    th.classList.add(this.fontClass, 'bright', 'th-color')
     if (left) th.classList.add('th-left-aligned')
     if (right) th.classList.add('th-right-aligned')
     if (span > 1) th.colSpan = span
@@ -152,12 +145,10 @@ Module.register('MMM-PGA', {
 
     colorClass = ''
 
-    if (this.config.colored) {
-      if (val == 'E') var colorClass = 'td-total-even'
-      if (val.charAt(0) == '-' && val.length > 1) colorClass = 'td-total-under'
-      if (val.charAt(0) == '+') colorClass = 'td-total-above'
-      if (colorClass.length > 0) cl.push(colorClass)
-    }
+    if (val == 'E') var colorClass = 'td-total-even'
+    if (val.charAt(0) == '-' && val.length > 1) colorClass = 'td-total-under'
+    if (val.charAt(0) == '+') colorClass = 'td-total-above'
+    if (colorClass.length > 0) cl.push(colorClass)
 
     return cl
   },
@@ -385,8 +376,7 @@ Module.register('MMM-PGA', {
   // Create a TH of the Leader Board
   buildRankingTh: function (val) {
     var th = document.createElement('th')
-    th.classList.add(this.fontClass)
-    if (this.config.colored) th.classList.add('color-headings')
+    th.classList.add(this.fontClass, 'color-headings')
     th.innerHTML = val
     return th
   },
@@ -403,13 +393,13 @@ Module.register('MMM-PGA', {
     var arrowText = ''
 
     if (player.curPosition == player.lwPosition) {
-      arrowText = (this.config.colored) ? '<span class=\'no-change dimmed\'>►</span>' : '<span>►</span>'
+      arrowText = '<span class=\'no-change dimmed\'>►</span>'
     }
     else if (parseInt(player.curPosition) < parseInt(player.lwPosition) || player.lwPosition == '') {
-      arrowText = (this.config.colored) ? '<span class=\'up\'>▲</span>' : '<span>▲</span>'
+      arrowText = '<span class=\'up\'>▲</span>'
     }
     else if (parseInt(player.curPosition) > parseInt(player.lwPosition)) {
-      arrowText = (this.config.colored) ? '<span class=\'down\'>▼</span>' : '<span>▼</span>'
+      arrowText = '<span class=\'down\'>▼</span>'
     }
 
     if (player.curPosition < 10) {
@@ -526,6 +516,9 @@ Module.register('MMM-PGA', {
   getDom: function () {
     var wrapper = document.createElement('div')
     wrapper.className = 'wrapper'
+    if (this.config.colored) {
+      wrapper.classList.add('grayscale')
+    }
     wrapper.style.maxWidth = this.config.maxWidth
 
     // If Data is not Loaded yet display the Loading Caption

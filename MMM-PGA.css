@@ -223,3 +223,7 @@
 .MMM-PGA .current-round {
   padding-right: 10px;
 }
+
+.MMM-PGA .grayscale {
+  filter: grayscale(100%);
+}
