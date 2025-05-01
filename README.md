@@ -65,8 +65,8 @@ git pull
 | `numRankings`         | The number of players to show in the Fedex Cup and OWGR rankings. The number should be set between 1 and 50.<br><br>**Type:** `int` <br> **Default value:** `5`
 | **For Upcoming Tournaments**
 | `numTournaments`      | Number of upcoming tournaments to show when there is not an active tournment in progress or  `showBoards` is set false.<br><br>**Type:** `int` <br> **Default value:** `3`
-| `showLocation`        | Same option as for Leaderboards (see above)
-| `showPurse`           | Same option as for Leaderboards (see above)
+| `showLocation`        | Works the same as on Leaderboards (see above)
+| `showPurse`           | Works the same as on Leaderboards (see above)
 | **General Display Options**
 | `showLogo`            | Shows the PGA logo in the header<br><br>**Type:** `bool` <br> **Default value:** `false`
 | `largerFont`         | Whether to display larger fonts for the module. If set to false it will use the `xsmall` style defined by MagicMirror². If set to true it will use the `small` style defined by MagicMirror².<br><br>**Type:** `bool` <br> **Default value:** `false`
