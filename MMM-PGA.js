@@ -476,7 +476,7 @@ Module.register('MMM-PGA', {
       if (this.config.showFlags) {
         var flagHtml = this.flaghtml.replace('http', player.flagUrl)
         var flagtd = this.buildRankingTD(flagHtml)
-        flagtd.classList.add('img')
+        flagtd.classList.add('img', 'flag-cell')
         rankRow.appendChild(flagtd)
       }
 
