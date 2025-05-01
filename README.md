@@ -41,7 +41,7 @@ git pull
     showPurse: false,
     showFlags: true,
   }
-},	
+},
 ```
 
 | Option                | Description
