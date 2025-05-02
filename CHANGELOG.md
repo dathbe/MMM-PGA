@@ -4,9 +4,9 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.3.0](https://github.com/dathbe/MMM-PGA/compare/v2.2.0...v2.3.0) - 2025-05-XX
+## [2.2.1](https://github.com/dathbe/MMM-PGA/compare/v2.2.0...v2.2.1) - 2025-05-XX
 
-- **NEW FEATURE**: Rotates between courses if tournament competed at mulitple courses
+- Displays all courses when tournament uses multiple courses
 - Minor cosmetic tweaks
 
 ## [2.2.0](https://github.com/dathbe/MMM-PGA/compare/v2.1.1...v2.2.0) - 2025-05-01
