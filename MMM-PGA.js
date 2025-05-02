@@ -12,7 +12,6 @@ Module.register('MMM-PGA', {
   defaults: {
     useHeader: true,
     header: 'PGA Tournament',
-    minWidth: '300px',
     rotateInterval: 30 * 1000,
     animationSpeed: 0, // fade in and out speed
     initialLoadDelay: 4250,
