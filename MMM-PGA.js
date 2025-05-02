@@ -334,7 +334,7 @@ Module.register('MMM-PGA', {
       if (this.config.showPurse) {
         var purseTd = document.createElement('td')
         purseTd.classList.add('xsmall', 'purse-cell')
-        if (border) purseTd.classList.add('border')
+        if (!this.config.showLocation) purseTd.classList.add('border')
         if (this.config.showLocation) purseTd.rowSpan = 1
         purseTd.innerHTML = 'Purse: ' + tournament.purse
         trow.appendChild(purseTd)
