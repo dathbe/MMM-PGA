@@ -228,16 +228,12 @@
   filter: grayscale(100%);
 }
 
-
-
-.MMM-PGA .locationDiv {
+/* .MMM-PGA .locationDiv {
   margin: 0;
   padding: 0;
   display: none;
-/*   animation-name: fade;
-  animation-duration: 1s; */
-  /* white-space: nowrap; */
-  /* align-items: center; */
+  animation-name: fade;
+  animation-duration: 1s;
 }
 
 .MMM-PGA .locationDiv:first-of-type {
@@ -247,4 +243,4 @@
 @keyframes fade {
   from {opacity: .1} 
   to {opacity: 1}
-}
+} */

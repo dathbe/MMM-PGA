@@ -3,7 +3,7 @@ const moment = require('moment')
 
 module.exports = {
 
-  url: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga', // &event=401703505 <-completed event 401703492 <- two courses
+  url: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga&event=401703492', // &event=401703505 <-completed event 401703492 <- two courses
   tournamentsUrl: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/pga/tourschedule',
   // url: "https://site.api.espn.com/apis/site/v2/sports/golf/leaderboard?event=401219795",
   // urlTournamentList: "https://www.espn.com/golf/schedule/_/tour/pga?_xhr=pageContent&offset=-04%3A00",

@@ -46,7 +46,7 @@ Module.register('MMM-PGA', {
     return ['MMM-PGA.css']
   },
 
-  locationIndex: 0,
+  /* locationIndex: 0, */
 
   /* Called whe Module starts set up some gloab config info */
 
@@ -91,14 +91,14 @@ Module.register('MMM-PGA', {
 
     this.fontClass = (this.config.largerFont) ? 'small' : 'xsmall'
 
-    // Schedule the first location rotation
+/*     // Schedule the first location rotation
     this.rotateLocations()
 
     // Schedule the UI load based on normal interval
     var self = this
     setInterval(function () {
       self.rotateLocations()
-    }, this.config.locationRotateInterval)
+    }, this.config.locationRotateInterval) */
   },
 
   /*   stop: function () {
@@ -647,7 +647,7 @@ Module.register('MMM-PGA', {
     }
   },
   
-  rotateLocations: function () {
+/*   rotateLocations: function () {
     let locationDivs = document.getElementsByClassName('location')
     for (let j = 0; j < locationDivs.length; j++) {
       let locations = document.getElementsByClassName('location')[j].getElementsByClassName('locationDiv')
@@ -663,7 +663,7 @@ Module.register('MMM-PGA', {
     if (this.locationIndex === 17280) {
       this.locationIndex = 0
     }
-  },
+  }, */
 
   broadcastIcons: {
 
