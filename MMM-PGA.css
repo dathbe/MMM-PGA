@@ -227,3 +227,24 @@
 .MMM-PGA .grayscale {
   filter: grayscale(100%);
 }
+
+
+
+.MMM-PGA .locationDiv {
+  margin: 0;
+  padding: 0;
+  display: none;
+/*   animation-name: fade;
+  animation-duration: 1s; */
+  /* white-space: nowrap; */
+  /* align-items: center; */
+}
+
+.MMM-PGA .locationDiv:first-of-type {
+  display: inline-block;
+}
+
+@keyframes fade {
+  from {opacity: .1} 
+  to {opacity: 1}
+}
