@@ -135,7 +135,16 @@ module.exports = {
       var tourName = tournament.label ? tournament.label : ''
       var strDate = tournament.startDate ? tournament.startDate : ''
       var nDate = tournament.endDate ? tournament.endDate : ''
-      var venue = tournament.locations[0] ? tournament.locations[0] : ''
+      if (tournament.locations[0]) {
+        var venue = []
+        for (let j=0; j<tournament.locations.length; j++) {
+          venue.push(tournament.locations[j])
+        }
+      }
+      else {
+        venue = ''
+      }
+      //var venue = tournament.locations[0] ? tournament.locations[0] : ''
       var purse = 'TBD'
       if (tournament.purse && tournament.purse.displayValue) {
         purse = tournament.purse.displayValue
@@ -184,7 +193,6 @@ module.exports = {
       courses.push(course.name + ', ' + city + appendstring + state)
     }
 
-    console.warn(courses)
     return courses
   },
 
