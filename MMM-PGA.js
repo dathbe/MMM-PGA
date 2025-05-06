@@ -90,7 +90,7 @@ Module.register('MMM-PGA', {
 
     this.fontClass = (this.config.largerFont) ? 'small' : 'xsmall'
 
-/*     // Schedule the first location rotation
+    /*     // Schedule the first location rotation
     this.rotateLocations()
 
     // Schedule the UI load based on normal interval
@@ -375,13 +375,13 @@ Module.register('MMM-PGA', {
           locationTd.colSpan = 2
           locationTd.classList.add('location')
           if (border) locationTd.classList.add('border')
-          for (i=0; i<tournament.location.length; i++) {
+          for (i = 0; i < tournament.location.length; i++) {
             var locationDiv = document.createElement('div')
             locationDiv.classList.add('xsmall', 'locationDiv')
             locationDiv.innerHTML = tournament.location[i]
             locationTd.appendChild(locationDiv)
           }
-          //locationTd.innerHTML = tournament.location[0]
+          // locationTd.innerHTML = tournament.location[0]
           secondRow.appendChild(locationTd)
         }
       }
@@ -645,8 +645,8 @@ Module.register('MMM-PGA', {
       this.updateDom(this.config.initialLoadDelay)
     }
   },
-  
-/*   rotateLocations: function () {
+
+  /*   rotateLocations: function () {
     let locationDivs = document.getElementsByClassName('location')
     for (let j = 0; j < locationDivs.length; j++) {
       let locations = document.getElementsByClassName('location')[j].getElementsByClassName('locationDiv')
