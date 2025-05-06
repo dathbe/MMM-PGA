@@ -137,14 +137,14 @@ module.exports = {
       var nDate = tournament.endDate ? tournament.endDate : ''
       if (tournament.locations[0]) {
         var venue = []
-        for (let j=0; j<tournament.locations.length; j++) {
+        for (let j = 0; j < tournament.locations.length; j++) {
           venue.push(tournament.locations[j])
         }
       }
       else {
         venue = ''
       }
-      //var venue = tournament.locations[0] ? tournament.locations[0] : ''
+      // var venue = tournament.locations[0] ? tournament.locations[0] : ''
       var purse = 'TBD'
       if (tournament.purse && tournament.purse.displayValue) {
         purse = tournament.purse.displayValue
@@ -179,7 +179,7 @@ module.exports = {
 
   getEventLocation: function (event) {
     var courses = []
-    for (i=0; i<event.courses.length; i++) {
+    for (let i = 0; i < event.courses.length; i++) {
       var course = event.courses[i]
 
       var city = this.setUndefStr(course.address.city)
