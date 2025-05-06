@@ -4,7 +4,7 @@ A [MagicMirror²](https://magicmirror.builders) module to display PGA leaderboar
 
 A configurable leaderboard can be shown with scores for your favorite golfers.
 
-**NOTE: With version 2.1.1, an API key is no longer needed!
+**NOTE: from version 2.1.1, an API key is no longer needed!
 
 [![Platform](https://img.shields.io/badge/platform-MagicMirror²-informational)](https://MagicMirror.builders)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
@@ -72,7 +72,7 @@ git pull
 | `largerFont`         | Whether to display larger fonts for the module. If set to false it will use the `xsmall` style defined by MagicMirror². If set to true it will use the `small` style defined by MagicMirror².<br><br>**Type:** `bool` <br> **Default value:** `false`
 | `colored`             | Whether to display colors within the module in, for example, the scores and icons.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `rotateInterval`      | Time (in milliseconds) to display a card from the module before rotating to the next card (only matters if there is more than one card to display).<br><br>**Type:** `int` <br> **Default value:** `30 * 1000` (30 seconds)
-| `animationSpeed`      | Speed to fade in and out.<br><br>**Type:** `int` <br> **Default value:** `0`
+| `animationSpeed`      | Animation speed to fade in and out, in ms.<br><br>**Type:** `int` <br> **Default value:** `0`
 
 ## Screenshots
 
@@ -118,7 +118,7 @@ If you want to add `favorites` to your config, it will be in the following forma
 
 You can also use a `remoteFavoritesFile`, either locally on using a url.  The format of the file is essentially the same as setting the `favorites` option directly.  An example file can be found at [utilities/favorites.json](utilities/favorites.json).
 
-### Getting the ID of Your Favorite Players
+### Getting the IDs of Your Favorite Players
 
 You can look up a player on ESPN's website.  The easiest way is as follows:
 

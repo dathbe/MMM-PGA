@@ -57,15 +57,15 @@
 }
 
 .MMM-PGA .leaderboard-table .td-total-under{
-  color: red;
+  color: #ff8e99;
 }
 
 .MMM-PGA .leaderboard-table .td-total-even{
-  color: green;
+  color: #8effa8;
 }
 
 .MMM-PGA .leaderboard-table .td-total-above{
-  color: rgb(122, 228, 255);
+  color: rgb(122, 228, 255); /* 7ae4ff */
 }
 
 .MMM-PGA .leaderboard-table .td-img{
@@ -115,6 +115,7 @@
   margin: 2px;
   text-align: right;
   white-space: nowrap;
+  vertical-align: bottom;
 }
 
 .MMM-PGA .tournament-table td.loc-cell{
@@ -215,7 +216,7 @@
 }
 
 .MMM-PGA .flag-cell img {
-  height: 22px;
+  height: 25px;
 }
 
 .MMM-PGA .pos-cell,
@@ -226,3 +227,27 @@
 .MMM-PGA .grayscale {
   filter: grayscale(100%);
 }
+
+.MMM-PGA .location,
+.MMM-PGA .purse-cell,
+.MMM-PGA .ranking-table .color-headings,
+.MMM-PGA .leaderboard-table .th-color {
+  color: #f8dd70;
+}
+
+/* .MMM-PGA .locationDiv {
+  margin: 0;
+  padding: 0;
+  display: none;
+  animation-name: fade;
+  animation-duration: 1s;
+}
+
+.MMM-PGA .locationDiv:first-of-type {
+  display: inline-block;
+}
+
+@keyframes fade {
+  from {opacity: .1} 
+  to {opacity: 1}
+} */

@@ -12,7 +12,6 @@ Module.register('MMM-PGA', {
   defaults: {
     useHeader: true,
     header: 'PGA Tournament',
-    minWidth: '300px',
     rotateInterval: 30 * 1000,
     animationSpeed: 0, // fade in and out speed
     initialLoadDelay: 4250,
@@ -39,11 +38,14 @@ Module.register('MMM-PGA', {
     rapidAPIKey: '',
     favorites: [],
     showBroadcast: true,
+    locationRotateInterval: 10000,
   },
 
   getStyles: function () {
     return ['MMM-PGA.css']
   },
+
+  /* locationIndex: 0, */
 
   /* Called whe Module starts set up some gloab config info */
 
@@ -87,6 +89,15 @@ Module.register('MMM-PGA', {
     this.sendSocketNotification('CONFIG', this.config)
 
     this.fontClass = (this.config.largerFont) ? 'small' : 'xsmall'
+
+/*     // Schedule the first location rotation
+    this.rotateLocations()
+
+    // Schedule the UI load based on normal interval
+    var self = this
+    setInterval(function () {
+      self.rotateLocations()
+    }, this.config.locationRotateInterval) */
   },
 
   /*   stop: function () {
@@ -323,8 +334,8 @@ Module.register('MMM-PGA', {
       if (this.config.showPurse) {
         var purseTd = document.createElement('td')
         purseTd.classList.add('xsmall', 'purse-cell')
-        if (border) purseTd.classList.add('border')
-        if (this.config.showLocation) purseTd.rowSpan = 2
+        if (!this.config.showLocation) purseTd.classList.add('border')
+        if (this.config.showLocation) purseTd.rowSpan = 1
         purseTd.innerHTML = 'Purse: ' + tournament.purse
         trow.appendChild(purseTd)
       }
@@ -362,9 +373,15 @@ Module.register('MMM-PGA', {
         if (this.config.showLocation) {
           var locationTd = document.createElement('td')
           locationTd.colSpan = 2
-          locationTd.classList.add('xsmall', 'location')
+          locationTd.classList.add('location')
           if (border) locationTd.classList.add('border')
-          locationTd.innerHTML = tournament.location
+          for (i=0; i<tournament.location.length; i++) {
+            var locationDiv = document.createElement('div')
+            locationDiv.classList.add('xsmall', 'locationDiv')
+            locationDiv.innerHTML = tournament.location[i]
+            locationTd.appendChild(locationDiv)
+          }
+          //locationTd.innerHTML = tournament.location[0]
           secondRow.appendChild(locationTd)
         }
       }
@@ -628,6 +645,24 @@ Module.register('MMM-PGA', {
       this.updateDom(this.config.initialLoadDelay)
     }
   },
+  
+/*   rotateLocations: function () {
+    let locationDivs = document.getElementsByClassName('location')
+    for (let j = 0; j < locationDivs.length; j++) {
+      let locations = document.getElementsByClassName('location')[j].getElementsByClassName('locationDiv')
+
+      if (locations.length > 0) {
+        for (let i = 0; i < locations.length; i++) {
+          locations[i].style.display = 'none'
+        }
+        locations[(this.locationIndex) % locations.length].style.display = 'inline-block'
+      }
+    }
+    this.locationIndex++
+    if (this.locationIndex === 17280) {
+      this.locationIndex = 0
+    }
+  }, */
 
   broadcastIcons: {
 

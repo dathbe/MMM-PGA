@@ -3,7 +3,7 @@ const moment = require('moment')
 
 module.exports = {
 
-  url: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga', // &event=401703505
+  url: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga', // &event=401703505 <-completed event 401703492 <- two courses
   tournamentsUrl: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/pga/tourschedule',
   // url: "https://site.api.espn.com/apis/site/v2/sports/golf/leaderboard?event=401219795",
   // urlTournamentList: "https://www.espn.com/golf/schedule/_/tour/pga?_xhr=pageContent&offset=-04%3A00",
@@ -135,7 +135,16 @@ module.exports = {
       var tourName = tournament.label ? tournament.label : ''
       var strDate = tournament.startDate ? tournament.startDate : ''
       var nDate = tournament.endDate ? tournament.endDate : ''
-      var venue = tournament.locations[0] ? tournament.locations[0] : ''
+      if (tournament.locations[0]) {
+        var venue = []
+        for (let j=0; j<tournament.locations.length; j++) {
+          venue.push(tournament.locations[j])
+        }
+      }
+      else {
+        venue = ''
+      }
+      //var venue = tournament.locations[0] ? tournament.locations[0] : ''
       var purse = 'TBD'
       if (tournament.purse && tournament.purse.displayValue) {
         purse = tournament.purse.displayValue
@@ -169,17 +178,22 @@ module.exports = {
   },
 
   getEventLocation: function (event) {
-    var course = event.courses[0]
+    var courses = []
+    for (i=0; i<event.courses.length; i++) {
+      var course = event.courses[i]
 
-    var city = this.setUndefStr(course.address.city)
-    var state = this.setUndefStr(course.address.state)
-    var appendstring = ', '
+      var city = this.setUndefStr(course.address.city)
+      var state = this.setUndefStr(course.address.state)
+      var appendstring = ', '
 
-    if (city.length == 0 || state.length == 0) {
-      appendstring = ''
+      if (city.length == 0 || state.length == 0) {
+        appendstring = ''
+      }
+
+      courses.push(course.name + ', ' + city + appendstring + state)
     }
 
-    return course.name + ' ' + city + appendstring + state
+    return courses
   },
 
   getRoundScore: function (player, round) {
