@@ -1,10 +1,13 @@
 import eslintPluginJs from '@eslint/js'
 import eslintPluginStylistic from '@stylistic/eslint-plugin'
 import globals from 'globals'
+import { defineConfig } from 'eslint/config'
+// import css from '@eslint/css'
 
-const config = [
+export default defineConfig([
   eslintPluginJs.configs.recommended,
   eslintPluginStylistic.configs.recommended,
+  // {files: ["**/*.css"], languageOptions: {tolerant: true}, plugins: {css}, language: "css/css", extends: ["css/recommended"], rules: {"css/use-baseline": ["error", {available: "newly"}]}},
   {
     files: ['**/*.js'],
     languageOptions: {
@@ -33,6 +36,4 @@ const config = [
     rules: {
     },
   },
-]
-
-export default config
+])

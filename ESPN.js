@@ -39,8 +39,8 @@ module.exports = {
         event = ESPNObj[0]
       }
     }
-    catch (error) {
-      Log.debug("One of the tournaments this week does not have a purse; using the last listed tournament")
+    catch {
+      Log.debug('One of the tournaments this week does not have a purse; using the last listed tournament')
       event = ESPNObj[ESPNObj.length - 1]
     }
 
