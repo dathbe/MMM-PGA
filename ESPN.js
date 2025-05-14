@@ -26,16 +26,22 @@ module.exports = {
 
     // Return the event with the biggest purse that is not canceled
     var purses = []
-    for (let j = 0; j < ESPNObj.length; j++) {
-      if (ESPNObj[j].status.type.name != 'STATUS_CANCELED') {
-        purses.push(Number(ESPNObj[j].displayPurse.replaceAll('$', '').replaceAll(',', '')))
+    try {
+      for (let j = 0; j < ESPNObj.length; j++) {
+        if (ESPNObj[j].status.type.name != 'STATUS_CANCELED') {
+          purses.push(Number(ESPNObj[j].displayPurse.replaceAll('$', '').replaceAll(',', '')))
+        }
+      }
+      if (purses.length > 0) {
+        event = ESPNObj[purses.indexOf(Math.max(...purses))]
+      }
+      else {
+        event = ESPNObj[0]
       }
     }
-    if (purses.length > 0) {
-      event = ESPNObj[purses.indexOf(Math.max(...purses))]
-    }
-    else {
-      event = ESPNObj[0]
+    catch {
+      Log.debug('One of the tournaments this week does not have a purse; using the last listed tournament')
+      event = ESPNObj[ESPNObj.length - 1]
     }
 
     var tournament = {}

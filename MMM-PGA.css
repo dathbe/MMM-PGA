@@ -161,11 +161,7 @@
 
 .MMM-PGA .ranking-table th{
   text-align: center;
-}
-
-.MMM-PGA .ranking-table .color-headings{
-  /*color: rgb(103,125,161);*/
-  color: rgb(119, 141, 190);
+  font-weight: 400;
 }
 
 .MMM-PGA .ranking-table th.player-name{
