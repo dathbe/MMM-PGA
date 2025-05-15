@@ -364,7 +364,6 @@ Module.register('MMM-PGA', {
           var broadcastTd = document.createElement('td')
           // locationTd.colSpan = 2
           broadcastTd.classList.add('xsmall', 'broadcast')
-          Log.warn(tournament.broadcast)
           if (border) broadcastTd.classList.add('border')
           if (tournament.broadcast !== undefined) {
             for (let j = 0; j < tournament.broadcast.length; j++) {
