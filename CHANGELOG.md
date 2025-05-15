@@ -4,6 +4,11 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.3](https://github.com/dathbe/MMM-PGA/compare/v2.2.2...v2.2.3) - 2025-05-XX
+
+- Add rotation among multiple broadcast channels
+- Add hidden (undocumented) config options of `skipChannels` and `channelRotateInterval`, which adds a list of channels to skip in the rotation, and the rotation time in milliseconds, respectively
+
 ## [2.2.2](https://github.com/dathbe/MMM-PGA/compare/v2.2.1...v2.2.2) - 2025-05-14
 
 - BUG FIX: Catch error when current week tournament has `undefined` purse
