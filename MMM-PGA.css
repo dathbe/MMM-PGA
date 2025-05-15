@@ -247,3 +247,14 @@
   from {opacity: .1} 
   to {opacity: 1}
 } */
+
+.MMM-PGA .broadcastIconDiv {
+  display: none;
+  animation-name: fade;
+  animation-duration: .5s;
+  white-space: nowrap;
+}
+
+.MMM-PGA .broadcastIconDiv:first-of-type {
+  display: block;
+}

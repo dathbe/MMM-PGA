@@ -39,7 +39,11 @@ Module.register('MMM-PGA', {
     favorites: [],
     showBroadcast: true,
     locationRotateInterval: 10000,
+    skipChannels: [],
+    channelRotateInterval: 7000,
   },
+
+  logoIndex: 0,
 
   getStyles: function () {
     return ['MMM-PGA.css']
@@ -98,6 +102,15 @@ Module.register('MMM-PGA', {
     setInterval(function () {
       self.rotateLocations()
     }, this.config.locationRotateInterval) */
+
+    // Schedule the first logo rotation
+    this.rotateChannels()
+
+    // Schedule the UI load based on normal interval
+    var self = this
+    setInterval(function () {
+      self.rotateChannels()
+    }, this.config.channelRotateInterval)
   },
 
   /*   stop: function () {
@@ -351,21 +364,29 @@ Module.register('MMM-PGA', {
           var broadcastTd = document.createElement('td')
           // locationTd.colSpan = 2
           broadcastTd.classList.add('xsmall', 'broadcast')
+          Log.warn(tournament.broadcast)
           if (border) broadcastTd.classList.add('border')
           if (tournament.broadcast !== undefined) {
-            if (this.broadcastIcons[tournament.broadcast[0].toLowerCase()] !== undefined) {
-              var broadcastImage = new Image()
-              broadcastImage.src = this.broadcastIcons[tournament.broadcast[0].toLowerCase()]
-              broadcastTd.appendChild(broadcastImage)
-            }
-            else if (this.broadcastIconsInvert[tournament.broadcast[0].toLowerCase()] !== undefined) {
-              broadcastTd.classList.add('invert')
-              broadcastImage = new Image()
-              broadcastImage.src = this.broadcastIconsInvert[tournament.broadcast[0].toLowerCase()]
-              broadcastTd.appendChild(broadcastImage)
-            }
-            else {
-              broadcastTd.innerHTML = tournament.broadcast[0].toUpperCase()
+            for (let j = 0; j < tournament.broadcast.length; j++) {
+              if (!this.config.skipChannels.includes(tournament.broadcast[j].toLowerCase())) {
+                var broadcastDiv = document.createElement('div')
+                if (this.broadcastIcons[tournament.broadcast[j].toLowerCase()] !== undefined) {
+                  broadcastDiv.classList.add('broadcastIconDiv')
+                  var broadcastImage = new Image()
+                  broadcastImage.src = this.broadcastIcons[tournament.broadcast[j].toLowerCase()]
+                  broadcastDiv.appendChild(broadcastImage)
+                }
+                else if (this.broadcastIconsInvert[tournament.broadcast[j].toLowerCase()] !== undefined) {
+                  broadcastDiv.classList.add('broadcastIconDiv', 'invert')
+                  broadcastImage = new Image()
+                  broadcastImage.src = this.broadcastIconsInvert[tournament.broadcast[j].toLowerCase()]
+                  broadcastDiv.appendChild(broadcastImage)
+                }
+                else {
+                  broadcastDiv.innerHTML = tournament.broadcast[j].toUpperCase().replace('PLUS','+')
+                }
+                broadcastTd.appendChild(broadcastDiv)
+              }
             }
           }
           secondRow.appendChild(broadcastTd)
@@ -375,10 +396,10 @@ Module.register('MMM-PGA', {
           locationTd.colSpan = 2
           locationTd.classList.add('location')
           if (border) locationTd.classList.add('border')
-          for (i = 0; i < tournament.location.length; i++) {
+          for (let j = 0; j < tournament.location.length; j++) {
             var locationDiv = document.createElement('div')
             locationDiv.classList.add('xsmall', 'locationDiv')
-            locationDiv.innerHTML = tournament.location[i]
+            locationDiv.innerHTML = tournament.location[j]
             locationTd.appendChild(locationDiv)
           }
           // locationTd.innerHTML = tournament.location[0]
@@ -602,6 +623,30 @@ Module.register('MMM-PGA', {
     }, this.config.rotateInterval)
   },
 
+  rotateChannels: function () {
+    // Log.debug(`${this.logoIndex} <- logoIndex1`)
+    //let broadcastDivs = document.getElementsByClassName('broadcast')
+    //for (let j = 0; j < broadcastDivs.length; j++) {
+    let logos = document.getElementsByClassName('broadcastIconDiv')
+
+    for (let i = 0; i < logos.length; i++) {
+      logos[i].style.display = 'none'
+    }
+    if (logos.length > 0) {
+      // Log.debug(`${this.logoIndex} <- logoIndex2`)
+      logos[(this.logoIndex) % logos.length].style.display = 'block'
+      // logos[moment().unix() % logos.length].style.display = "block"
+    }
+    //}
+    // Log.debug(`${this.logoIndex} <- logoIndex3`)
+    this.logoIndex++
+    // Log.debug(`${this.logoIndex} <- logoIndex4`)
+    if (this.logoIndex === 17280) {
+      this.logoIndex = 0
+    }
+    // Log.debug(`${this.logoIndex} <- logoIndex5`)
+  },
+
   // Called by MM Framework when new data has been retrieved
   socketNotificationReceived: function (notification, payload) {
     if (notification === 'PGA_RESULT') {
@@ -665,9 +710,11 @@ Module.register('MMM-PGA', {
   }, */
 
   broadcastIcons: {
-
+    'espn': 'https://upload.wikimedia.org/wikipedia/commons/2/2f/ESPN_wordmark.svg',
+    'espnplus': './modules/MMM-PGA/logos/channels/ESPN+.svg',
+    'paramountplus': 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Paramount%2B_logo.svg',
   },
   broadcastIconsInvert: {
-    cbs: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/CBS_logo_%282020%29.svg',
+    'cbs': 'https://upload.wikimedia.org/wikipedia/commons/e/ee/CBS_logo_%282020%29.svg',
   },
 })
