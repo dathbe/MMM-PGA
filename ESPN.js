@@ -299,18 +299,20 @@ module.exports = {
     pgaBroadcasts = pgaBroadcasts.data.coverage.coverageType
     var broadcast = []
     var alreadyAdded = []
+    const darkLogos = ['ESPN+', 'PGA Championship']
     for (let i = 0; i < pgaBroadcasts.length; i++) {
-      Log.debug(pgaBroadcasts[i].network.networkName)
-      Log.debug(pgaBroadcasts[i].liveStatus)
-      const darkLogos = ['ESPN+', 'PGA Championship']
-      if ((/* true || */ pgaBroadcasts[i].liveStatus.toLowerCase() === 'live') && pgaBroadcasts[i].streamTitle.endsWith('Broadcast') && !alreadyAdded.includes(pgaBroadcasts[i].network.networkName)) {
-        alreadyAdded.push(pgaBroadcasts[i].network.networkName)
-        if (darkLogos.includes(pgaBroadcasts[i].network.networkName)) {
-          broadcast.push([pgaBroadcasts[i].network.networkName, pgaBroadcasts[i].network.networkLogoDark])
+      if (pgaBroadcasts[i].__typename === 'BroadcastCoverageCarousel') {
+        for (let j = 0; j < pgaBroadcasts[i].carousel.length; j++) {
+          if ((/* true || */ pgaBroadcasts[i].carousel[j].liveStatus === 'LIVE') && pgaBroadcasts[i].carousel[j].streamTitle.endsWith('Broadcast') && !alreadyAdded.includes(pgaBroadcasts[i].carousel[j].network.networkName)) {
+            if (darkLogos.includes(pgaBroadcasts[i].carousel[j].network.networkName)) {
+              broadcast.push([pgaBroadcasts[i].carousel[j].network.networkName, pgaBroadcasts[i].carousel[j].network.networkLogoDark])
+            }
+            else {
+              broadcast.push([pgaBroadcasts[i].carousel[j].network.networkName, pgaBroadcasts[i].carousel[j].network.networkLogo])
+            }
+          }
         }
-        else {
-          broadcast.push([pgaBroadcasts[i].network.networkName, pgaBroadcasts[i].network.networkLogo])
-        }
+        break
       }
     }
 
