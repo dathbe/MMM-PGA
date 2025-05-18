@@ -626,22 +626,24 @@ Module.register('MMM-PGA', {
     // for (let j = 0; j < broadcastDivs.length; j++) {
     let logos = document.getElementsByClassName('broadcastIconDiv')
 
-    for (let i = 0; i < logos.length; i++) {
-      logos[i].style.display = 'none'
+    if (logos.length > 1) {
+      for (let i = 0; i < logos.length; i++) {
+        logos[i].style.display = 'none'
+      }
+      if (logos.length > 0) {
+        // Log.debug(`${this.logoIndex} <- logoIndex2`)
+        logos[(this.logoIndex) % logos.length].style.display = 'block'
+        // logos[moment().unix() % logos.length].style.display = "block"
+      }
+      // }
+      // Log.debug(`${this.logoIndex} <- logoIndex3`)
+      this.logoIndex++
+      // Log.debug(`${this.logoIndex} <- logoIndex4`)
+      if (this.logoIndex === 17280) {
+        this.logoIndex = 0
+      }
+      // Log.debug(`${this.logoIndex} <- logoIndex5`)
     }
-    if (logos.length > 0) {
-      // Log.debug(`${this.logoIndex} <- logoIndex2`)
-      logos[(this.logoIndex) % logos.length].style.display = 'block'
-      // logos[moment().unix() % logos.length].style.display = "block"
-    }
-    // }
-    // Log.debug(`${this.logoIndex} <- logoIndex3`)
-    this.logoIndex++
-    // Log.debug(`${this.logoIndex} <- logoIndex4`)
-    if (this.logoIndex === 17280) {
-      this.logoIndex = 0
-    }
-    // Log.debug(`${this.logoIndex} <- logoIndex5`)
   },
 
   // Called by MM Framework when new data has been retrieved
