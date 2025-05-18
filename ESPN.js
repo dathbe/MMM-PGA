@@ -61,12 +61,12 @@ module.exports = {
     tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
     tournament.currentRound = this.getCurrentRound(event)
     tournament.playoff = false
-    if (/* true || */  event.competitions[0].status.type.name === 'STATUS_IN_PROGRESS') {
-      tournament.broadcast = await this.getBroadcasts(event.competitions[0].broadcasts)
+    if (/* true || */ event.competitions[0].status.type.name === 'STATUS_IN_PROGRESS') {
+      tournament.broadcast = await this.getBroadcasts()
     }
     else {
       tournament.broadcast = []
-/*       for (let i = 0; i < event.competitions[0].broadcasts.length; i++) {
+      /*       for (let i = 0; i < event.competitions[0].broadcasts.length; i++) {
         tournament.broadcast.push([event.competitions[0].broadcasts[i].media.slug, ''])
       } */
     }
@@ -250,55 +250,55 @@ module.exports = {
     return (typeof obj == 'undefined') ? defStr : obj
   },
 
-  async getBroadcasts(broadcastJson) {
-    currentTourneyId = await fetch("https://orchestrator.pgatour.com/graphql", {
-    "credentials": "omit",
-    "headers": {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0",
-        "Accept": "*/*",
-        "Accept-Language": "en-US,en;q=0.5",
-        "content-type": "application/json",
-        "x-api-key": "da2-gsrx5bibzbb4njvhl7t37wqyl4",
-        "x-pgat-platform": "web",
-        "x-amz-user-agent": "aws-amplify/3.0.7",
-        "Sec-GPC": "1",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-site",
-        "Priority": "u=4"
-    },
-    "referrer": "https://www.pgatour.com/",
-    "body": "{\"operationName\":\"Schedule\",\"variables\":{\"tourCode\":\"R\",\"year\":\"2025\"},\"query\":\"query Schedule($tourCode: String!, $year: String, $filter: TournamentCategory) {\\n  schedule(tourCode: $tourCode, year: $year, filter: $filter) {\\n    completed {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n    filters {\\n      type\\n      name\\n    }\\n    seasonYear\\n    tour\\n    upcoming {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n  }\\n}\\n\\nfragment ScheduleTournament on ScheduleMonth {\\n  tournaments {\\n    tournamentName\\n    id\\n    beautyImage\\n    champion\\n    champions {\\n      displayName\\n      playerId\\n    }\\n    championEarnings\\n    championId\\n    city\\n    country\\n    countryCode\\n    courseName\\n    date\\n    dateAccessibilityText\\n    purse\\n    sortDate\\n    startDate\\n    state\\n    stateCode\\n    status {\\n      roundDisplay\\n      roundStatus\\n      roundStatusColor\\n      roundStatusDisplay\\n    }\\n    tournamentStatus\\n    ticketsURL\\n    tourStandingHeading\\n    tourStandingValue\\n    tournamentLogo\\n    display\\n    sequenceNumber\\n    tournamentCategoryInfo {\\n      type\\n      logoLight\\n      logoDark\\n      label\\n    }\\n    tournamentSiteURL\\n    tournamentStatus\\n    useTournamentSiteURL\\n  }\\n}\"}",
-    "method": "POST",
-    "mode": "cors"
+  async getBroadcasts() {
+    var currentTourneyId = await fetch('https://orchestrator.pgatour.com/graphql', {
+      credentials: 'omit',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'content-type': 'application/json',
+        'x-api-key': 'da2-gsrx5bibzbb4njvhl7t37wqyl4',
+        'x-pgat-platform': 'web',
+        'x-amz-user-agent': 'aws-amplify/3.0.7',
+        'Sec-GPC': '1',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-site',
+        'Priority': 'u=4',
+      },
+      referrer: 'https://www.pgatour.com/',
+      body: '{"operationName":"Schedule","variables":{"tourCode":"R","year":"2025"},"query":"query Schedule($tourCode: String!, $year: String, $filter: TournamentCategory) {\\n  schedule(tourCode: $tourCode, year: $year, filter: $filter) {\\n    completed {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n    filters {\\n      type\\n      name\\n    }\\n    seasonYear\\n    tour\\n    upcoming {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n  }\\n}\\n\\nfragment ScheduleTournament on ScheduleMonth {\\n  tournaments {\\n    tournamentName\\n    id\\n    beautyImage\\n    champion\\n    champions {\\n      displayName\\n      playerId\\n    }\\n    championEarnings\\n    championId\\n    city\\n    country\\n    countryCode\\n    courseName\\n    date\\n    dateAccessibilityText\\n    purse\\n    sortDate\\n    startDate\\n    state\\n    stateCode\\n    status {\\n      roundDisplay\\n      roundStatus\\n      roundStatusColor\\n      roundStatusDisplay\\n    }\\n    tournamentStatus\\n    ticketsURL\\n    tourStandingHeading\\n    tourStandingValue\\n    tournamentLogo\\n    display\\n    sequenceNumber\\n    tournamentCategoryInfo {\\n      type\\n      logoLight\\n      logoDark\\n      label\\n    }\\n    tournamentSiteURL\\n    tournamentStatus\\n    useTournamentSiteURL\\n  }\\n}"}',
+      method: 'POST',
+      mode: 'cors',
     })
     currentTourneyId = await currentTourneyId.json()
     currentTourneyId = currentTourneyId.data.schedule.upcoming[0].tournaments[0].id
 
-    pgaBroadcasts = await fetch("https://orchestrator.pgatour.com/graphql", {
-    "credentials": "omit",
-    "headers": {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0",
-        "Accept": "*/*",
-        "Accept-Language": "en-US,en;q=0.5",
-        "content-type": "application/json",
-        "x-api-key": "da2-gsrx5bibzbb4njvhl7t37wqyl4",
-        "x-pgat-platform": "web",
-        "x-amz-user-agent": "aws-amplify/3.0.7",
-        "Sec-GPC": "1",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-site",
-        "Priority": "u=4"
-    },
-    "referrer": "https://www.pgatour.com/",
-    "body": `{\"operationName\":\"Coverage\",\"variables\":{\"tournamentId\":\"${currentTourneyId}\"},\"query\":\"query Coverage($tournamentId: ID!) {\\n  coverage(tournamentId: $tournamentId) {\\n    id\\n    tournamentName\\n    countryCode\\n    coverageType {\\n      ... on BroadcastAudioStream {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastFullTelecast {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastFeaturedGroup {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        courseId\\n        groups {\\n          id\\n          extendedCoverage\\n          playerLastNames\\n          liveStatus\\n        }\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastFeaturedHole {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        courseId\\n        featuredHoles\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastCoverageCarousel {\\n        __typename\\n        carousel {\\n          ... on BroadcastFullTelecast {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n          ... on BroadcastFeaturedGroup {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            courseId\\n            groups {\\n              id\\n              extendedCoverage\\n              playerLastNames\\n              liveStatus\\n            }\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n          ... on BroadcastFeaturedHole {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            courseId\\n            featuredHoles\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n        }\\n      }\\n    }\\n  }\\n}\"}`,
-    "method": "POST",
-    "mode": "cors"
+    var pgaBroadcasts = await fetch('https://orchestrator.pgatour.com/graphql', {
+      credentials: 'omit',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'content-type': 'application/json',
+        'x-api-key': 'da2-gsrx5bibzbb4njvhl7t37wqyl4',
+        'x-pgat-platform': 'web',
+        'x-amz-user-agent': 'aws-amplify/3.0.7',
+        'Sec-GPC': '1',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-site',
+        'Priority': 'u=4',
+      },
+      referrer: 'https://www.pgatour.com/',
+      body: `{"operationName":"Coverage","variables":{"tournamentId":"${currentTourneyId}"},"query":"query Coverage($tournamentId: ID!) {\\n  coverage(tournamentId: $tournamentId) {\\n    id\\n    tournamentName\\n    countryCode\\n    coverageType {\\n      ... on BroadcastAudioStream {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastFullTelecast {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastFeaturedGroup {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        courseId\\n        groups {\\n          id\\n          extendedCoverage\\n          playerLastNames\\n          liveStatus\\n        }\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastFeaturedHole {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        courseId\\n        featuredHoles\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastCoverageCarousel {\\n        __typename\\n        carousel {\\n          ... on BroadcastFullTelecast {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n          ... on BroadcastFeaturedGroup {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            courseId\\n            groups {\\n              id\\n              extendedCoverage\\n              playerLastNames\\n              liveStatus\\n            }\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n          ... on BroadcastFeaturedHole {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            courseId\\n            featuredHoles\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n        }\\n      }\\n    }\\n  }\\n}"}`,
+      method: 'POST',
+      mode: 'cors',
     })
     pgaBroadcasts = await pgaBroadcasts.json()
     pgaBroadcasts = pgaBroadcasts.data.coverage.coverageType
-    broadcast = []
+    var broadcast = []
     for (let i = 0; i < pgaBroadcasts.length; i++) {
       Log.debug(pgaBroadcasts[i].network.networkName)
       Log.debug(pgaBroadcasts[i].liveStatus)
@@ -314,6 +314,6 @@ module.exports = {
     }
 
     return broadcast
-  }
+  },
 
 }
