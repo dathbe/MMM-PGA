@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Add rotation among multiple broadcast channels
 - Add hidden (undocumented) config options of `skipChannels` and `channelRotateInterval`, which adds a list of channels to skip in the rotation, and the rotation time in milliseconds, respectively
+- BUG FIX: Add catch for undefined tournament purse on leaderboard
 
 ## [2.2.2](https://github.com/dathbe/MMM-PGA/compare/v2.2.1...v2.2.2) - 2025-05-14
 
