@@ -369,7 +369,7 @@ Module.register('MMM-PGA', {
             for (let j = 0; j < tournament.broadcast.length; j++) {
               if (!this.config.skipChannels.includes(tournament.broadcast[j][0])) {
                 var broadcastDiv = document.createElement('div')
-                //broadcastDiv.classList.add('broadcastIconDiv')
+                broadcastDiv.classList.add('broadcastIconDiv')
                 if (this.broadcastIcons[tournament.broadcast[j][0]] !== undefined) {
                   var broadcastImage = new Image()
                   broadcastImage.src = this.broadcastIcons[tournament.broadcast[j][0]]

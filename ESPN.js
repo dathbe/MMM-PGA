@@ -61,7 +61,7 @@ module.exports = {
     tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
     tournament.currentRound = this.getCurrentRound(event)
     tournament.playoff = false
-    if (true || event.competitions[0].status.type.name === 'STATUS_IN_PROGRESS') {
+    if (/* true || */ event.competitions[0].status.type.name === 'STATUS_IN_PROGRESS') {
       tournament.broadcast = await this.getBroadcasts()
     }
     else {
