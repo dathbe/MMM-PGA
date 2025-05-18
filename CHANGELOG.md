@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [2.2.3](https://github.com/dathbe/MMM-PGA/compare/v2.2.2...v2.2.3) - 2025-05-XX
 
+- Change broadcast icon display so it only shows on-air broadcasts
 - Add rotation among multiple broadcast channels
 - Add hidden (undocumented) config options of `skipChannels` and `channelRotateInterval`, which adds a list of channels to skip in the rotation, and the rotation time in milliseconds, respectively
 - BUG FIX: Add catch for undefined tournament purse on leaderboard
