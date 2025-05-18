@@ -248,13 +248,13 @@
   to {opacity: 1}
 } */
 
-.MMM-PGA .broadcastIconDiv {
+.MMM-PGA .PGAbroadcastIconDiv {
   display: none;
   animation-name: fade;
   animation-duration: .5s;
   white-space: nowrap;
 }
 
-.MMM-PGA .broadcastIconDiv:first-of-type {
+.MMM-PGA .PGAbroadcastIconDiv:first-of-type {
   display: block;
 }
