@@ -52,7 +52,12 @@ module.exports = {
     tournament.location = this.getEventLocation(event)
     tournament.statusCode = event.status.type.name
     tournament.status = event.competitions[0].status ? event.competitions[0].status.type.detail : ''
-    tournament.purse = event.displayPurse
+    if (tournament.purse !== undefined) {
+      tournament.purse = event.displayPurse
+    }
+    else {
+      tournament.purse = 'TBD'
+    }
     tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
     tournament.currentRound = this.getCurrentRound(event)
     tournament.playoff = false
