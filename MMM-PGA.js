@@ -369,7 +369,7 @@ Module.register('MMM-PGA', {
             for (let j = 0; j < tournament.broadcast.length; j++) {
               if (!this.config.skipChannels.includes(tournament.broadcast[j][0])) {
                 var broadcastDiv = document.createElement('div')
-                broadcastDiv.classList.add('broadcastIconDiv')
+                broadcastDiv.classList.add('PGAbroadcastIconDiv')
                 if (tournament.broadcast[j][1] !== '') {
                   broadcastImage = new Image()
                   broadcastImage.src = tournament.broadcast[j][1]
@@ -621,28 +621,22 @@ Module.register('MMM-PGA', {
   },
 
   rotateChannels: function () {
-    // Log.debug(`${this.logoIndex} <- logoIndex1`)
-    // let broadcastDivs = document.getElementsByClassName('broadcast')
-    // for (let j = 0; j < broadcastDivs.length; j++) {
-    let logos = document.getElementsByClassName('broadcastIconDiv')
-
+    let logos = document.getElementsByClassName('PGAbroadcastIconDiv')
     if (logos.length > 1) {
       for (let i = 0; i < logos.length; i++) {
         logos[i].style.display = 'none'
       }
       if (logos.length > 0) {
-        // Log.debug(`${this.logoIndex} <- logoIndex2`)
         logos[(this.logoIndex) % logos.length].style.display = 'block'
         // logos[moment().unix() % logos.length].style.display = "block"
       }
-      // }
-      // Log.debug(`${this.logoIndex} <- logoIndex3`)
       this.logoIndex++
-      // Log.debug(`${this.logoIndex} <- logoIndex4`)
       if (this.logoIndex === 17280) {
         this.logoIndex = 0
       }
-      // Log.debug(`${this.logoIndex} <- logoIndex5`)
+    }
+    else {
+      logos[0].style.display = 'block'
     }
   },
 
