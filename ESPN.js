@@ -301,22 +301,39 @@ module.exports = {
     var alreadyAdded = []
     const darkLogos = ['ESPN+', 'PGA Championship']
     for (let i = 0; i < pgaBroadcasts.length; i++) {
-      if (pgaBroadcasts[i].__typename === 'BroadcastCoverageCarousel') {
-        for (let j = 0; j < pgaBroadcasts[i].carousel.length; j++) {
-          if ((/* true || */ pgaBroadcasts[i].carousel[j].liveStatus === 'LIVE') && pgaBroadcasts[i].carousel[j].streamTitle.endsWith('Broadcast') && !alreadyAdded.includes(pgaBroadcasts[i].carousel[j].network.networkName)) {
-            if (darkLogos.includes(pgaBroadcasts[i].carousel[j].network.networkName)) {
-              broadcast.push([pgaBroadcasts[i].carousel[j].network.networkName, pgaBroadcasts[i].carousel[j].network.networkLogoDark])
-            }
-            else {
-              broadcast.push([pgaBroadcasts[i].carousel[j].network.networkName, pgaBroadcasts[i].carousel[j].network.networkLogo])
-            }
+      if (pgaBroadcasts[i].__typename !== 'BroadcastCoverageCarousel') {
+        if ((/* true || */ pgaBroadcasts[i].liveStatus === 'LIVE') && pgaBroadcasts[i].streamTitle.endsWith('Broadcast') && !alreadyAdded.includes(pgaBroadcasts[i].network.networkName)) {
+          var newNetwork = [pgaBroadcasts[i].network.networkName]
+          if (this.broadcastIcons[pgaBroadcasts[i].network.networkName] !== undefined) {
+            newNetwork.push(this.broadcastIcons[pgaBroadcasts[i].network.networkName])
           }
+          else if (this.broadcastIconsInvert[pgaBroadcasts[i].network.networkName] !== undefined) {
+            newNetwork.push(this.broadcastIconsInvert[pgaBroadcasts[i].network.networkName])
+            newNetwork.push('invert')
+          }
+          else if (darkLogos.includes(pgaBroadcasts[i].network.networkName)) {
+            newNetwork.push(pgaBroadcasts[i].network.networkLogoDark)
+          }
+          else {
+            newNetwork.push(pgaBroadcasts[i].network.networkLogo)
+          }
+          broadcast.push(newNetwork)
+          alreadyAdded.push(pgaBroadcasts[i].network.networkName)
         }
-        break
       }
     }
 
+    Log.debug(broadcast)
     return broadcast
+  },
+  broadcastIcons: {
+    // espn: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/ESPN_wordmark.svg',
+    // 'ESPN+': './modules/MMM-PGA/logos/channels/ESPN+.svg',
+    // paramountplus: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Paramount%2B_logo.svg',
+    'Paramount+': 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Paramount%2B_logo.svg',
+  },
+  broadcastIconsInvert: {
+    // cbs: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/CBS_logo_%282020%29.svg',
   },
 
 }

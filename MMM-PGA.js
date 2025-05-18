@@ -370,27 +370,17 @@ Module.register('MMM-PGA', {
               if (!this.config.skipChannels.includes(tournament.broadcast[j][0])) {
                 var broadcastDiv = document.createElement('div')
                 broadcastDiv.classList.add('broadcastIconDiv')
-                if (this.broadcastIcons[tournament.broadcast[j][0]] !== undefined) {
-                  var broadcastImage = new Image()
-                  broadcastImage.src = this.broadcastIcons[tournament.broadcast[j][0]]
-                  broadcastImage.alt = tournament.broadcast[j][0]
-                  broadcastDiv.appendChild(broadcastImage)
-                }
-                else if (this.broadcastIconsInvert[tournament.broadcast[j][0]] !== undefined) {
-                  broadcastDiv.classList.add('invert')
-                  broadcastImage = new Image()
-                  broadcastImage.src = this.broadcastIconsInvert[tournament.broadcast[j][0]]
-                  broadcastImage.alt = tournament.broadcast[j][0]
-                  broadcastDiv.appendChild(broadcastImage)
-                }
-                else if (tournament.broadcast[j][1] !== '') {
+                if (tournament.broadcast[j][1] !== '') {
                   broadcastImage = new Image()
                   broadcastImage.src = tournament.broadcast[j][1]
                   broadcastImage.alt = tournament.broadcast[j][0]
                   broadcastDiv.appendChild(broadcastImage)
                 }
                 else {
-                  broadcastDiv.innerHTML = tournament.broadcast[j][0].toUpperCase().replace('PLUS', '+')
+                  broadcastDiv.innerHTML = tournament.broadcast[j][0] /* .toUpperCase().replace('PLUS', '+') */
+                }
+                if (tournament.broadcast[j][2] !== undefined) {
+                  broadcastDiv.classList.add(tournament.broadcast[j][2])
                 }
                 broadcastTd.appendChild(broadcastDiv)
               }
@@ -715,14 +705,4 @@ Module.register('MMM-PGA', {
       this.locationIndex = 0
     }
   }, */
-
-  broadcastIcons: {
-    // espn: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/ESPN_wordmark.svg',
-    // espnplus: './modules/MMM-PGA/logos/channels/ESPN+.svg',
-    // paramountplus: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Paramount%2B_logo.svg',
-    'Paramount+': 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Paramount%2B_logo.svg',
-  },
-  broadcastIconsInvert: {
-    // cbs: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/CBS_logo_%282020%29.svg',
-  },
 })
