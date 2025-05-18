@@ -10,18 +10,19 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Add rotation among multiple broadcast channels
 - Add hidden (undocumented) config options of `skipChannels` and `channelRotateInterval`, which adds a list of channels to skip in the rotation, and the rotation time in milliseconds, respectively
 - BUG FIX: Add catch for undefined tournament purse on leaderboard
+- Update devDependencies
 
 ## [2.2.2](https://github.com/dathbe/MMM-PGA/compare/v2.2.1...v2.2.2) - 2025-05-14
 
 - BUG FIX: Catch error when current week tournament has `undefined` purse
-- Bump dev dependency
+- Update devDependencies
 - Lint style changes
 
 ## [2.2.1](https://github.com/dathbe/MMM-PGA/compare/v2.2.0...v2.2.1) - 2025-05-06
 
 - Displays all courses when tournament uses multiple courses
 - Minor cosmetic tweaks
-- Bump dev dependencies versions
+- Update devDependencies
 
 ## [2.2.0](https://github.com/dathbe/MMM-PGA/compare/v2.1.1...v2.2.0) - 2025-05-01
 
