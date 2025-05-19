@@ -38,7 +38,6 @@ git pull
   position: "top_left",
   config: {
     showLogo: true,
-    showPurse: false,
     showFlags: true,
   }
 },
