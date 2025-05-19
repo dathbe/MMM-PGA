@@ -81,7 +81,7 @@
 }
 
 .MMM-PGA .tournament-table{
-  max-width: 500px;
+  max-width: 400px;
   border-collapse: collapse;
   line-height: 18px;
 }
@@ -98,9 +98,10 @@
 }
 
 .MMM-PGA .tournament-table td.date-cell{
-  padding-right: 2px;
+  padding-right: 10px;
   margin: 2px;
-  width: 30%;
+  width: fit-content;
+  white-space: nowrap;
 }
 
 .MMM-PGA .tournament-table td.date-cell,

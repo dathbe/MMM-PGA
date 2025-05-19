@@ -123,7 +123,10 @@ module.exports = NodeHelper.create({
       // Load Data to begin with so we dont have to wait for next server load
       // Each client will make a call at startup
       this.getUpcomingTourneyData(this.config.numTournaments)
-      this.getLeaderboardData() // would be great to move this into a conditional block so it only runs if user wants boards, but the dom won't load if I do that; it only calls once on startup, so not the biggest deal
+      var self = this
+      setTimeout(function () {
+        self.getLeaderboardData()
+      }, 4000)
       if (this.config.showFedex) {
         this.getFedexData(this.config.maxNumRankings, this.config.rapidAPIKey)
       }

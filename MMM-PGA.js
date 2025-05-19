@@ -371,7 +371,7 @@ Module.register('MMM-PGA', {
                 var broadcastDiv = document.createElement('div')
                 broadcastDiv.classList.add('PGAbroadcastIconDiv')
                 if (tournament.broadcast[j][1] !== '') {
-                  broadcastImage = new Image()
+                  var broadcastImage = new Image()
                   broadcastImage.src = tournament.broadcast[j][1]
                   broadcastImage.alt = tournament.broadcast[j][0]
                   broadcastDiv.appendChild(broadcastImage)

@@ -3,14 +3,14 @@ const moment = require('moment')
 
 module.exports = {
 
-  url: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga', // &event=401703505 <-completed event 401703492 <- two courses
+  url: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga', // &event=401703505 <-completed event 401703492 <- two courses 
   tournamentsUrl: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/pga/tourschedule',
   // url: "https://site.api.espn.com/apis/site/v2/sports/golf/leaderboard?event=401219795",
   // urlTournamentList: "https://www.espn.com/golf/schedule/_/tour/pga?_xhr=pageContent&offset=-04%3A00",
+  currentTourneyId: '',
+  currentTourneyPurse: {},
 
   async getTournamentData(callback) {
-    // Log.log("ESPN MMM-PGA retrieving Tournament Data");
-
     const response = await fetch(this.url, {
       method: 'get',
     })
@@ -29,7 +29,12 @@ module.exports = {
     try {
       for (let j = 0; j < ESPNObj.length; j++) {
         if (ESPNObj[j].status.type.name != 'STATUS_CANCELED') {
-          purses.push(Number(ESPNObj[j].displayPurse.replaceAll('$', '').replaceAll(',', '')))
+          if (ESPNObj[j].displayPurse === undefined) {
+            purses.push(999999999999)
+          }
+          else {
+            purses.push(Number(ESPNObj[j].displayPurse.replaceAll('$', '').replaceAll(',', '')))
+          }
         }
       }
       if (purses.length > 0) {
@@ -40,7 +45,7 @@ module.exports = {
       }
     }
     catch {
-      Log.debug('One of the tournaments this week does not have a purse; using the last listed tournament')
+      Log.debug('[MMM-PGA] One of the tournaments this week does not have a purse; using the last listed tournament')
       event = ESPNObj[ESPNObj.length - 1]
     }
 
@@ -56,9 +61,9 @@ module.exports = {
       tournament.purse = event.displayPurse
     }
     else {
-      tournament.purse = 'TBD'
+      tournament.purse = this.currentTourneyPurse[tournament.name.toLowerCase()]
     }
-    tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
+    // tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
     tournament.currentRound = this.getCurrentRound(event)
     tournament.playoff = false
     if (/* true || */ event.competitions[0].status.type.name === 'STATUS_IN_PROGRESS') {
@@ -159,7 +164,7 @@ module.exports = {
         venue = ''
       }
       // var venue = tournament.locations[0] ? tournament.locations[0] : ''
-      var purse = 'TBD'
+      var purse = '-'
       if (tournament.purse && tournament.purse.displayValue) {
         purse = tournament.purse.displayValue
       }
@@ -173,7 +178,75 @@ module.exports = {
       })
     }
 
-    // Log.debug(tournaments)
+    var PGAbody = await fetch('https://orchestrator.pgatour.com/graphql', {
+      credentials: 'omit',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'content-type': 'application/json',
+        'x-api-key': 'da2-gsrx5bibzbb4njvhl7t37wqyl4',
+        'x-pgat-platform': 'web',
+        'x-amz-user-agent': 'aws-amplify/3.0.7',
+        'Sec-GPC': '1',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-site',
+        'Priority': 'u=4',
+      },
+      referrer: 'https://www.pgatour.com/',
+      body: `{"operationName":"Schedule","variables":{"tourCode":"R","year":"${new Date().getYear() + 1900}"},"query":"query Schedule($tourCode: String!, $year: String, $filter: TournamentCategory) {\\n  schedule(tourCode: $tourCode, year: $year, filter: $filter) {\\n    completed {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n    filters {\\n      type\\n      name\\n    }\\n    seasonYear\\n    tour\\n    upcoming {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n  }\\n}\\n\\nfragment ScheduleTournament on ScheduleMonth {\\n  tournaments {\\n    tournamentName\\n    id\\n    beautyImage\\n    champion\\n    champions {\\n      displayName\\n      playerId\\n    }\\n    championEarnings\\n    championId\\n    city\\n    country\\n    countryCode\\n    courseName\\n    date\\n    dateAccessibilityText\\n    purse\\n    sortDate\\n    startDate\\n    state\\n    stateCode\\n    status {\\n      roundDisplay\\n      roundStatus\\n      roundStatusColor\\n      roundStatusDisplay\\n    }\\n    tournamentStatus\\n    ticketsURL\\n    tourStandingHeading\\n    tourStandingValue\\n    tournamentLogo\\n    display\\n    sequenceNumber\\n    tournamentCategoryInfo {\\n      type\\n      logoLight\\n      logoDark\\n      label\\n    }\\n    tournamentSiteURL\\n    tournamentStatus\\n    useTournamentSiteURL\\n  }\\n}"}`,
+      method: 'POST',
+      mode: 'cors',
+    })
+    Log.debug('[MMM-PGA] https://orchestrator.pgatour.com/graphql fetched for tournament ID')
+    PGAbody = await PGAbody.json()
+    PGAbody = PGAbody.data.schedule
+    this.currentTourneyId = PGAbody.upcoming[0].tournaments[0].id
+    this.currentTourneyPurse[PGAbody.upcoming[0].tournaments[0].tournamentName.toLowerCase()] = PGAbody.upcoming[0].tournaments[0].purse
+    this.currentTourneyPurse[PGAbody.completed[PGAbody.completed.length-1].tournaments[PGAbody.completed[PGAbody.completed.length-1].tournaments.length-1].tournamentName.toLowerCase()] = PGAbody.completed[PGAbody.completed.length-1].tournaments[PGAbody.completed[PGAbody.completed.length-1].tournaments.length-1].purse,
+
+    // The following is an alternative way to get upcoming tournament info.  It is inferior because only a single course is listed, whereas ESPN provides all courses (E.g., Torrey Pines North and South for the Farmer's)
+    /* var PGAObj = []
+    for (let i=0; i < PGAbody.length; i++) {
+      for (let j=0; j < PGAbody[i].tournaments.length; j++) {
+        PGAObj.push(PGAbody[i].tournaments[j])
+      }
+    }
+
+    if (numTournaments > PGAObj.length) {
+      totalTourn = PGAObj.length
+    }
+    else {
+      totalTourn = numTournaments
+    }
+
+    var tournaments = []
+    
+    for (let i = 0; i < totalTourn; i++) {
+      var tourName = PGAObj[i].tournamentName
+      var strDate = PGAObj[i].date
+      var nDate = 'ndate'
+      if (PGAObj[i].stateCode != '') {
+        venue = [`${PGAObj[i].courseName} - ${PGAObj[i].city}, ${PGAObj[i].stateCode}`]
+      }
+      else {
+        venue = [`${PGAObj[i].courseName} - ${PGAObj[i].city}, ${PGAObj[i].country}`]
+      }
+      var purse = PGAObj[i].purse
+      if (purse === '$0') {
+        purse = '-'
+      }
+      tournaments.push({
+        name: tourName,
+        date: strDate,
+        location: venue,
+        purse: purse,
+        defendingChamp: '',
+        logo: PGAObj[i].tournamentLogo,
+      })
+    } */
+
     callback(tournaments)
   },
 
@@ -204,7 +277,7 @@ module.exports = {
         appendstring = ''
       }
 
-      courses.push(course.name + ', ' + city + appendstring + state)
+      courses.push(course.name + ' - ' + city + appendstring + state)
     }
 
     return courses
@@ -250,30 +323,37 @@ module.exports = {
   },
 
   async getBroadcasts() {
-    var currentTourneyId = await fetch('https://orchestrator.pgatour.com/graphql', {
-      credentials: 'omit',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0',
-        'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'content-type': 'application/json',
-        'x-api-key': 'da2-gsrx5bibzbb4njvhl7t37wqyl4',
-        'x-pgat-platform': 'web',
-        'x-amz-user-agent': 'aws-amplify/3.0.7',
-        'Sec-GPC': '1',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'same-site',
-        'Priority': 'u=4',
-      },
-      referrer: 'https://www.pgatour.com/',
-      body: '{"operationName":"Schedule","variables":{"tourCode":"R","year":"2025"},"query":"query Schedule($tourCode: String!, $year: String, $filter: TournamentCategory) {\\n  schedule(tourCode: $tourCode, year: $year, filter: $filter) {\\n    completed {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n    filters {\\n      type\\n      name\\n    }\\n    seasonYear\\n    tour\\n    upcoming {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n  }\\n}\\n\\nfragment ScheduleTournament on ScheduleMonth {\\n  tournaments {\\n    tournamentName\\n    id\\n    beautyImage\\n    champion\\n    champions {\\n      displayName\\n      playerId\\n    }\\n    championEarnings\\n    championId\\n    city\\n    country\\n    countryCode\\n    courseName\\n    date\\n    dateAccessibilityText\\n    purse\\n    sortDate\\n    startDate\\n    state\\n    stateCode\\n    status {\\n      roundDisplay\\n      roundStatus\\n      roundStatusColor\\n      roundStatusDisplay\\n    }\\n    tournamentStatus\\n    ticketsURL\\n    tourStandingHeading\\n    tourStandingValue\\n    tournamentLogo\\n    display\\n    sequenceNumber\\n    tournamentCategoryInfo {\\n      type\\n      logoLight\\n      logoDark\\n      label\\n    }\\n    tournamentSiteURL\\n    tournamentStatus\\n    useTournamentSiteURL\\n  }\\n}"}',
-      method: 'POST',
-      mode: 'cors',
-    })
-    currentTourneyId = await currentTourneyId.json()
-    currentTourneyId = currentTourneyId.data.schedule.upcoming[0].tournaments[0].id
+    /* if (this.currentTourneyId === '') {
+      var currentTourneyId = await fetch('https://orchestrator.pgatour.com/graphql', {
+        credentials: 'omit',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0', */
+     //     'Accept': '*/*',
+          /* 'Accept-Language': 'en-US,en;q=0.5',
+          'content-type': 'application/json',
+          'x-api-key': 'da2-gsrx5bibzbb4njvhl7t37wqyl4',
+          'x-pgat-platform': 'web',
+          'x-amz-user-agent': 'aws-amplify/3.0.7',
+          'Sec-GPC': '1',
+          'Sec-Fetch-Dest': 'empty',
+          'Sec-Fetch-Mode': 'cors',
+          'Sec-Fetch-Site': 'same-site',
+          'Priority': 'u=4',
+        },
+         referrer: 'https://www.pgatour.com/',
+        body: `{"operationName":"Schedule","variables":{"tourCode":"R","year":"${new Date().getYear() + 1900}"},"query":"query Schedule($tourCode: String!, $year: String, $filter: TournamentCategory) {\\n  schedule(tourCode: $tourCode, year: $year, filter: $filter) {\\n    completed {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n    filters {\\n      type\\n      name\\n    }\\n    seasonYear\\n    tour\\n    upcoming {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n  }\\n}\\n\\nfragment ScheduleTournament on ScheduleMonth {\\n  tournaments {\\n    tournamentName\\n    id\\n    beautyImage\\n    champion\\n    champions {\\n      displayName\\n      playerId\\n    }\\n    championEarnings\\n    championId\\n    city\\n    country\\n    countryCode\\n    courseName\\n    date\\n    dateAccessibilityText\\n    purse\\n    sortDate\\n    startDate\\n    state\\n    stateCode\\n    status {\\n      roundDisplay\\n      roundStatus\\n      roundStatusColor\\n      roundStatusDisplay\\n    }\\n    tournamentStatus\\n    ticketsURL\\n    tourStandingHeading\\n    tourStandingValue\\n    tournamentLogo\\n    display\\n    sequenceNumber\\n    tournamentCategoryInfo {\\n      type\\n      logoLight\\n      logoDark\\n      label\\n    }\\n    tournamentSiteURL\\n    tournamentStatus\\n    useTournamentSiteURL\\n  }\\n}"}`,
+        method: 'POST',
+        mode: 'cors',
+      })
+      Log.debug('[MMM-PGA] https://orchestrator.pgatour.com/graphql fetched for current tournament ID')
+      currentTourneyId = await currentTourneyId.json()
+      this.currentTourneyId = currentTourneyId.data.schedule.upcoming[0].tournaments[0].id
+    } */
 
+    
+/*     while (this.currentTourneyId === '') {
+      Log.debug('waiting...')
+    } */
     var pgaBroadcasts = await fetch('https://orchestrator.pgatour.com/graphql', {
       credentials: 'omit',
       headers: {
@@ -291,15 +371,16 @@ module.exports = {
         'Priority': 'u=4',
       },
       referrer: 'https://www.pgatour.com/',
-      body: `{"operationName":"Coverage","variables":{"tournamentId":"${currentTourneyId}"},"query":"query Coverage($tournamentId: ID!) {\\n  coverage(tournamentId: $tournamentId) {\\n    id\\n    tournamentName\\n    countryCode\\n    coverageType {\\n      ... on BroadcastFullTelecast {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastFeaturedGroup {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        courseId\\n        groups {\\n          id\\n          extendedCoverage\\n          playerLastNames\\n          liveStatus\\n        }\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastFeaturedHole {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        courseId\\n        featuredHoles\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastCoverageCarousel {\\n        __typename\\n        carousel {\\n          ... on BroadcastFullTelecast {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n          ... on BroadcastFeaturedGroup {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            courseId\\n            groups {\\n              id\\n              extendedCoverage\\n              playerLastNames\\n              liveStatus\\n            }\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n          ... on BroadcastFeaturedHole {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            courseId\\n            featuredHoles\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n        }\\n      }\\n    }\\n  }\\n}"}`,
+      body: `{"operationName":"Coverage","variables":{"tournamentId":"${this.currentTourneyId}"},"query":"query Coverage($tournamentId: ID!) {\\n  coverage(tournamentId: $tournamentId) {\\n    id\\n    tournamentName\\n    countryCode\\n    coverageType {\\n      ... on BroadcastFullTelecast {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastFeaturedGroup {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        courseId\\n        groups {\\n          id\\n          extendedCoverage\\n          playerLastNames\\n          liveStatus\\n        }\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastFeaturedHole {\\n        __typename\\n        id\\n        streamTitle\\n        roundNumber\\n        channelTitle\\n        roundDisplay\\n        startTime\\n        endTime\\n        courseId\\n        featuredHoles\\n        promoImage\\n        promoImages\\n        liveStatus\\n        network {\\n          id\\n          networkName\\n          backgroundColor\\n          backgroundColorDark\\n          networkLogo\\n          networkLogoDark\\n          priorityNum\\n          url\\n          iOSLink\\n          appleAppStore\\n          androidLink\\n          googlePlayStore\\n          simulcast\\n          simulcastUrl\\n          streamUrl\\n          iosStreamUrl\\n          androidStreamUrl\\n        }\\n      }\\n      ... on BroadcastCoverageCarousel {\\n        __typename\\n        carousel {\\n          ... on BroadcastFullTelecast {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n          ... on BroadcastFeaturedGroup {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            courseId\\n            groups {\\n              id\\n              extendedCoverage\\n              playerLastNames\\n              liveStatus\\n            }\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n          ... on BroadcastFeaturedHole {\\n            __typename\\n            id\\n            streamTitle\\n            roundNumber\\n            channelTitle\\n            roundDisplay\\n            startTime\\n            endTime\\n            courseId\\n            featuredHoles\\n            promoImage\\n            promoImages\\n            liveStatus\\n            network {\\n              id\\n              networkName\\n              backgroundColor\\n              backgroundColorDark\\n              networkLogo\\n              networkLogoDark\\n              priorityNum\\n              url\\n              iOSLink\\n              appleAppStore\\n              androidLink\\n              googlePlayStore\\n              simulcast\\n              simulcastUrl\\n              streamUrl\\n              iosStreamUrl\\n              androidStreamUrl\\n            }\\n          }\\n        }\\n      }\\n    }\\n  }\\n}"}`,
       method: 'POST',
       mode: 'cors',
     })
+    Log.debug('[MMM-PGA] https://orchestrator.pgatour.com/graphql fetched for broadcasts')
     pgaBroadcasts = await pgaBroadcasts.json()
     pgaBroadcasts = pgaBroadcasts.data.coverage.coverageType
     var broadcast = []
     var alreadyAdded = []
-    const darkLogos = ['ESPN+', 'PGA Championship']
+    const darkLogos = ['ESPN+', 'PGA Championship', 'CBS']
     for (let i = 0; i < pgaBroadcasts.length; i++) {
       if (pgaBroadcasts[i].__typename !== 'BroadcastCoverageCarousel') {
         if ((/* true || */ pgaBroadcasts[i].liveStatus === 'LIVE') && pgaBroadcasts[i].streamTitle.endsWith('Broadcast') && !alreadyAdded.includes(pgaBroadcasts[i].network.networkName)) {
@@ -323,7 +404,6 @@ module.exports = {
       }
     }
 
-    Log.debug(broadcast)
     return broadcast
   },
   broadcastIcons: {
