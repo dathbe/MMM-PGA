@@ -29,7 +29,7 @@ module.exports = NodeHelper.create({
     res.sendStatus(200)
   },
 
-  // Core function of franewor that schedules the Update
+  /* // schedules the leaderboard update
   scheduleUpdate: function () {
     // schedule the updates for Subsequent Loads
     var self = this
@@ -37,7 +37,7 @@ module.exports = NodeHelper.create({
     setInterval(() => {
       self.getLeaderboardData()
     }, self.config.updateInterval)
-  },
+  }, */
 
   // Schedule the Ranking Updates. This is a much longer intervl since the data only changes weekly
   scheduleRankingUpdate: function () {
@@ -72,9 +72,15 @@ module.exports = NodeHelper.create({
   getLeaderboardData: function () {
     var self = this
 
-    ESPN.getTournamentData(function (tournament) {
+    ESPN.getTournamentData(this.config.updateInterval, function (tournament) {
       self.sendSocketNotification('PGA_RESULT', tournament)
     })
+    if (this.config.showBoards) {
+      Log.debug(Math.max(ESPN.boardUpdateInterval, self.config.updateInterval) / 1000 / 60)
+      setTimeout(() => {
+        self.getLeaderboardData()
+      }, Math.max(ESPN.boardUpdateInterval, self.config.updateInterval))
+    }
   },
 
   getUpcomingTourneyData: function (numTournaments) {
@@ -109,9 +115,9 @@ module.exports = NodeHelper.create({
       if (this.started !== true) {
         this.started = true
         this.scheduleUpcomingTourneyUpdate()
-        if (this.config.showBoards) {
+        /* if (this.config.showBoards) {
           this.scheduleUpdate()
-        }
+        } */
         if (this.config.showFedex) {
           this.scheduleFedexUpdate()
         }

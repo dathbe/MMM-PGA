@@ -7,6 +7,10 @@
  .MMM-PGA{
    min-width: 300px;
  }
+ 
+.MMM-PGA header {
+  text-transform: unset;
+}
 
 .MMM-PGA .leaderboard-separator{
   font-size: 15.5px;

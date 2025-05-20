@@ -3,14 +3,18 @@ const moment = require('moment')
 
 module.exports = {
 
-  url: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga', // &event=401703505 <-completed event 401703492 <- two courses 
+  url: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga', // &event=401703505 <-completed event 401703492 <- two courses
   tournamentsUrl: 'https://site.web.api.espn.com/apis/site/v2/sports/golf/pga/tourschedule',
   // url: "https://site.api.espn.com/apis/site/v2/sports/golf/leaderboard?event=401219795",
   // urlTournamentList: "https://www.espn.com/golf/schedule/_/tour/pga?_xhr=pageContent&offset=-04%3A00",
   currentTourneyId: '',
   currentTourneyPurse: {},
+  boardUpdateInterval: 0,
 
-  async getTournamentData(callback) {
+  async getTournamentData(configUpdateInterval, callback) {
+    if (this.boardUpdateInterval < configUpdateInterval) {
+      this.boardUpdateInterval = configUpdateInterval
+    }
     const response = await fetch(this.url, {
       method: 'get',
     })
@@ -29,11 +33,11 @@ module.exports = {
     try {
       for (let j = 0; j < ESPNObj.length; j++) {
         if (ESPNObj[j].status.type.name != 'STATUS_CANCELED') {
-          if (ESPNObj[j].displayPurse === undefined) {
+          if (ESPNObj[j].purse === undefined) {
             purses.push(999999999999)
           }
           else {
-            purses.push(Number(ESPNObj[j].displayPurse.replaceAll('$', '').replaceAll(',', '')))
+            purses.push(Number(ESPNObj[j].purse))
           }
         }
       }
@@ -57,7 +61,7 @@ module.exports = {
     tournament.location = this.getEventLocation(event)
     tournament.statusCode = event.status.type.name
     tournament.status = event.competitions[0].status ? event.competitions[0].status.type.detail : ''
-    if (tournament.purse !== undefined) {
+    if (event.displayPurse !== undefined) {
       tournament.purse = event.displayPurse
     }
     else {
@@ -118,6 +122,20 @@ module.exports = {
         })
       }
     }
+
+    Log.debug(event.status)
+    Log.debug(event.competitions[0].status)
+    const nextStart = new Date(Date.parse(event.date))
+    if (['STATUS_FINAL'].includes(event.status.type.name)) {
+      this.boardUpdateInterval = 30 * 60 * 1000 // 30 minutes
+    }
+    else if (event.status.type.name === 'STATUS_SCHEDULED') {
+      Math.max(this.boardUpdateInterval = nextStart - new Date(), 15 * 60 * 1000) // when tourney "starts" per ESPN (midnight ET on the day the tournament starts) or 15 minutes, whichever is longer
+    }
+    else { // e.g., 'STATUS_IN_PROGRESS'
+      this.boardUpdateInterval = configUpdateInterval
+    }
+
     // Function to send SocketNotification with the Tournament Data
     // Log.debug(tournament)
     callback(tournament)
@@ -204,7 +222,7 @@ module.exports = {
     PGAbody = PGAbody.data.schedule
     this.currentTourneyId = PGAbody.upcoming[0].tournaments[0].id
     this.currentTourneyPurse[PGAbody.upcoming[0].tournaments[0].tournamentName.toLowerCase()] = PGAbody.upcoming[0].tournaments[0].purse
-    this.currentTourneyPurse[PGAbody.completed[PGAbody.completed.length-1].tournaments[PGAbody.completed[PGAbody.completed.length-1].tournaments.length-1].tournamentName.toLowerCase()] = PGAbody.completed[PGAbody.completed.length-1].tournaments[PGAbody.completed[PGAbody.completed.length-1].tournaments.length-1].purse,
+    this.currentTourneyPurse[PGAbody.completed[PGAbody.completed.length - 1].tournaments[PGAbody.completed[PGAbody.completed.length - 1].tournaments.length - 1].tournamentName.toLowerCase()] = PGAbody.completed[PGAbody.completed.length - 1].tournaments[PGAbody.completed[PGAbody.completed.length - 1].tournaments.length - 1].purse,
 
     // The following is an alternative way to get upcoming tournament info.  It is inferior because only a single course is listed, whereas ESPN provides all courses (E.g., Torrey Pines North and South for the Farmer's)
     /* var PGAObj = []
@@ -222,7 +240,7 @@ module.exports = {
     }
 
     var tournaments = []
-    
+
     for (let i = 0; i < totalTourn; i++) {
       var tourName = PGAObj[i].tournamentName
       var strDate = PGAObj[i].date
@@ -328,8 +346,8 @@ module.exports = {
         credentials: 'omit',
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0', */
-     //     'Accept': '*/*',
-          /* 'Accept-Language': 'en-US,en;q=0.5',
+    //    'Accept': '*/*',
+    /*    'Accept-Language': 'en-US,en;q=0.5',
           'content-type': 'application/json',
           'x-api-key': 'da2-gsrx5bibzbb4njvhl7t37wqyl4',
           'x-pgat-platform': 'web',
@@ -350,8 +368,7 @@ module.exports = {
       this.currentTourneyId = currentTourneyId.data.schedule.upcoming[0].tournaments[0].id
     } */
 
-    
-/*     while (this.currentTourneyId === '') {
+    /* while (this.currentTourneyId === '') {
       Log.debug('waiting...')
     } */
     var pgaBroadcasts = await fetch('https://orchestrator.pgatour.com/graphql', {

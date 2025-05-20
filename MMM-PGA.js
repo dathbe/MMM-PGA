@@ -12,11 +12,14 @@ Module.register('MMM-PGA', {
   defaults: {
     useHeader: true,
     header: 'PGA Tournament',
+    upcomingTournamentHeader: 'PGA - UPCOMING TOURNAMENTS',
+    fedexCupHeader: 'FedExCup STANDINGS',
+    owgrHeader: 'OFFICIAL WORLD GOLF RANKING',
     rotateInterval: 30 * 1000,
     animationSpeed: 0, // fade in and out speed
     initialLoadDelay: 4250,
     retryDelay: 2500,
-    updateInterval: 5 * 60 * 1000, // every 5 minutes
+    updateInterval: 4 * 60 * 1000, // every 4 minutes for leaderboards
     rankingsUpdateInterval: 4 * 60 * 60 * 1000, // every 4 hours
     colored: true,
     showBoards: true,
@@ -71,16 +74,12 @@ Module.register('MMM-PGA', {
 
     // Set up For Showing Info when a tournament is not active
     this.nonActiveIndex = 0 // Start With Tournament List
-    this.upcomingTournamentHeader = 'PGA - Upcoming Tournaments'
-    this.fedexCupHeader = 'FEDEX CUP STANDINGS'
-    this.owgrHeader = 'OFFICIAL WORLD GOLF RANKING'
     this.rankingObjs = {}
     // Set number of rankings to MAX if user requested more than max
     if (this.config.numRankings > this.config.maxNumRankings) this.config.numRankings = this.config.maxNumRankings
 
     // Set up for Active tournament
     this.boardIndex = 0 // Starts with the Leaderboard
-    this.leaderboardHeader = '&nbsp;'
     this.rotateInterval = null
     this.tournament = null
     this.tournaments = null
@@ -217,7 +216,7 @@ Module.register('MMM-PGA', {
     var boardName = document.createElement('span')
     // Set  Board header Text
     if (this.boardIndex == 0) {
-      var boardHeader = this.leaderboardHeader
+      var boardHeader = '&nbsp;'
     }
     else {
       boardHeader = this.config.favorites[this.boardIndex - 1].headerName
@@ -525,7 +524,7 @@ Module.register('MMM-PGA', {
     }
     else {
       if (this.nonActiveIndex == 0) {
-        headerText = this.upcomingTournamentHeader
+        headerText = this.config.upcomingTournamentHeader
       }
       else {
         var obj = Object.entries(this.rankingObjs)[this.nonActiveIndex - 1][1]
@@ -585,18 +584,18 @@ Module.register('MMM-PGA', {
       }
 
       wrapper.appendChild(list)
-      return wrapper
     }
+    else {
+      // Tounament is in progress and Module is confugred to show boards
+      // So build the boards
+      var curTourneyList = [this.tournament]
+      var tdetails = this.buildTournamentList(curTourneyList, false)
+      wrapper.appendChild(tdetails)
 
-    // Tounament is in progress and Module is confugred to show boards
-    // So build the boards
-    var curTourneyList = [this.tournament]
-    var tdetails = this.buildTournamentList(curTourneyList, false)
-    wrapper.appendChild(tdetails)
-
-    if (this.config.showBoards) {
-      var leaderboard = this.buildLeaderBoard(this.tournament)
-      wrapper.appendChild(leaderboard)
+      if (this.config.showBoards) {
+        var leaderboard = this.buildLeaderBoard(this.tournament)
+        wrapper.appendChild(leaderboard)
+      }
     }
 
     return wrapper
@@ -635,7 +634,7 @@ Module.register('MMM-PGA', {
         this.logoIndex = 0
       }
     }
-    else {
+    else if (logos.length > 0) {
       logos[0].style.display = 'block'
     }
   },
@@ -660,7 +659,7 @@ Module.register('MMM-PGA', {
       this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'OWGR_RANKING') {
-      this.rankingObjs.owgr = { headerTxt: this.owgrHeader, rankingObj: payload }
+      this.rankingObjs.owgr = { headerTxt: this.config.owgrHeader, rankingObj: payload }
       this.loaded = true
       if (this.rotateInterval == null) {
         this.scheduleCarousel()
@@ -668,7 +667,7 @@ Module.register('MMM-PGA', {
       this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'FEDEXCUP_RANKING') {
-      this.rankingObjs.fedex = { headerTxt: this.fedexCupHeader, rankingObj: payload }
+      this.rankingObjs.fedex = { headerTxt: this.config.fedexCupHeader, rankingObj: payload }
       this.loaded = true
       if (this.rotateInterval == null) {
         this.scheduleCarousel()

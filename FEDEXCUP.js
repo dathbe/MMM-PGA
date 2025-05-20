@@ -46,7 +46,7 @@ module.exports = {
       mode: 'cors',
       credentials: 'omit',
     })
-    Log.debug(`[MMM-PGA] ${this.pgaUrl} fetched`)
+    Log.debug(`[MMM-PGA] ${this.pgaUrl} fetched for FedEx standings`)
 
     const data = await response.json()
     // Log.debug(data.data.tourCupCombined.players[0])
