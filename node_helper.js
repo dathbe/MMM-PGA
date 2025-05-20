@@ -76,7 +76,7 @@ module.exports = NodeHelper.create({
       self.sendSocketNotification('PGA_RESULT', tournament)
     })
     if (this.config.showBoards) {
-      Log.debug(Math.max(ESPN.boardUpdateInterval, self.config.updateInterval) / 1000 / 60)
+      // Log.debug(Math.max(ESPN.boardUpdateInterval, self.config.updateInterval) / 1000 / 60)
       setTimeout(() => {
         self.getLeaderboardData()
       }, Math.max(ESPN.boardUpdateInterval, self.config.updateInterval))

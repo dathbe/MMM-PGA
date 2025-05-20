@@ -58,21 +58,21 @@ git pull
 | **For Favorites Boards**
 | `favorites`           | Array of favorite players to display on one or more boards. Each favorite board has a `headerName` and a `favoriteList` array of player ids. See below for details. Players in the favorite board object will be displayed on the board if they are playing in the current tournament.  Favorite boards will rotate along with the overall leaderboard.<br><br>**Type:** `array` <br> **Default value:** `[]` (empty)
 | `remoteFavoritesFile` | Location of a remote File to use for favorites. The format of the file is a json file with exactly what you would set in the `favorites` configuration. If this option is set any `favorites` defined in the config will be ignored.<br><br>Examples:<br>- `'utilities/favorites.json'` (Local file. File path is relative to MMM-PGA folder, so this example would point to ~/MagicMirror/modules/MMM-PGA/utilities/favorites.json.)<br>- `'https://dl.dropboxusercontent.com/s/7my######/favorites.json'` (File stored in Dropbox)<br><br>**Type:** `string` <br> **Default value:** `null`
-| `header`              | Works the same as on Leaderboards (see above)
+| `header`              | Works the same as on Leaderboards (see above).
 | **For Rankings**
 | `showFedex`           | Whether to show FedEx Cup standings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments and selected rankings.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `showOWGR`            | Whether to show Official World Golf Rankings when a tournament is not active. If set to true the module will rotate between the upcoming tournaments and selected rankings.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `numRankings`         | The number of players to show in the Fedex Cup and OWGR rankings. The number should be set between 1 and 50.<br><br>**Type:** `int` <br> **Default value:** `5`
 | **For Upcoming Tournaments**
 | `numTournaments`      | Number of upcoming tournaments to show when there is not an active tournment in progress or  `showBoards` is set false.<br><br>**Type:** `int` <br> **Default value:** `3`
-| `showLocation`        | Works the same as on Leaderboards (see above)
-| `showPurse`           | Works the same as on Leaderboards (see above)
+| `showLocation`        | Works the same as on Leaderboards (see above).
+| `showPurse`           | Works the same as on Leaderboards (see above).
 | **General Display Options**
 | `showLogo`            | Shows the PGA logo in the header<br><br>**Type:** `bool` <br> **Default value:** `false`
 | `largerFont`          | Whether to display larger fonts for the module. If set to false it will use the `xsmall` style defined by MagicMirror². If set to true it will use the `small` style defined by MagicMirror².<br><br>**Type:** `bool` <br> **Default value:** `false`
 | `colored`             | Whether to display colors within the module in, for example, the scores and icons.<br><br>**Type:** `bool` <br> **Default value:** `true`
 | `rotateInterval`      | Time (in milliseconds) to display a card from the module before rotating to the next card (only matters if there is more than one card to display).<br><br>**Type:** `int` <br> **Default value:** `30 * 1000` (30 seconds)
-| `animationSpeed`      | Animation speed to fade in and out, in ms.<br><br>**Type:** `int` <br> **Default value:** `0`
+| `animationSpeed`      | Animation time to fade in and out, in milliseconds, when rotating between cards.<br><br>**Type:** `int` <br> **Default value:** `750`
 
 ## Screenshots
 

@@ -16,7 +16,7 @@ Module.register('MMM-PGA', {
     fedexCupHeader: 'FedExCup STANDINGS',
     owgrHeader: 'OFFICIAL WORLD GOLF RANKING',
     rotateInterval: 30 * 1000,
-    animationSpeed: 0, // fade in and out speed
+    animationSpeed: 750, // fade in and out speed in milliseconds
     initialLoadDelay: 4250,
     retryDelay: 2500,
     updateInterval: 4 * 60 * 1000, // every 4 minutes for leaderboards
@@ -63,6 +63,8 @@ Module.register('MMM-PGA', {
     this.pgalogohtml = '<img src=\'./modules/MMM-PGA/images/pga-tour-logo.svg\' class=\'tourlogo\'></img> '
     this.flaghtml = '<img src=\'http\' alt=\'\' align=top></img>'
 
+    this.cardIndex = 0
+
     if (this.config.showRankings === false) {
       this.config.showFedex = false
       this.config.showOWGR = false
@@ -73,13 +75,13 @@ Module.register('MMM-PGA', {
     }
 
     // Set up For Showing Info when a tournament is not active
-    this.nonActiveIndex = 0 // Start With Tournament List
+    //this.nonActiveIndex = 0 // Start With Tournament List
     this.rankingObjs = {}
     // Set number of rankings to MAX if user requested more than max
     if (this.config.numRankings > this.config.maxNumRankings) this.config.numRankings = this.config.maxNumRankings
 
     // Set up for Active tournament
-    this.boardIndex = 0 // Starts with the Leaderboard
+    // this.boardIndex = 0 // Starts with the Leaderboard
     this.rotateInterval = null
     this.tournament = null
     this.tournaments = null
@@ -126,7 +128,7 @@ Module.register('MMM-PGA', {
       this.getFavoriteFile(function (response) {
         self.config.favorites = response
         self.numBoards = 1 + self.config.favorites.length
-        self.boardIndex = 0
+        // self.boardIndex = 0
       })
     }
   },
@@ -177,10 +179,10 @@ Module.register('MMM-PGA', {
   },
 
   /* Builds the Dom for the Board */
-  buildLeaderBoard: function (tournament) {
+  buildLeaderBoard: function (board) {
     var self = this
 
-    var players = tournament.players
+    var players = this.tournament.players
 
     players.sort(function (a, b) {
       return a.sortOrder - b.sortOrder
@@ -188,23 +190,18 @@ Module.register('MMM-PGA', {
 
     // If Favorites is enabled create Array with only the Favorites
     function includePlayer(player) {
-      return self.config.favorites[self.boardIndex - 1].favoriteList.includes(player.id)
+      return self.config.favorites[board].favoriteList.includes(player.id)
     }
-    while (this.boardIndex >= 1) {
+    var favsWarning = false
+    if (typeof board === 'number') {
       var favs = players.filter(includePlayer)
-      if (favs.length == 0) {
-        this.boardIndex++
-        if (this.boardIndex == this.numBoards) this.boardIndex = 0
-      }
-      else {
+      if (favs.length > 0) {
         players = favs
         var len = players.length
-        break
       }
-    }
-
-    if (this.boardIndex == 0) {
-      len = players.length < this.config.maxLeaderboard ? players.length : this.config.maxLeaderboard
+      else {
+        favsWarning = true
+      }
     }
 
     // Create Board Header
@@ -215,18 +212,19 @@ Module.register('MMM-PGA', {
 
     var boardName = document.createElement('span')
     // Set  Board header Text
-    if (this.boardIndex == 0) {
+    if (board === 'leaderboard') {
+      len = players.length < this.config.maxLeaderboard ? players.length : this.config.maxLeaderboard
       var boardHeader = '&nbsp;'
     }
     else {
-      boardHeader = this.config.favorites[this.boardIndex - 1].headerName
+      boardHeader = this.config.favorites[board].headerName
     }
     boardName.innerHTML = boardHeader
     leaderboardSeparator.appendChild(boardName)
 
     var boardStatus = document.createElement('span')
     boardStatus.classList.add('event-status')
-    boardStatus.innerHTML = tournament.status
+    boardStatus.innerHTML = this.tournament.status
     leaderboardSeparator.appendChild(boardStatus)
 
     // Build table with Score details
@@ -236,7 +234,7 @@ Module.register('MMM-PGA', {
 
     var namespan = 1
     if (this.config.showFlags) namespan++
-    // if (tournament.playoff) namespan++;
+    // if (this.tournament.playoff) namespan++;
 
     // Leader Board Table Header
     var lbhead = document.createElement('tr')
@@ -246,7 +244,7 @@ Module.register('MMM-PGA', {
     posTh.classList.add('pos-cell')
     lbhead.appendChild(posTh)
 
-    if (tournament.playoff) {
+    if (this.tournament.playoff) {
       var playoffTh = this.buildTh('')
       playoffTh.classList.add('playoff-cell')
       lbhead.appendChild(playoffTh)
@@ -256,7 +254,7 @@ Module.register('MMM-PGA', {
     playerTh.classList.add('player-name')
     lbhead.appendChild(playerTh)
 
-    var roundTh = this.buildTh('R' + tournament.currentRound)
+    var roundTh = this.buildTh('R' + this.tournament.currentRound)
     roundTh.classList.add('current-round')
     lbhead.appendChild(roundTh)
 
@@ -276,7 +274,7 @@ Module.register('MMM-PGA', {
 
       // Only do tie logic for Leaderboards
       // Favorites will display ALL
-      if (this.boardIndex == 0) {
+      if (board === 'leaderboard') {
         if (i == this.config.numLeaderboard - 1) lastpos = playerpos
 
         if (i > this.config.numLeaderboard - 1) {
@@ -289,7 +287,7 @@ Module.register('MMM-PGA', {
       lbTable.appendChild(lbrow)
 
       lbrow.appendChild(this.buildTD(player.position, ['pos-cell']))
-      if (tournament.playoff) {
+      if (this.tournament.playoff) {
         var pind = (player.playoff) ? '►' : ''
         lbrow.appendChild(this.buildTD(pind, ['td-playoff', 'playoff-cell']))
       }
@@ -516,26 +514,28 @@ Module.register('MMM-PGA', {
     return rankTable
   },
 
-  buildHeader: function (showActive) {
+  buildHeader: function (card) {
     var header = document.createElement('header')
 
-    if (showActive) {
+    if (card === 'leaderboard' || typeof card === 'number') {
       var headerText = this.config.header
     }
-    else {
-      if (this.nonActiveIndex == 0) {
+    else if (card === 'upcoming') {
         headerText = this.config.upcomingTournamentHeader
-      }
-      else {
-        var obj = Object.entries(this.rankingObjs)[this.nonActiveIndex - 1][1]
-        headerText = obj.headerTxt
-      }
+    }
+    else if (card === 'owgr' ) {
+      headerText = this.config.owgrHeader
+    }
+    else if (card === 'fedex') {
+      headerText = this.config.fedexCupHeader
+    }
+    else {
+      headerText = "PGA"
     }
 
     header.classList.add('pga_header_wrapper')
     var headerTextSpan = document.createElement('span')
     headerTextSpan.classList.add('pga_header', 'bright')
-    // headerTextSpan.classList.add('small')
     headerTextSpan.innerHTML = headerText
     if (this.config.showLogo) {
       headerTextSpan.innerHTML = this.pgalogohtml + headerTextSpan.innerHTML
@@ -561,42 +561,53 @@ Module.register('MMM-PGA', {
       return wrapper
     }
 
+    // Determine which cards we want to display
     if (this.tournament !== null && this.tournament.statusCode !== 'STATUS_SCHEDULED' && this.config.showBoards) {
-      var showActive = true
+      this.currentCards = ['leaderboard']
+      for (let i = 0; i < this.config.favorites.length; i++) {
+        var self = this
+        // Don't display favorite list unless there are some players on the list competing in the tournament
+        function includePlayer(player) {
+          return self.config.favorites[i].favoriteList.includes(player.id)
+        }
+        var checkFavs = this.tournament.players
+        if (checkFavs.filter(includePlayer).length > 0) {
+          this.currentCards.push(i)
+        }
+      }
     }
     else {
-      showActive = false
+      this.currentCards = ['upcoming']
+    }
+    if (this.tournament === null || ['STATUS_SCHEDULED', 'STATUS_FINAL'].includes(this.tournament.statusCode)) {
+      if (this.config.showOWGR) {
+        this.currentCards.push('owgr')
+      }
+      if (this.config.showFedex) {
+        this.currentCards.push('fedex')
+      }
     }
 
     // creating the header
     if (this.config.useHeader != false) {
-      wrapper.appendChild(this.buildHeader(showActive))
+      wrapper.appendChild(this.buildHeader(this.currentCards[this.cardIndex]))
     }
 
-    // If Tounament not in Progress Show the upcoming tournaments and rankings
-    if (!showActive) {
-      if (this.nonActiveIndex == 0) {
-        var list = this.buildTournamentList(this.tournaments)
-      }
-      else {
-        var rankingObj = Object.entries(this.rankingObjs)[this.nonActiveIndex - 1][1].rankingObj
-        list = this.buildRankList(rankingObj)
-      }
-
-      wrapper.appendChild(list)
-    }
-    else {
-      // Tounament is in progress and Module is confugred to show boards
-      // So build the boards
+    // creating the card body
+    if (this.currentCards[this.cardIndex] === 'leaderboard' || typeof this.currentCards[this.cardIndex] === 'number') {
       var curTourneyList = [this.tournament]
       var tdetails = this.buildTournamentList(curTourneyList, false)
       wrapper.appendChild(tdetails)
-
-      if (this.config.showBoards) {
-        var leaderboard = this.buildLeaderBoard(this.tournament)
-        wrapper.appendChild(leaderboard)
-      }
+      var list = this.buildLeaderBoard(this.currentCards[this.cardIndex])
+      // Need better handling of buildLeaderBoard so that it will accept the favorite number
     }
+    else if (this.currentCards[this.cardIndex] === 'upcoming') {
+      var list = this.buildTournamentList(this.tournaments)
+    }
+    else if (['owgr', 'fedex'].includes(this.currentCards[this.cardIndex])) {
+      list = this.buildRankList(this.rankingObjs[this.currentCards[this.cardIndex]].rankingObj)
+    }
+    wrapper.appendChild(list)
 
     return wrapper
   },
@@ -605,16 +616,20 @@ Module.register('MMM-PGA', {
   scheduleCarousel: function () {
     // Log.debug('[MMM-PGA] schedule carousel')
     this.rotateInterval = setInterval(() => {
-      if (this.config.favorites.length == 0) {
+/*       if (this.config.favorites.length == 0) {
         this.boardIndex = 0
       }
       else {
         this.boardIndex = (this.boardIndex == this.numBoards - 1) ? 0 : this.boardIndex + 1
+      } */
+
+      //var numRankingObj = Object.keys(this.rankingObjs).length
+      //this.nonActiveIndex = (this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
+
+      this.cardIndex++
+      if (this.cardIndex >= this.currentCards.length) {
+        this.cardIndex = 0
       }
-
-      var numRankingObj = Object.keys(this.rankingObjs).length
-      this.nonActiveIndex = (this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
-
       this.updateDom(this.config.animationSpeed)
     }, this.config.rotateInterval)
   },
@@ -647,7 +662,7 @@ Module.register('MMM-PGA', {
       if (this.rotateInterval == null) {
         this.scheduleCarousel()
       }
-      this.updateDom(this.config.animationSpeed)
+      this.updateDom()
     }
 
     else if (notification == 'PGA_TOURNAMENT_LIST') {
@@ -656,48 +671,30 @@ Module.register('MMM-PGA', {
       if (this.rotateInterval == null) {
         this.scheduleCarousel()
       }
-      this.updateDom(this.config.animationSpeed)
+      // this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'OWGR_RANKING') {
       this.rankingObjs.owgr = { headerTxt: this.config.owgrHeader, rankingObj: payload }
-      this.loaded = true
+      // this.loaded = true
       if (this.rotateInterval == null) {
         this.scheduleCarousel()
       }
-      this.updateDom(this.config.animationSpeed)
+      // this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'FEDEXCUP_RANKING') {
       this.rankingObjs.fedex = { headerTxt: this.config.fedexCupHeader, rankingObj: payload }
-      this.loaded = true
+      // this.loaded = true
       if (this.rotateInterval == null) {
         this.scheduleCarousel()
       }
-      this.updateDom(this.config.animationSpeed)
+      // this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'UPDATE_FAVORITES') {
       Log.debug('[MMM-PGA] Update Favorites')
       this.updateFavorites()
     }
-    else {
+    /* else {
       this.updateDom(this.config.initialLoadDelay)
-    }
+    } */
   },
-
-  /*   rotateLocations: function () {
-    let locationDivs = document.getElementsByClassName('location')
-    for (let j = 0; j < locationDivs.length; j++) {
-      let locations = document.getElementsByClassName('location')[j].getElementsByClassName('locationDiv')
-
-      if (locations.length > 0) {
-        for (let i = 0; i < locations.length; i++) {
-          locations[i].style.display = 'none'
-        }
-        locations[(this.locationIndex) % locations.length].style.display = 'inline-block'
-      }
-    }
-    this.locationIndex++
-    if (this.locationIndex === 17280) {
-      this.locationIndex = 0
-    }
-  }, */
 })
