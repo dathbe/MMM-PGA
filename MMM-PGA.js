@@ -599,7 +599,6 @@ Module.register('MMM-PGA', {
       var tdetails = this.buildTournamentList(curTourneyList, false)
       wrapper.appendChild(tdetails)
       var list = this.buildLeaderBoard(this.currentCards[this.cardIndex])
-      // Need better handling of buildLeaderBoard so that it will accept the favorite number
     }
     else if (this.currentCards[this.cardIndex] === 'upcoming') {
       var list = this.buildTournamentList(this.tournaments)
