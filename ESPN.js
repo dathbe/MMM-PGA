@@ -126,14 +126,17 @@ module.exports = {
     Log.debug(event.status)
     Log.debug(event.competitions[0].status)
     const nextStart = new Date(Date.parse(event.date))
-    if (['STATUS_FINAL'].includes(event.status.type.name)) {
+    if (event.status.type.name === 'STATUS_FINAL') { // When tournament has finished
       this.boardUpdateInterval = 30 * 60 * 1000 // 30 minutes
     }
-    else if (event.status.type.name === 'STATUS_SCHEDULED') {
+    else if (event.status.type.name === 'STATUS_SCHEDULED') { // When tournament has not started
       Math.max(this.boardUpdateInterval = nextStart - new Date(), 15 * 60 * 1000) // when tourney "starts" per ESPN (midnight ET on the day the tournament starts) or 15 minutes, whichever is longer
     }
-    else { // e.g., 'STATUS_IN_PROGRESS'
-      this.boardUpdateInterval = configUpdateInterval
+    else if (event.status.type.name !== 'STATUS_IN_PROGRESS') { // When tournament is done for the day
+      this.boardUpdateInterval = 15 * 60 * 1000 // 15 minutes
+    }
+    else { // When tourament is in progress
+      this.boardUpdateInterval = configUpdateInterval // Use the user's desired updateInterval
     }
 
     // Function to send SocketNotification with the Tournament Data
