@@ -552,7 +552,7 @@ Module.register('MMM-PGA', {
 
     // If Data is not Loaded yet display the Loading Caption
     if (!this.loaded) {
-      wrapper.innerHTML = 'Loading MMM-PGA . . .'
+      wrapper.innerHTML = 'Loading MMM-PGA...'
       wrapper.classList.add('light', 'small', 'dimmed')
       return wrapper
     }
