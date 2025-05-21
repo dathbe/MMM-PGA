@@ -75,7 +75,7 @@ Module.register('MMM-PGA', {
     }
 
     // Set up For Showing Info when a tournament is not active
-    //this.nonActiveIndex = 0 // Start With Tournament List
+    // this.nonActiveIndex = 0 // Start With Tournament List
     this.rankingObjs = {}
     // Set number of rankings to MAX if user requested more than max
     if (this.config.numRankings > this.config.maxNumRankings) this.config.numRankings = this.config.maxNumRankings
@@ -192,15 +192,11 @@ Module.register('MMM-PGA', {
     function includePlayer(player) {
       return self.config.favorites[board].favoriteList.includes(player.id)
     }
-    var favsWarning = false
     if (typeof board === 'number') {
       var favs = players.filter(includePlayer)
       if (favs.length > 0) {
         players = favs
         var len = players.length
-      }
-      else {
-        favsWarning = true
       }
     }
 
@@ -521,16 +517,16 @@ Module.register('MMM-PGA', {
       var headerText = this.config.header
     }
     else if (card === 'upcoming') {
-        headerText = this.config.upcomingTournamentHeader
+      headerText = this.config.upcomingTournamentHeader
     }
-    else if (card === 'owgr' ) {
+    else if (card === 'owgr') {
       headerText = this.config.owgrHeader
     }
     else if (card === 'fedex') {
       headerText = this.config.fedexCupHeader
     }
     else {
-      headerText = "PGA"
+      headerText = 'PGA'
     }
 
     header.classList.add('pga_header_wrapper')
@@ -601,7 +597,7 @@ Module.register('MMM-PGA', {
       var list = this.buildLeaderBoard(this.currentCards[this.cardIndex])
     }
     else if (this.currentCards[this.cardIndex] === 'upcoming') {
-      var list = this.buildTournamentList(this.tournaments)
+      list = this.buildTournamentList(this.tournaments)
     }
     else if (['owgr', 'fedex'].includes(this.currentCards[this.cardIndex])) {
       list = this.buildRankList(this.rankingObjs[this.currentCards[this.cardIndex]].rankingObj)
@@ -615,15 +611,15 @@ Module.register('MMM-PGA', {
   scheduleCarousel: function () {
     // Log.debug('[MMM-PGA] schedule carousel')
     this.rotateInterval = setInterval(() => {
-/*       if (this.config.favorites.length == 0) {
+      /* if (this.config.favorites.length == 0) {
         this.boardIndex = 0
       }
       else {
         this.boardIndex = (this.boardIndex == this.numBoards - 1) ? 0 : this.boardIndex + 1
       } */
 
-      //var numRankingObj = Object.keys(this.rankingObjs).length
-      //this.nonActiveIndex = (this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
+      // var numRankingObj = Object.keys(this.rankingObjs).length
+      // this.nonActiveIndex = (this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
 
       this.cardIndex++
       if (this.cardIndex >= this.currentCards.length) {
