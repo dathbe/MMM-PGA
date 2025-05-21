@@ -87,7 +87,12 @@ module.exports = NodeHelper.create({
     var self = this
 
     ESPN.getTournaments(numTournaments, function (tournaments) {
-      self.sendSocketNotification('PGA_TOURNAMENT_LIST', tournaments)
+      if (tournaments.length > 0) {
+        self.sendSocketNotification('PGA_TOURNAMENT_LIST', tournaments)
+      }
+      else {
+        Log.debug('[MMM-PGA] No tournament data to post; either no upcoming tournaments, or error fetching data.')
+      }
     })
   },
 
