@@ -124,8 +124,8 @@ module.exports = {
         }
       }
 
-/*       Log.debug(event.status)
-      Log.debug(event.competitions[0].status) */
+      Log.debug(event.status)
+      Log.debug(event.competitions[0].status)
       const nextStart = new Date(Date.parse(event.date))
       if (event.status.type.name === 'STATUS_FINAL') { // When tournament has finished
         this.boardUpdateInterval = 30 * 60 * 1000 // 30 minutes
@@ -439,7 +439,7 @@ module.exports = {
       }
       else if (pgaBroadcasts[i].__typename === 'BroadcastFullTelecast') {
         if (pgaBroadcasts[i].liveStatus === 'LIVE' && (pgaBroadcasts[i].streamTitle.endsWith('Broadcast') || pgaBroadcasts[i].streamTitle === 'Main Feed')) {
-          var newNetwork = [pgaBroadcasts[i].network.networkName]
+          newNetwork = [pgaBroadcasts[i].network.networkName]
           if (this.broadcastIcons[pgaBroadcasts[i].network.networkName] !== undefined) {
             newNetwork.push(this.broadcastIcons[pgaBroadcasts[i].network.networkName])
           }

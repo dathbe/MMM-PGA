@@ -628,7 +628,6 @@ Module.register('MMM-PGA', {
       if (this.currentCards.length > 1) {
         this.updateDom(this.config.animationSpeed)
       }
-      
     }, this.config.rotateInterval)
   },
 
