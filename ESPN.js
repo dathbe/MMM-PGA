@@ -437,6 +437,26 @@ module.exports = {
           }
         }
       }
+      else if (pgaBroadcasts[i].__typename === 'BroadcastFullTelecast') {
+        if (pgaBroadcasts[i].liveStatus === 'LIVE' && (pgaBroadcasts[i].streamTitle.endsWith('Broadcast') || pgaBroadcasts[i].streamTitle === 'Main Feed')) {
+          var newNetwork = [pgaBroadcasts[i].network.networkName]
+          if (this.broadcastIcons[pgaBroadcasts[i].network.networkName] !== undefined) {
+            newNetwork.push(this.broadcastIcons[pgaBroadcasts[i].network.networkName])
+          }
+          else if (this.broadcastIconsInvert[pgaBroadcasts[i].network.networkName] !== undefined) {
+            newNetwork.push(this.broadcastIconsInvert[pgaBroadcasts[i].network.networkName])
+            newNetwork.push('invert')
+          }
+          else if (darkLogos.includes(pgaBroadcasts[i].network.networkName)) {
+            newNetwork.push(pgaBroadcasts[i].network.networkLogoDark)
+          }
+          else {
+            newNetwork.push(pgaBroadcasts[i].network.networkLogo)
+          }
+          broadcast.push(newNetwork)
+          alreadyAdded.push(pgaBroadcasts[i].network.networkName)
+        }
+      }
     }
 
     return broadcast
