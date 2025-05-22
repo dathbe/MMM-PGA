@@ -203,7 +203,8 @@
 }
 
 .MMM-PGA td.broadcast img {
-  height: 12px;
+  height: 18px;
+  margin-bottom: -3px;
 }
 
 .MMM-PGA header {
