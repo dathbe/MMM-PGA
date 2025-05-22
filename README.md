@@ -32,6 +32,8 @@ git pull
 
 ## Configuration
 
+Add an MMM-PGA module to the modules array in the `~/MagicMirror/config/config.js` file. The following example config shows a minimal configuration option. More options are described below.
+
 ```js
 {
   module: 'MMM-PGA',
