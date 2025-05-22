@@ -1,6 +1,6 @@
 {
   "name": "mmm-pga",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A MagicMirror² module to display PGA leaderboards, tournaments, and rankings",
   "repository": {
     "type": "git",
