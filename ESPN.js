@@ -124,8 +124,8 @@ module.exports = {
         }
       }
 
-      Log.debug(event.status)
-      Log.debug(event.competitions[0].status)
+/*       Log.debug(event.status)
+      Log.debug(event.competitions[0].status) */
       const nextStart = new Date(Date.parse(event.date))
       if (event.status.type.name === 'STATUS_FINAL') { // When tournament has finished
         this.boardUpdateInterval = 30 * 60 * 1000 // 30 minutes
@@ -408,31 +408,33 @@ module.exports = {
       method: 'POST',
       mode: 'cors',
     })
-    Log.debug('[MMM-PGA] https://orchestrator.pgatour.com/graphql fetched for broadcasts')
     pgaBroadcasts = await pgaBroadcasts.json()
+    Log.debug(`[MMM-PGA] https://orchestrator.pgatour.com/graphql fetched for ${pgaBroadcasts.data.coverage.tournamentName} broadcasts`)
     pgaBroadcasts = pgaBroadcasts.data.coverage.coverageType
     var broadcast = []
     var alreadyAdded = []
     const darkLogos = ['ESPN+', 'PGA Championship', 'CBS']
     for (let i = 0; i < pgaBroadcasts.length; i++) {
-      if (pgaBroadcasts[i].__typename !== 'BroadcastCoverageCarousel') {
-        if ((/* true || */ pgaBroadcasts[i].liveStatus === 'LIVE') && pgaBroadcasts[i].streamTitle.endsWith('Broadcast') && !alreadyAdded.includes(pgaBroadcasts[i].network.networkName)) {
-          var newNetwork = [pgaBroadcasts[i].network.networkName]
-          if (this.broadcastIcons[pgaBroadcasts[i].network.networkName] !== undefined) {
-            newNetwork.push(this.broadcastIcons[pgaBroadcasts[i].network.networkName])
+      if (pgaBroadcasts[i].__typename === 'BroadcastCoverageCarousel') {
+        for (let j = 0; j < pgaBroadcasts[i].carousel.length; j++) {
+          if (pgaBroadcasts[i].carousel[j].liveStatus === 'LIVE' && (pgaBroadcasts[i].carousel[j].streamTitle.endsWith('Broadcast') || pgaBroadcasts[i].carousel[j].streamTitle === 'Main Feed')) {
+            var newNetwork = [pgaBroadcasts[i].carousel[j].network.networkName]
+            if (this.broadcastIcons[pgaBroadcasts[i].carousel[j].network.networkName] !== undefined) {
+              newNetwork.push(this.broadcastIcons[pgaBroadcasts[i].carousel[j].network.networkName])
+            }
+            else if (this.broadcastIconsInvert[pgaBroadcasts[i].carousel[j].network.networkName] !== undefined) {
+              newNetwork.push(this.broadcastIconsInvert[pgaBroadcasts[i].carousel[j].network.networkName])
+              newNetwork.push('invert')
+            }
+            else if (darkLogos.includes(pgaBroadcasts[i].carousel[j].network.networkName)) {
+              newNetwork.push(pgaBroadcasts[i].carousel[j].network.networkLogoDark)
+            }
+            else {
+              newNetwork.push(pgaBroadcasts[i].carousel[j].network.networkLogo)
+            }
+            broadcast.push(newNetwork)
+            alreadyAdded.push(pgaBroadcasts[i].carousel[j].network.networkName)
           }
-          else if (this.broadcastIconsInvert[pgaBroadcasts[i].network.networkName] !== undefined) {
-            newNetwork.push(this.broadcastIconsInvert[pgaBroadcasts[i].network.networkName])
-            newNetwork.push('invert')
-          }
-          else if (darkLogos.includes(pgaBroadcasts[i].network.networkName)) {
-            newNetwork.push(pgaBroadcasts[i].network.networkLogoDark)
-          }
-          else {
-            newNetwork.push(pgaBroadcasts[i].network.networkLogo)
-          }
-          broadcast.push(newNetwork)
-          alreadyAdded.push(pgaBroadcasts[i].network.networkName)
         }
       }
     }
