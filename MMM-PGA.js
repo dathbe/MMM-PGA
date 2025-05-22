@@ -12,11 +12,14 @@ Module.register('MMM-PGA', {
   defaults: {
     useHeader: true,
     header: 'PGA Tournament',
+    upcomingTournamentHeader: 'PGA - UPCOMING TOURNAMENTS',
+    fedexCupHeader: 'FedExCup STANDINGS',
+    owgrHeader: 'OFFICIAL WORLD GOLF RANKING',
     rotateInterval: 30 * 1000,
-    animationSpeed: 0, // fade in and out speed
+    animationSpeed: 750, // fade in and out speed in milliseconds
     initialLoadDelay: 4250,
     retryDelay: 2500,
-    updateInterval: 5 * 60 * 1000, // every 5 minutes
+    updateInterval: 4 * 60 * 1000, // every 4 minutes for leaderboards
     rankingsUpdateInterval: 4 * 60 * 60 * 1000, // every 4 hours
     colored: true,
     showBoards: true,
@@ -39,7 +42,11 @@ Module.register('MMM-PGA', {
     favorites: [],
     showBroadcast: true,
     locationRotateInterval: 10000,
+    skipChannels: [],
+    channelRotateInterval: 7000,
   },
+
+  logoIndex: 0,
 
   getStyles: function () {
     return ['MMM-PGA.css']
@@ -56,6 +63,8 @@ Module.register('MMM-PGA', {
     this.pgalogohtml = '<img src=\'./modules/MMM-PGA/images/pga-tour-logo.svg\' class=\'tourlogo\'></img> '
     this.flaghtml = '<img src=\'http\' alt=\'\' align=top></img>'
 
+    this.cardIndex = 0
+
     if (this.config.showRankings === false) {
       this.config.showFedex = false
       this.config.showOWGR = false
@@ -66,17 +75,13 @@ Module.register('MMM-PGA', {
     }
 
     // Set up For Showing Info when a tournament is not active
-    this.nonActiveIndex = 0 // Start With Tournament List
-    this.upcomingTournamentHeader = 'PGA - Upcoming Tournaments'
-    this.fedexCupHeader = 'FEDEX CUP STANDINGS'
-    this.owgrHeader = 'OFFICIAL WORLD GOLF RANKING'
+    // this.nonActiveIndex = 0 // Start With Tournament List
     this.rankingObjs = {}
     // Set number of rankings to MAX if user requested more than max
     if (this.config.numRankings > this.config.maxNumRankings) this.config.numRankings = this.config.maxNumRankings
 
     // Set up for Active tournament
-    this.boardIndex = 0 // Starts with the Leaderboard
-    this.leaderboardHeader = '&nbsp;'
+    // this.boardIndex = 0 // Starts with the Leaderboard
     this.rotateInterval = null
     this.tournament = null
     this.tournaments = null
@@ -98,6 +103,15 @@ Module.register('MMM-PGA', {
     setInterval(function () {
       self.rotateLocations()
     }, this.config.locationRotateInterval) */
+
+    // Schedule the first logo rotation
+    this.rotateChannels()
+
+    // Schedule the UI load based on normal interval
+    var self = this
+    setInterval(function () {
+      self.rotateChannels()
+    }, this.config.channelRotateInterval)
   },
 
   /*   stop: function () {
@@ -114,7 +128,7 @@ Module.register('MMM-PGA', {
       this.getFavoriteFile(function (response) {
         self.config.favorites = response
         self.numBoards = 1 + self.config.favorites.length
-        self.boardIndex = 0
+        // self.boardIndex = 0
       })
     }
   },
@@ -165,10 +179,10 @@ Module.register('MMM-PGA', {
   },
 
   /* Builds the Dom for the Board */
-  buildLeaderBoard: function (tournament) {
+  buildLeaderBoard: function (board) {
     var self = this
 
-    var players = tournament.players
+    var players = this.tournament.players
 
     players.sort(function (a, b) {
       return a.sortOrder - b.sortOrder
@@ -176,23 +190,14 @@ Module.register('MMM-PGA', {
 
     // If Favorites is enabled create Array with only the Favorites
     function includePlayer(player) {
-      return self.config.favorites[self.boardIndex - 1].favoriteList.includes(player.id)
+      return self.config.favorites[board].favoriteList.includes(player.id)
     }
-    while (this.boardIndex >= 1) {
+    if (typeof board === 'number') {
       var favs = players.filter(includePlayer)
-      if (favs.length == 0) {
-        this.boardIndex++
-        if (this.boardIndex == this.numBoards) this.boardIndex = 0
-      }
-      else {
+      if (favs.length > 0) {
         players = favs
         var len = players.length
-        break
       }
-    }
-
-    if (this.boardIndex == 0) {
-      len = players.length < this.config.maxLeaderboard ? players.length : this.config.maxLeaderboard
     }
 
     // Create Board Header
@@ -203,18 +208,19 @@ Module.register('MMM-PGA', {
 
     var boardName = document.createElement('span')
     // Set  Board header Text
-    if (this.boardIndex == 0) {
-      var boardHeader = this.leaderboardHeader
+    if (board === 'leaderboard') {
+      len = players.length < this.config.maxLeaderboard ? players.length : this.config.maxLeaderboard
+      var boardHeader = '&nbsp;'
     }
     else {
-      boardHeader = this.config.favorites[this.boardIndex - 1].headerName
+      boardHeader = this.config.favorites[board].headerName
     }
     boardName.innerHTML = boardHeader
     leaderboardSeparator.appendChild(boardName)
 
     var boardStatus = document.createElement('span')
     boardStatus.classList.add('event-status')
-    boardStatus.innerHTML = tournament.status
+    boardStatus.innerHTML = this.tournament.status
     leaderboardSeparator.appendChild(boardStatus)
 
     // Build table with Score details
@@ -224,7 +230,7 @@ Module.register('MMM-PGA', {
 
     var namespan = 1
     if (this.config.showFlags) namespan++
-    // if (tournament.playoff) namespan++;
+    // if (this.tournament.playoff) namespan++;
 
     // Leader Board Table Header
     var lbhead = document.createElement('tr')
@@ -234,7 +240,7 @@ Module.register('MMM-PGA', {
     posTh.classList.add('pos-cell')
     lbhead.appendChild(posTh)
 
-    if (tournament.playoff) {
+    if (this.tournament.playoff) {
       var playoffTh = this.buildTh('')
       playoffTh.classList.add('playoff-cell')
       lbhead.appendChild(playoffTh)
@@ -244,7 +250,7 @@ Module.register('MMM-PGA', {
     playerTh.classList.add('player-name')
     lbhead.appendChild(playerTh)
 
-    var roundTh = this.buildTh('R' + tournament.currentRound)
+    var roundTh = this.buildTh('R' + this.tournament.currentRound)
     roundTh.classList.add('current-round')
     lbhead.appendChild(roundTh)
 
@@ -264,7 +270,7 @@ Module.register('MMM-PGA', {
 
       // Only do tie logic for Leaderboards
       // Favorites will display ALL
-      if (this.boardIndex == 0) {
+      if (board === 'leaderboard') {
         if (i == this.config.numLeaderboard - 1) lastpos = playerpos
 
         if (i > this.config.numLeaderboard - 1) {
@@ -277,7 +283,7 @@ Module.register('MMM-PGA', {
       lbTable.appendChild(lbrow)
 
       lbrow.appendChild(this.buildTD(player.position, ['pos-cell']))
-      if (tournament.playoff) {
+      if (this.tournament.playoff) {
         var pind = (player.playoff) ? '►' : ''
         lbrow.appendChild(this.buildTD(pind, ['td-playoff', 'playoff-cell']))
       }
@@ -353,19 +359,24 @@ Module.register('MMM-PGA', {
           broadcastTd.classList.add('xsmall', 'broadcast')
           if (border) broadcastTd.classList.add('border')
           if (tournament.broadcast !== undefined) {
-            if (this.broadcastIcons[tournament.broadcast[0].toLowerCase()] !== undefined) {
-              var broadcastImage = new Image()
-              broadcastImage.src = this.broadcastIcons[tournament.broadcast[0].toLowerCase()]
-              broadcastTd.appendChild(broadcastImage)
-            }
-            else if (this.broadcastIconsInvert[tournament.broadcast[0].toLowerCase()] !== undefined) {
-              broadcastTd.classList.add('invert')
-              broadcastImage = new Image()
-              broadcastImage.src = this.broadcastIconsInvert[tournament.broadcast[0].toLowerCase()]
-              broadcastTd.appendChild(broadcastImage)
-            }
-            else {
-              broadcastTd.innerHTML = tournament.broadcast[0].toUpperCase()
+            for (let j = 0; j < tournament.broadcast.length; j++) {
+              if (!this.config.skipChannels.includes(tournament.broadcast[j][0])) {
+                var broadcastDiv = document.createElement('div')
+                broadcastDiv.classList.add('PGAbroadcastIconDiv')
+                if (tournament.broadcast[j][1] !== '') {
+                  var broadcastImage = new Image()
+                  broadcastImage.src = tournament.broadcast[j][1]
+                  broadcastImage.alt = tournament.broadcast[j][0]
+                  broadcastDiv.appendChild(broadcastImage)
+                }
+                else {
+                  broadcastDiv.innerHTML = tournament.broadcast[j][0] /* .toUpperCase().replace('PLUS', '+') */
+                }
+                if (tournament.broadcast[j][2] !== undefined) {
+                  broadcastDiv.classList.add(tournament.broadcast[j][2])
+                }
+                broadcastTd.appendChild(broadcastDiv)
+              }
             }
           }
           secondRow.appendChild(broadcastTd)
@@ -375,10 +386,10 @@ Module.register('MMM-PGA', {
           locationTd.colSpan = 2
           locationTd.classList.add('location')
           if (border) locationTd.classList.add('border')
-          for (i = 0; i < tournament.location.length; i++) {
+          for (let j = 0; j < tournament.location.length; j++) {
             var locationDiv = document.createElement('div')
             locationDiv.classList.add('xsmall', 'locationDiv')
-            locationDiv.innerHTML = tournament.location[i]
+            locationDiv.innerHTML = tournament.location[j]
             locationTd.appendChild(locationDiv)
           }
           // locationTd.innerHTML = tournament.location[0]
@@ -499,26 +510,28 @@ Module.register('MMM-PGA', {
     return rankTable
   },
 
-  buildHeader: function (showActive) {
+  buildHeader: function (card) {
     var header = document.createElement('header')
 
-    if (showActive) {
+    if (card === 'leaderboard' || typeof card === 'number') {
       var headerText = this.config.header
     }
+    else if (card === 'upcoming') {
+      headerText = this.config.upcomingTournamentHeader
+    }
+    else if (card === 'owgr') {
+      headerText = this.config.owgrHeader
+    }
+    else if (card === 'fedex') {
+      headerText = this.config.fedexCupHeader
+    }
     else {
-      if (this.nonActiveIndex == 0) {
-        headerText = this.upcomingTournamentHeader
-      }
-      else {
-        var obj = Object.entries(this.rankingObjs)[this.nonActiveIndex - 1][1]
-        headerText = obj.headerTxt
-      }
+      headerText = 'PGA'
     }
 
     header.classList.add('pga_header_wrapper')
     var headerTextSpan = document.createElement('span')
     headerTextSpan.classList.add('pga_header', 'bright')
-    // headerTextSpan.classList.add('small')
     headerTextSpan.innerHTML = headerText
     if (this.config.showLogo) {
       headerTextSpan.innerHTML = this.pgalogohtml + headerTextSpan.innerHTML
@@ -539,47 +552,57 @@ Module.register('MMM-PGA', {
 
     // If Data is not Loaded yet display the Loading Caption
     if (!this.loaded) {
-      wrapper.innerHTML = 'Loading MMM-PGA . . .'
+      wrapper.innerHTML = 'Loading MMM-PGA...'
       wrapper.classList.add('light', 'small', 'dimmed')
       return wrapper
     }
 
+    // Determine which cards we want to display
     if (this.tournament !== null && this.tournament.statusCode !== 'STATUS_SCHEDULED' && this.config.showBoards) {
-      var showActive = true
+      this.currentCards = ['leaderboard']
+      for (let i = 0; i < this.config.favorites.length; i++) {
+        var self = this
+        // Don't display favorite list unless there are some players on the list competing in the tournament
+        function includePlayer(player) {
+          return self.config.favorites[i].favoriteList.includes(player.id)
+        }
+        var checkFavs = this.tournament.players
+        if (checkFavs.filter(includePlayer).length > 0) {
+          this.currentCards.push(i)
+        }
+      }
     }
     else {
-      showActive = false
+      this.currentCards = ['upcoming']
+    }
+    if (this.tournament === null || ['STATUS_SCHEDULED', 'STATUS_FINAL'].includes(this.tournament.statusCode)) {
+      if (this.config.showOWGR) {
+        this.currentCards.push('owgr')
+      }
+      if (this.config.showFedex) {
+        this.currentCards.push('fedex')
+      }
     }
 
     // creating the header
     if (this.config.useHeader != false) {
-      wrapper.appendChild(this.buildHeader(showActive))
+      wrapper.appendChild(this.buildHeader(this.currentCards[this.cardIndex]))
     }
 
-    // If Tounament not in Progress Show the upcoming tournaments and rankings
-    if (!showActive) {
-      if (this.nonActiveIndex == 0) {
-        var list = this.buildTournamentList(this.tournaments)
-      }
-      else {
-        var rankingObj = Object.entries(this.rankingObjs)[this.nonActiveIndex - 1][1].rankingObj
-        list = this.buildRankList(rankingObj)
-      }
-
-      wrapper.appendChild(list)
-      return wrapper
+    // creating the card body
+    if (this.currentCards[this.cardIndex] === 'leaderboard' || typeof this.currentCards[this.cardIndex] === 'number') {
+      var curTourneyList = [this.tournament]
+      var tdetails = this.buildTournamentList(curTourneyList, false)
+      wrapper.appendChild(tdetails)
+      var list = this.buildLeaderBoard(this.currentCards[this.cardIndex])
     }
-
-    // Tounament is in progress and Module is confugred to show boards
-    // So build the boards
-    var curTourneyList = [this.tournament]
-    var tdetails = this.buildTournamentList(curTourneyList, false)
-    wrapper.appendChild(tdetails)
-
-    if (this.config.showBoards) {
-      var leaderboard = this.buildLeaderBoard(this.tournament)
-      wrapper.appendChild(leaderboard)
+    else if (this.currentCards[this.cardIndex] === 'upcoming') {
+      list = this.buildTournamentList(this.tournaments)
     }
+    else if (['owgr', 'fedex'].includes(this.currentCards[this.cardIndex])) {
+      list = this.buildRankList(this.rankingObjs[this.currentCards[this.cardIndex]].rankingObj)
+    }
+    wrapper.appendChild(list)
 
     return wrapper
   },
@@ -588,18 +611,45 @@ Module.register('MMM-PGA', {
   scheduleCarousel: function () {
     // Log.debug('[MMM-PGA] schedule carousel')
     this.rotateInterval = setInterval(() => {
-      if (this.config.favorites.length == 0) {
+      /* if (this.config.favorites.length == 0) {
         this.boardIndex = 0
       }
       else {
         this.boardIndex = (this.boardIndex == this.numBoards - 1) ? 0 : this.boardIndex + 1
+      } */
+
+      // var numRankingObj = Object.keys(this.rankingObjs).length
+      // this.nonActiveIndex = (this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
+
+      this.cardIndex++
+      if (this.cardIndex >= this.currentCards.length) {
+        this.cardIndex = 0
       }
-
-      var numRankingObj = Object.keys(this.rankingObjs).length
-      this.nonActiveIndex = (this.nonActiveIndex == numRankingObj) ? 0 : this.nonActiveIndex + 1
-
-      this.updateDom(this.config.animationSpeed)
+      if (this.currentCards.length > 1) {
+        this.updateDom(this.config.animationSpeed)
+      }
+      
     }, this.config.rotateInterval)
+  },
+
+  rotateChannels: function () {
+    let logos = document.getElementsByClassName('PGAbroadcastIconDiv')
+    if (logos.length > 1) {
+      for (let i = 0; i < logos.length; i++) {
+        logos[i].style.display = 'none'
+      }
+      if (logos.length > 0) {
+        logos[(this.logoIndex) % logos.length].style.display = 'block'
+        // logos[moment().unix() % logos.length].style.display = "block"
+      }
+      this.logoIndex++
+      if (this.logoIndex === 17280) {
+        this.logoIndex = 0
+      }
+    }
+    else if (logos.length > 0) {
+      logos[0].style.display = 'block'
+    }
   },
 
   // Called by MM Framework when new data has been retrieved
@@ -610,7 +660,7 @@ Module.register('MMM-PGA', {
       if (this.rotateInterval == null) {
         this.scheduleCarousel()
       }
-      this.updateDom(this.config.animationSpeed)
+      this.updateDom()
     }
 
     else if (notification == 'PGA_TOURNAMENT_LIST') {
@@ -619,55 +669,30 @@ Module.register('MMM-PGA', {
       if (this.rotateInterval == null) {
         this.scheduleCarousel()
       }
-      this.updateDom(this.config.animationSpeed)
+      // this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'OWGR_RANKING') {
-      this.rankingObjs.owgr = { headerTxt: this.owgrHeader, rankingObj: payload }
-      this.loaded = true
+      this.rankingObjs.owgr = { headerTxt: this.config.owgrHeader, rankingObj: payload }
+      // this.loaded = true
       if (this.rotateInterval == null) {
         this.scheduleCarousel()
       }
-      this.updateDom(this.config.animationSpeed)
+      // this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'FEDEXCUP_RANKING') {
-      this.rankingObjs.fedex = { headerTxt: this.fedexCupHeader, rankingObj: payload }
-      this.loaded = true
+      this.rankingObjs.fedex = { headerTxt: this.config.fedexCupHeader, rankingObj: payload }
+      // this.loaded = true
       if (this.rotateInterval == null) {
         this.scheduleCarousel()
       }
-      this.updateDom(this.config.animationSpeed)
+      // this.updateDom(this.config.animationSpeed)
     }
     else if (notification == 'UPDATE_FAVORITES') {
       Log.debug('[MMM-PGA] Update Favorites')
       this.updateFavorites()
     }
-    else {
+    /* else {
       this.updateDom(this.config.initialLoadDelay)
-    }
-  },
-
-  /*   rotateLocations: function () {
-    let locationDivs = document.getElementsByClassName('location')
-    for (let j = 0; j < locationDivs.length; j++) {
-      let locations = document.getElementsByClassName('location')[j].getElementsByClassName('locationDiv')
-
-      if (locations.length > 0) {
-        for (let i = 0; i < locations.length; i++) {
-          locations[i].style.display = 'none'
-        }
-        locations[(this.locationIndex) % locations.length].style.display = 'inline-block'
-      }
-    }
-    this.locationIndex++
-    if (this.locationIndex === 17280) {
-      this.locationIndex = 0
-    }
-  }, */
-
-  broadcastIcons: {
-
-  },
-  broadcastIconsInvert: {
-    cbs: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/CBS_logo_%282020%29.svg',
+    } */
   },
 })

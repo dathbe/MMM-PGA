@@ -7,6 +7,10 @@
  .MMM-PGA{
    min-width: 300px;
  }
+ 
+.MMM-PGA header {
+  text-transform: unset;
+}
 
 .MMM-PGA .leaderboard-separator{
   font-size: 15.5px;
@@ -81,7 +85,7 @@
 }
 
 .MMM-PGA .tournament-table{
-  max-width: 500px;
+  max-width: 400px;
   border-collapse: collapse;
   line-height: 18px;
 }
@@ -98,9 +102,10 @@
 }
 
 .MMM-PGA .tournament-table td.date-cell{
-  padding-right: 2px;
+  padding-right: 10px;
   margin: 2px;
-  width: 30%;
+  width: fit-content;
+  white-space: nowrap;
 }
 
 .MMM-PGA .tournament-table td.date-cell,
@@ -198,7 +203,8 @@
 }
 
 .MMM-PGA td.broadcast img {
-  height: 12px;
+  height: 18px;
+  margin-bottom: -3px;
 }
 
 .MMM-PGA header {
@@ -247,3 +253,14 @@
   from {opacity: .1} 
   to {opacity: 1}
 } */
+
+.MMM-PGA .PGAbroadcastIconDiv {
+  display: none;
+  animation-name: fade;
+  animation-duration: .5s;
+  white-space: nowrap;
+}
+
+.MMM-PGA .PGAbroadcastIconDiv:first-of-type {
+  display: block;
+}

@@ -1,6 +1,6 @@
 {
   "name": "mmm-pga",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A MagicMirror² module to display PGA leaderboards, tournaments, and rankings",
   "repository": {
     "type": "git",
@@ -27,9 +27,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "^9.26.0",
+    "@eslint/js": "^9.27.0",
     "@stylistic/eslint-plugin": "^4.2.0",
-    "eslint": "^9.26.0",
+    "eslint": "^9.27.0",
     "globals": "^16.1.0"
   }
 }

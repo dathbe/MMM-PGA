@@ -4,17 +4,33 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0](https://github.com/dathbe/MMM-PGA/compare/v2.2.2...v2.3.0) - 2025-05-22
+
+- **NEW FEATURE**: Rankings will now display in rotation once a tournament is complete (required re-write of card rotation logic)
+- **NEW FEATURE**: Broadcast icon will now display only on-air broadcasts (draws from PGA Tour website instead of ESPN)
+- Change FedExCup header to PGA-preferred `FedExCup` instead of `FEDEX CUP`
+- Add rotation among multiple broadcast channels
+- Add hidden (undocumented) config options of `skipChannels` and `channelRotateInterval`, which adds a list of channels to skip in the rotation, and the rotation time in milliseconds, respectively
+- Add hideen (undocumented) config options of `upcomingTournamentHeader`, `fedexCupHeader`, and `owgrHeader`, which allow customizing the header for those three cards
+- Change default `updateInterval` to 4 minutes (from 5), because this will now only pull when tournament is active
+- Default `animationSpeed` changed to `750` ms when rotating between cards
+- Pull purse information for leaderboard from PGA Tour website when ESPN does not have it
+- Small style tweaks
+- Update devDependencies
+- Update example images to show updated style
+- BUG FIX: Add catch for undefined tournament purse on leaderboard
+
 ## [2.2.2](https://github.com/dathbe/MMM-PGA/compare/v2.2.1...v2.2.2) - 2025-05-14
 
 - BUG FIX: Catch error when current week tournament has `undefined` purse
-- Bump dev dependency
+- Update devDependencies
 - Lint style changes
 
 ## [2.2.1](https://github.com/dathbe/MMM-PGA/compare/v2.2.0...v2.2.1) - 2025-05-06
 
 - Displays all courses when tournament uses multiple courses
 - Minor cosmetic tweaks
-- Bump dev dependencies versions
+- Update devDependencies
 
 ## [2.2.0](https://github.com/dathbe/MMM-PGA/compare/v2.1.1...v2.2.0) - 2025-05-01
 
