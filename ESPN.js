@@ -1,5 +1,5 @@
 const Log = require('logger')
-const moment = require('moment')
+const moment = require('moment-timezone')
 
 module.exports = {
 
