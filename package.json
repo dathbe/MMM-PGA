@@ -26,6 +26,9 @@
     "test": "npm run lint"
   },
   "license": "MIT",
+  "dependencies": {
+    "moment-timezone": "^0.5.48"
+  },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
     "@stylistic/eslint-plugin": "^4.2.0",
