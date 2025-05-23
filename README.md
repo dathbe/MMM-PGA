@@ -18,16 +18,19 @@ A configurable leaderboard can be shown with scores for your favorite golfers.
 ```bash
 cd ~/MagicMirror/modules
 git clone https://github.com/dathbe/MMM-PGA
+cd MMM-PGA
+npm install --omit=dev
 ```
 
 Dependencies:
-* None!
+* [moment-timezone](https://www.npmjs.com/package/moment-timezone)
 
 ## Updating the Module
 
 ```bash
 cd ~/MagicMirror/modules/MMM-PGA
 git pull
+npm install --omit=dev
 ```
 
 ## Configuration
