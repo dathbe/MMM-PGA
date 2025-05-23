@@ -87,8 +87,14 @@ module.exports = {
       if (tournament.statusCode != 'STATUS_SCHEDULED') {
         var espnPlayers = event.competitions[0].competitors
 
+        var firstTeeOff = null
         for (var i in espnPlayers) {
           var espnPlayer = espnPlayers[i]
+
+          if (espnPlayer.status.displayValue.startsWith(moment().year()) && (firstTeeOff === null || moment(espnPlayer.status.displayValue) < firstTeeOff)) {
+            firstTeeOff = moment(espnPlayer.status.displayValue)
+          }
+
           if (espnPlayer.status.playoff)
             tournament.playoff = true
 
@@ -124,17 +130,27 @@ module.exports = {
         }
       }
 
-      Log.debug(event.status)
-      Log.debug(event.competitions[0].status)
-      const nextStart = new Date(Date.parse(event.date))
       if (event.status.type.name === 'STATUS_FINAL') { // When tournament has finished
-        this.boardUpdateInterval = 30 * 60 * 1000 // 30 minutes
+        this.boardUpdateInterval = 4 * 60 * 60 * 1000 // 4 hours
       }
       else if (event.status.type.name === 'STATUS_SCHEDULED') { // When tournament has not started
-        Math.max(this.boardUpdateInterval = nextStart - new Date(), 15 * 60 * 1000) // when tourney "starts" per ESPN (midnight ET on the day the tournament starts) or 15 minutes, whichever is longer
+        this.boardUpdateInterval = Math.max(moment(event.date) - moment(), 15 * 60 * 1000) // when tourney "starts" per ESPN (midnight ET on the day the tournament starts) or 15 minutes, whichever is longer
       }
-      else if (event.status.type.name !== 'STATUS_IN_PROGRESS') { // When tournament is done for the day
-        this.boardUpdateInterval = 15 * 60 * 1000 // 15 minutes
+      else if (event.competitions[0].status.type.name === 'STATUS_PLAY_COMPLETE') { // When tournament is done for the day
+        if (firstTeeOff !== null) {
+          if (firstTeeOff - moment() > 4 * 60 * 60 * 1000) {
+            this.boardUpdateInterval = 4 * 60 * 60 * 1000
+          }
+          else if (firstTeeOff - moment() < 15 * 60 * 1000) {
+            this.boardUpdateInterval = 15 * 60 * 1000
+          }
+          else {
+            this.boardUpdateInterval = firstTeeOff - moment()
+          }
+        }
+        else {
+          this.boardUpdateInterval = 15 * 60 * 1000 // 15 minutes
+        }
       }
       else { // When tourament is in progress
         this.boardUpdateInterval = configUpdateInterval // Use the user's desired updateInterval
@@ -226,7 +242,7 @@ module.exports = {
           'Priority': 'u=4',
         },
         referrer: 'https://www.pgatour.com/',
-        body: `{"operationName":"Schedule","variables":{"tourCode":"R","year":"${new Date().getYear() + 1900}"},"query":"query Schedule($tourCode: String!, $year: String, $filter: TournamentCategory) {\\n  schedule(tourCode: $tourCode, year: $year, filter: $filter) {\\n    completed {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n    filters {\\n      type\\n      name\\n    }\\n    seasonYear\\n    tour\\n    upcoming {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n  }\\n}\\n\\nfragment ScheduleTournament on ScheduleMonth {\\n  tournaments {\\n    tournamentName\\n    id\\n    beautyImage\\n    champion\\n    champions {\\n      displayName\\n      playerId\\n    }\\n    championEarnings\\n    championId\\n    city\\n    country\\n    countryCode\\n    courseName\\n    date\\n    dateAccessibilityText\\n    purse\\n    sortDate\\n    startDate\\n    state\\n    stateCode\\n    status {\\n      roundDisplay\\n      roundStatus\\n      roundStatusColor\\n      roundStatusDisplay\\n    }\\n    tournamentStatus\\n    ticketsURL\\n    tourStandingHeading\\n    tourStandingValue\\n    tournamentLogo\\n    display\\n    sequenceNumber\\n    tournamentCategoryInfo {\\n      type\\n      logoLight\\n      logoDark\\n      label\\n    }\\n    tournamentSiteURL\\n    tournamentStatus\\n    useTournamentSiteURL\\n  }\\n}"}`,
+        body: `{"operationName":"Schedule","variables":{"tourCode":"R","year":"${moment().year()}"},"query":"query Schedule($tourCode: String!, $year: String, $filter: TournamentCategory) {\\n  schedule(tourCode: $tourCode, year: $year, filter: $filter) {\\n    completed {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n    filters {\\n      type\\n      name\\n    }\\n    seasonYear\\n    tour\\n    upcoming {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n  }\\n}\\n\\nfragment ScheduleTournament on ScheduleMonth {\\n  tournaments {\\n    tournamentName\\n    id\\n    beautyImage\\n    champion\\n    champions {\\n      displayName\\n      playerId\\n    }\\n    championEarnings\\n    championId\\n    city\\n    country\\n    countryCode\\n    courseName\\n    date\\n    dateAccessibilityText\\n    purse\\n    sortDate\\n    startDate\\n    state\\n    stateCode\\n    status {\\n      roundDisplay\\n      roundStatus\\n      roundStatusColor\\n      roundStatusDisplay\\n    }\\n    tournamentStatus\\n    ticketsURL\\n    tourStandingHeading\\n    tourStandingValue\\n    tournamentLogo\\n    display\\n    sequenceNumber\\n    tournamentCategoryInfo {\\n      type\\n      logoLight\\n      logoDark\\n      label\\n    }\\n    tournamentSiteURL\\n    tournamentStatus\\n    useTournamentSiteURL\\n  }\\n}"}`,
         method: 'POST',
         mode: 'cors',
       })
@@ -375,7 +391,7 @@ module.exports = {
           'Priority': 'u=4',
         },
          referrer: 'https://www.pgatour.com/',
-        body: `{"operationName":"Schedule","variables":{"tourCode":"R","year":"${new Date().getYear() + 1900}"},"query":"query Schedule($tourCode: String!, $year: String, $filter: TournamentCategory) {\\n  schedule(tourCode: $tourCode, year: $year, filter: $filter) {\\n    completed {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n    filters {\\n      type\\n      name\\n    }\\n    seasonYear\\n    tour\\n    upcoming {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n  }\\n}\\n\\nfragment ScheduleTournament on ScheduleMonth {\\n  tournaments {\\n    tournamentName\\n    id\\n    beautyImage\\n    champion\\n    champions {\\n      displayName\\n      playerId\\n    }\\n    championEarnings\\n    championId\\n    city\\n    country\\n    countryCode\\n    courseName\\n    date\\n    dateAccessibilityText\\n    purse\\n    sortDate\\n    startDate\\n    state\\n    stateCode\\n    status {\\n      roundDisplay\\n      roundStatus\\n      roundStatusColor\\n      roundStatusDisplay\\n    }\\n    tournamentStatus\\n    ticketsURL\\n    tourStandingHeading\\n    tourStandingValue\\n    tournamentLogo\\n    display\\n    sequenceNumber\\n    tournamentCategoryInfo {\\n      type\\n      logoLight\\n      logoDark\\n      label\\n    }\\n    tournamentSiteURL\\n    tournamentStatus\\n    useTournamentSiteURL\\n  }\\n}"}`,
+        body: `{"operationName":"Schedule","variables":{"tourCode":"R","year":"${moment().year()}"},"query":"query Schedule($tourCode: String!, $year: String, $filter: TournamentCategory) {\\n  schedule(tourCode: $tourCode, year: $year, filter: $filter) {\\n    completed {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n    filters {\\n      type\\n      name\\n    }\\n    seasonYear\\n    tour\\n    upcoming {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n  }\\n}\\n\\nfragment ScheduleTournament on ScheduleMonth {\\n  tournaments {\\n    tournamentName\\n    id\\n    beautyImage\\n    champion\\n    champions {\\n      displayName\\n      playerId\\n    }\\n    championEarnings\\n    championId\\n    city\\n    country\\n    countryCode\\n    courseName\\n    date\\n    dateAccessibilityText\\n    purse\\n    sortDate\\n    startDate\\n    state\\n    stateCode\\n    status {\\n      roundDisplay\\n      roundStatus\\n      roundStatusColor\\n      roundStatusDisplay\\n    }\\n    tournamentStatus\\n    ticketsURL\\n    tourStandingHeading\\n    tourStandingValue\\n    tournamentLogo\\n    display\\n    sequenceNumber\\n    tournamentCategoryInfo {\\n      type\\n      logoLight\\n      logoDark\\n      label\\n    }\\n    tournamentSiteURL\\n    tournamentStatus\\n    useTournamentSiteURL\\n  }\\n}"}`,
         method: 'POST',
         mode: 'cors',
       })
