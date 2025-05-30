@@ -434,7 +434,7 @@ module.exports = {
       if (pgaBroadcasts[i].__typename === 'BroadcastCoverageCarousel') {
         for (let j = 0; j < pgaBroadcasts[i].carousel.length; j++) {
           if (pgaBroadcasts[i].carousel[j].liveStatus === 'LIVE' && (pgaBroadcasts[i].carousel[j].streamTitle.endsWith('Broadcast') || pgaBroadcasts[i].carousel[j].streamTitle === 'Main Feed') && !skipChannels.includes(pgaBroadcasts[i].carousel[j].network.networkName)) {
-            var newNetwork = {'network': pgaBroadcasts[i].carousel[j].network.networkName}
+            var newNetwork = { network: pgaBroadcasts[i].carousel[j].network.networkName }
             if (this.broadcastIcons[pgaBroadcasts[i].carousel[j].network.networkName] !== undefined) {
               newNetwork['imageUrl'] = this.broadcastIcons[pgaBroadcasts[i].carousel[j].network.networkName]
             }
@@ -456,7 +456,7 @@ module.exports = {
       }
       else if (pgaBroadcasts[i].__typename === 'BroadcastFullTelecast') {
         if (pgaBroadcasts[i].liveStatus === 'LIVE' && (pgaBroadcasts[i].streamTitle.endsWith('Broadcast') || pgaBroadcasts[i].streamTitle === 'Main Feed') && !skipChannels.includes(pgaBroadcasts[i].network.networkName)) {
-          newNetwork = {'network': pgaBroadcasts[i].network.networkName}
+          newNetwork = { network: pgaBroadcasts[i].network.networkName }
           if (this.broadcastIcons[pgaBroadcasts[i].network.networkName] !== undefined) {
             newNetwork['imageUrl'] = this.broadcastIcons[pgaBroadcasts[i].network.networkName]
           }
@@ -475,7 +475,7 @@ module.exports = {
           alreadyAdded.push(pgaBroadcasts[i].network.networkName)
         }
         else if (pgaBroadcasts[i].liveStatus === 'UPCOMING' && (broadcast.length === 0 || (broadcast[0]['time'] !== 'live' && broadcast[0]['time'] >= moment(pgaBroadcasts[i].startTime))) && (pgaBroadcasts[i].streamTitle.endsWith('Broadcast') || pgaBroadcasts[i].streamTitle === 'Main Feed')) {
-          newNetwork = {'network': pgaBroadcasts[i].network.networkName}
+          newNetwork = { network: pgaBroadcasts[i].network.networkName }
           if (this.broadcastIcons[pgaBroadcasts[i].network.networkName] !== undefined) {
             newNetwork['imageUrl'] = this.broadcastIcons[pgaBroadcasts[i].network.networkName]
           }

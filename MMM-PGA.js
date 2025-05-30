@@ -375,7 +375,7 @@ Module.register('MMM-PGA', {
                   broadcastDiv.appendChild(broadcastImage)
                 }
                 else {
-                  broadcastDiv.innerHTML = tournament.broadcast[j][network] /* .toUpperCase().replace('PLUS', '+') */
+                  broadcastDiv.innerHTML = tournament.broadcast[j]['network'] /* .toUpperCase().replace('PLUS', '+') */
                 }
                 if (tournament.broadcast[j]['inversion'] !== undefined) {
                   broadcastDiv.classList.add(tournament.broadcast[j]['inversion'])
