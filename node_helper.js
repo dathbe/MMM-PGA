@@ -72,7 +72,7 @@ module.exports = NodeHelper.create({
   getLeaderboardData: function () {
     var self = this
 
-    ESPN.getTournamentData(this.config.updateInterval, function (tournament) {
+    ESPN.getTournamentData(this.config.updateInterval, this.config.skipChannels, function (tournament) {
       self.sendSocketNotification('PGA_RESULT', tournament)
     })
     if (this.config.showBoards) {

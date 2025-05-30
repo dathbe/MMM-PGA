@@ -52,6 +52,11 @@ Module.register('MMM-PGA', {
     return ['MMM-PGA.css']
   },
 
+  // Define required scripts.
+  getScripts: function () {
+    return ['moment.js']
+  },
+
   /* locationIndex: 0, */
 
   /* Called whe Module starts set up some gloab config info */
@@ -360,20 +365,23 @@ Module.register('MMM-PGA', {
           if (border) broadcastTd.classList.add('border')
           if (tournament.broadcast !== undefined) {
             for (let j = 0; j < tournament.broadcast.length; j++) {
-              if (!this.config.skipChannels.includes(tournament.broadcast[j][0])) {
+              if (!this.config.skipChannels.includes(tournament.broadcast[j]['network'])) {
                 var broadcastDiv = document.createElement('div')
                 broadcastDiv.classList.add('PGAbroadcastIconDiv')
-                if (tournament.broadcast[j][1] !== '') {
+                if (tournament.broadcast[j]['imageUrl'] !== '') {
                   var broadcastImage = new Image()
-                  broadcastImage.src = tournament.broadcast[j][1]
-                  broadcastImage.alt = tournament.broadcast[j][0]
+                  broadcastImage.src = tournament.broadcast[j]['imageUrl']
+                  broadcastImage.alt = tournament.broadcast[j]['network']
                   broadcastDiv.appendChild(broadcastImage)
                 }
                 else {
-                  broadcastDiv.innerHTML = tournament.broadcast[j][0] /* .toUpperCase().replace('PLUS', '+') */
+                  broadcastDiv.innerHTML = tournament.broadcast[j][network] /* .toUpperCase().replace('PLUS', '+') */
                 }
-                if (tournament.broadcast[j][2] !== undefined) {
-                  broadcastDiv.classList.add(tournament.broadcast[j][2])
+                if (tournament.broadcast[j]['inversion'] !== undefined) {
+                  broadcastDiv.classList.add(tournament.broadcast[j]['inversion'])
+                }
+                if (tournament.broadcast[j]['time'] !== 'live') {
+                  broadcastDiv.innerHTML += `<br>${moment(tournament.broadcast[j]['time']).format('h:mm a')}`
                 }
                 broadcastTd.appendChild(broadcastDiv)
               }
