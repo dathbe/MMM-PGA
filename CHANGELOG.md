@@ -4,7 +4,7 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.3.2](https://github.com/dathbe/MMM-PGA/compare/v2.3.1...v2.3.2) - 2025-XX-XX
+## [2.3.2](https://github.com/dathbe/MMM-PGA/compare/v2.3.1...v2.3.2) - 2025-06-08
 
 - Upcoming broadcast will now display (with time) when ther eis no live broadcast
 - Update dependencies
