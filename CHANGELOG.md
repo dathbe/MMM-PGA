@@ -4,6 +4,12 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.2](https://github.com/dathbe/MMM-PGA/compare/v2.3.1...v2.3.2) - 2025-06-08
+
+- Upcoming broadcast will now display (with time) when ther eis no live broadcast
+- Update dependencies
+- Lint per https://modules.magicmirror.builders/result.html
+
 ## [2.3.1](https://github.com/dathbe/MMM-PGA/compare/v2.3.0...v2.3.1) - 2025-05-23
 
 - Explicitly add `moment-timezone` dependency (was previously used via MagicMirror parent directory, see [this forum discussion](https://forum.magicmirror.builders/topic/19695/do-you-need-to-list-moment-and-moment-timezone-as-dependencies-in-modules/2)
