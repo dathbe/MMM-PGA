@@ -4,6 +4,12 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.3](https://github.com/dathbe/MMM-PGA/compare/v2.3.2...v2.3.3) - 2025-06-19
+
+- Update dependencies
+- Add dependabot checks
+- `npm run` to `node --run`
+
 ## [2.3.2](https://github.com/dathbe/MMM-PGA/compare/v2.3.1...v2.3.2) - 2025-06-08
 
 - Upcoming broadcast will now display (with time) when ther eis no live broadcast
