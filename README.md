@@ -166,8 +166,8 @@ cd ~/MagicMirror/modules/MMM-PGA
 npm install
 ```
 
-- `npm run lint` - Run linting checks.
-- `npm run lint:fix` - Fix automatically fixable linting errors.
+- `node --run lint` - Run linting checks.
+- `node --run lint:fix` - Fix automatically fixable linting errors.
 
 ## License
 
