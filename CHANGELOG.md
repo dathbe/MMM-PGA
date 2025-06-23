@@ -4,6 +4,11 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.4](https://github.com/dathbe/MMM-PGA/compare/v2.3.3...v2.3.4) - 2025-06-XX
+
+- Update dependencies
+- Update dependabot file
+
 ## [2.3.3](https://github.com/dathbe/MMM-PGA/compare/v2.3.2...v2.3.3) - 2025-06-19
 
 - Update dependencies
