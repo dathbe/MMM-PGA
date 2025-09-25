@@ -4,8 +4,9 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.3.5](https://github.com/dathbe/MMM-PGA/compare/v2.3.4...v2.3.5) - 2025-09-XX
+## [2.3.5](https://github.com/dathbe/MMM-PGA/compare/v2.3.4...v2.3.5) - 2025-09-25
 
+- BUG FIX: Address some errors that occur with Ryder Cup formatting
 - Update dependencies
 
 ## [2.3.4](https://github.com/dathbe/MMM-PGA/compare/v2.3.3...v2.3.4) - 2025-07-05
