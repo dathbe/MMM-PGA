@@ -608,6 +608,7 @@ Module.register('MMM-PGA', {
       list = this.buildTournamentList(this.tournaments)
     }
     else if (['owgr', 'fedex'].includes(this.currentCards[this.cardIndex])) {
+      Log.debug(this.currentCards[this.cardIndex])
       list = this.buildRankList(this.rankingObjs[this.currentCards[this.cardIndex]].rankingObj)
     }
     wrapper.appendChild(list)

@@ -55,13 +55,25 @@ module.exports = {
       }
 
       var tournament = {}
+      var competition = ''
+      if (event.competitions[0].status) {
+        competition = event.competitions[0]
+      }
+      else if (event.competitions[0][0].status) {
+        competition = event.competitions[0][0]
+      }
 
       // Tournament Details
       tournament.name = event.shortName
       tournament.date = this.getEventDate(event.date, event.endDate)
       tournament.location = this.getEventLocation(event)
       tournament.statusCode = event.status.type.name
-      tournament.status = event.competitions[0].status ? event.competitions[0].status.type.detail : ''
+      if (competition.status) {
+        tournament.status = competition.status.type.detail
+      }
+      else {
+        tournament.status = ''
+      }
       if (event.displayPurse !== undefined) {
         tournament.purse = event.displayPurse
       }
@@ -71,7 +83,7 @@ module.exports = {
       // tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
       tournament.currentRound = this.getCurrentRound(event)
       tournament.playoff = false
-      if (/* true || */ event.competitions[0].status.type.name === 'STATUS_IN_PROGRESS') {
+      if (/* true || */ competition.status.type.name === 'STATUS_IN_PROGRESS') {
         tournament.broadcast = await this.getBroadcasts(skipChannels)
       }
       else {
@@ -85,7 +97,7 @@ module.exports = {
       tournament.players = []
 
       if (tournament.statusCode != 'STATUS_SCHEDULED') {
-        var espnPlayers = event.competitions[0].competitors
+        var espnPlayers = competition.competitors
 
         var firstTeeOff = null
         for (var i in espnPlayers) {
@@ -136,7 +148,7 @@ module.exports = {
       else if (event.status.type.name === 'STATUS_SCHEDULED') { // When tournament has not started
         this.boardUpdateInterval = Math.max(moment(event.date) - moment(), 15 * 60 * 1000) // when tourney "starts" per ESPN (midnight ET on the day the tournament starts) or 15 minutes, whichever is longer
       }
-      else if (event.competitions[0].status.type.name === 'STATUS_PLAY_COMPLETE') { // When tournament is done for the day
+      else if (competition.status.type.name === 'STATUS_PLAY_COMPLETE') { // When tournament is done for the day
         if (firstTeeOff !== null) {
           if (firstTeeOff - moment() > 4 * 60 * 60 * 1000) {
             this.boardUpdateInterval = 4 * 60 * 60 * 1000
