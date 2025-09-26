@@ -150,13 +150,29 @@ module.exports = {
             sortOrder = 100 - i
           }
 
+          if (event.competitions[1]) {
+            if (i == 0) {
+              thru = ''
+            }
+            else {
+              for (let j = 1; j < event.competitions.length; j++) {
+                if (event.competitions[j][0].status.type.detail != 'Scheduled') {
+                  var thru = event.competitions[j][0].description
+                }
+              }
+            }
+          }
+          else {
+            thru = this.getPlayerThru(espnPlayer)
+          }
+
           tournament.players.push({
             name: name,
             position: position,
             posId: posId,
             flagHref: flagHref,
             score: score,
-            thru: this.getPlayerThru(espnPlayer),
+            thru: thru,
             roundScore: this.getRoundScore(espnPlayer, tournament.currentRound),
             id: playerID,
             sortOrder: sortOrder,
