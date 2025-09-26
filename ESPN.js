@@ -143,11 +143,22 @@ module.exports = {
             var position = espnPlayer.status.position.displayName
             var posId = parseInt(espnPlayer.status.position.id)
             var sortOrder = espnPlayer.sortOrder
+            var thru = this.getPlayerThru(espnPlayer)
           }
           else {
             position = String(espnPlayer.homeAway).charAt(0).toUpperCase() + String(espnPlayer.homeAway).slice(1)
             posId = 1
             sortOrder = 100 - i
+            for (let j = 1; j < event.competitions.length; j++) {
+              if (event.competitions[j][0].status.type.detail != 'Scheduled') {
+                if (i == 1) {
+                  thru = event.competitions[j][0].description
+                }
+                else if (i == 0) {
+                  thru = event.competitions[j][0].status.type.description
+                }
+              }
+            }
           }
 
           tournament.players.push({
@@ -156,7 +167,7 @@ module.exports = {
             posId: posId,
             flagHref: flagHref,
             score: score,
-            thru: this.getPlayerThru(espnPlayer),
+            thru: thru,
             roundScore: this.getRoundScore(espnPlayer, tournament.currentRound),
             id: playerID,
             sortOrder: sortOrder,
