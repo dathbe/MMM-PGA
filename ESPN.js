@@ -116,6 +116,11 @@ module.exports = {
             var flagHref = espnPlayer.athlete.flag.href
             var playerID = espnPlayer.athlete.id
           }
+          else if (espnPlayer.team.logos[0].href) {
+            name = espnPlayer.team.displayName
+            flagHref = espnPlayer.team.logos[0].href
+            playerID = espnPlayer.id
+          }
           else if (espnPlayer.team) {
             name = espnPlayer.team.displayName
             flagHref = ''
@@ -127,16 +132,34 @@ module.exports = {
             playerID = 'n/a'
           }
 
+          if (espnPlayer.statistics) {
+            var score = espnPlayer.statistics[0].displayValue
+          }
+          else if (espnPlayer.score) {
+            score = espnPlayer.score.value
+          }
+
+          if (espnPlayer.status.position) {
+            var position = espnPlayer.status.position.displayName
+            var posId = parseInt(espnPlayer.status.position.id)
+            var sortOrder = espnPlayer.sortOrder
+          }
+          else {
+            position = String(espnPlayer.homeAway).charAt(0).toUpperCase() + String(espnPlayer.homeAway).slice(1)
+            posId = 1
+            sortOrder = 100 - i
+          }
+
           tournament.players.push({
             name: name,
-            position: espnPlayer.status.position.displayName,
-            posId: parseInt(espnPlayer.status.position.id),
+            position: position,
+            posId: posId,
             flagHref: flagHref,
-            score: espnPlayer.statistics[0].displayValue,
+            score: score,
             thru: this.getPlayerThru(espnPlayer),
             roundScore: this.getRoundScore(espnPlayer, tournament.currentRound),
             id: playerID,
-            sortOrder: espnPlayer.sortOrder,
+            sortOrder: sortOrder,
             playoff: espnPlayer.status.playoff,
           })
         }
