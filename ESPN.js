@@ -161,22 +161,6 @@ module.exports = {
             }
           }
 
-/*           if (event.competitions[1]) {
-            if (i == 0) {
-              thru = ''
-            }
-            else {
-              for (let j = 1; j < event.competitions.length; j++) {
-                if (event.competitions[j][0].status.type.detail != 'Scheduled') {
-                  var thru = event.competitions[j][0].description
-                }
-              }
-            }
-          }
-          else {
-            thru = this.getPlayerThru(espnPlayer)
-          } */
-
           tournament.players.push({
             name: name,
             position: position,
