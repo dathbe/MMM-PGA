@@ -176,8 +176,8 @@ Module.register('MMM-PGA', {
     colorClass = ''
 
     if (val == 'E') var colorClass = 'td-total-even'
-    if (val.charAt(0) == '-' && val.length > 1) colorClass = 'td-total-under'
-    if (val.charAt(0) == '+') colorClass = 'td-total-above'
+    if (('' + val).charAt(0) == '-' && val.length > 1) colorClass = 'td-total-under'
+    if (('' + val).charAt(0) == '+') colorClass = 'td-total-above'
     if (colorClass.length > 0) cl.push(colorClass)
 
     return cl
