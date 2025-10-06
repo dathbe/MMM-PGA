@@ -4,7 +4,13 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.3.6](https://github.com/dathbe/MMM-PGA/compare/v2.3.6...v2.3.7) - 2025-09-26
+## [2.3.8](https://github.com/dathbe/MMM-PGA/compare/v2.3.7...v2.3.8) - 2025-10-06
+
+- Tweak display for team events (e.g., Ryder Cup)
+- Update automated tests
+- Update dependencies
+
+## [2.3.7](https://github.com/dathbe/MMM-PGA/compare/v2.3.6...v2.3.7) - 2025-09-26
 
 - Ryder Cup display tweaks
 - Minor CSS tweaks

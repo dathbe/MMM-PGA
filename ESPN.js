@@ -150,12 +150,20 @@ module.exports = {
             posId = 1
             sortOrder = 100 - i
             for (let j = 1; j < event.competitions.length; j++) {
-              if (event.competitions[j][0].status.type.detail != 'Scheduled') {
+              if (event.competitions[j][0].status.type.detail != 'Final' || j == event.competitions.length - 1) {
                 if (i == 1) {
                   thru = event.competitions[j][0].description
                 }
                 else if (i == 0) {
-                  thru = event.competitions[j][0].status.type.description
+                  if (event.competitions[j][0].status.type.detail == 'Final') {
+                    thru = "Play Complete"
+                  }
+                  else if (event.competitions[j][0].status.type.detail == 'Scheduled') {
+                    thru = moment(event.competitions[j][0].date, 'YYYY-MM-DDTHH:mmZ').local().format('h:mm a')
+                  }
+                  else {
+                    thru = "In Progress"
+                  }
                 }
               }
             }
