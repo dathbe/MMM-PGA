@@ -1,6 +1,5 @@
 const Log = require('logger')
 // const flags = require('./flags.js')
-// const moment = require('moment')
 
 // TODO: Add comments
 
