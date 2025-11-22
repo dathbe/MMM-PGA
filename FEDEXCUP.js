@@ -10,7 +10,7 @@ module.exports = {
   pgaUrl: 'https://orchestrator.pgatour.com/graphql',
 
   async getFedExCupData(maxPlayers, rapidAPIKey, callback) {
-    // const currentYear = moment().year()
+    // const currentYear = mom//ent().year()
     // const urlFED = this.rapidUrl + currentYear
 
     // Log.log('FEDEX MMM-PGA retrieving FedEx Cup Standings')
