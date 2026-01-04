@@ -15,7 +15,7 @@ module.exports = {
     if (this.boardUpdateInterval < configUpdateInterval) {
       this.boardUpdateInterval = configUpdateInterval
     }
-    try {
+//    try {
       const response = await fetch(this.url, {
         method: 'get',
       })
@@ -213,10 +213,10 @@ module.exports = {
       // Function to send SocketNotification with the Tournament Data
       // Log.debug(tournament)
       callback(tournament)
-    }
-    catch (error) {
-      Log.error(`[MMM-PGA] Could not load leaderboard data: ${error}`)
-    }
+//    }
+//    catch (error) {
+//      Log.error(`[MMM-PGA] Could not load leaderboard data: ${error} ${new Error().stack}`)
+//    }
   },
 
   async getTournaments(numTournaments, callback) {
@@ -275,7 +275,7 @@ module.exports = {
       }
     }
     catch (error) {
-      Log.error(`[MMM-PGA] Could not load upcoming tournaments data: ${error}`)
+      Log.error(`[MMM-PGA] Could not load upcoming tournaments data: ${error} ${new Error().stack}`)
     }
 
     try {
@@ -305,10 +305,37 @@ module.exports = {
       PGAbody = PGAbody.data.schedule
       this.currentTourneyId = PGAbody.upcoming[0].tournaments[0].id
       this.currentTourneyPurse[PGAbody.upcoming[0].tournaments[0].tournamentName.toLowerCase()] = PGAbody.upcoming[0].tournaments[0].purse
-      this.currentTourneyPurse[PGAbody.completed[PGAbody.completed.length - 1].tournaments[PGAbody.completed[PGAbody.completed.length - 1].tournaments.length - 1].tournamentName.toLowerCase()] = PGAbody.completed[PGAbody.completed.length - 1].tournaments[PGAbody.completed[PGAbody.completed.length - 1].tournaments.length - 1].purse
+      if (PGAbody.completed.length > 0) {
+        this.currentTourneyPurse[PGAbody.completed[PGAbody.completed.length - 1].tournaments[PGAbody.completed[PGAbody.completed.length - 1].tournaments.length - 1].tournamentName.toLowerCase()] = PGAbody.completed[PGAbody.completed.length - 1].tournaments[PGAbody.completed[PGAbody.completed.length - 1].tournaments.length - 1].purse
+      } else {
+        var lyPGAbody = await fetch('https://orchestrator.pgatour.com/graphql', {
+          credentials: 'omit',
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0',
+            'Accept': '*/*',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'content-type': 'application/json',
+            'x-api-key': 'da2-gsrx5bibzbb4njvhl7t37wqyl4',
+            'x-pgat-platform': 'web',
+            'x-amz-user-agent': 'aws-amplify/3.0.7',
+            'Sec-GPC': '1',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-site',
+            'Priority': 'u=4',
+          },
+          referrer: 'https://www.pgatour.com/',
+          body: `{"operationName":"Schedule","variables":{"tourCode":"R","year":"${moment().year() - 1}"},"query":"query Schedule($tourCode: String!, $year: String, $filter: TournamentCategory) {\\n  schedule(tourCode: $tourCode, year: $year, filter: $filter) {\\n    completed {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n    filters {\\n      type\\n      name\\n    }\\n    seasonYear\\n    tour\\n    upcoming {\\n      month\\n      year\\n      monthSort\\n      ...ScheduleTournament\\n    }\\n  }\\n}\\n\\nfragment ScheduleTournament on ScheduleMonth {\\n  tournaments {\\n    tournamentName\\n    id\\n    beautyImage\\n    champion\\n    champions {\\n      displayName\\n      playerId\\n    }\\n    championEarnings\\n    championId\\n    city\\n    country\\n    countryCode\\n    courseName\\n    date\\n    dateAccessibilityText\\n    purse\\n    sortDate\\n    startDate\\n    state\\n    stateCode\\n    status {\\n      roundDisplay\\n      roundStatus\\n      roundStatusColor\\n      roundStatusDisplay\\n    }\\n    tournamentStatus\\n    ticketsURL\\n    tourStandingHeading\\n    tourStandingValue\\n    tournamentLogo\\n    display\\n    sequenceNumber\\n    tournamentCategoryInfo {\\n      type\\n      logoLight\\n      logoDark\\n      label\\n    }\\n    tournamentSiteURL\\n    tournamentStatus\\n    useTournamentSiteURL\\n  }\\n}"}`,
+          method: 'POST',
+          mode: 'cors',
+        })
+        lyPGAbody = await lyPGAbody.json()
+        lyPGAbody = lyPGAbody.data.schedule
+        this.currentTourneyPurse[lyPGAbody.completed[lyPGAbody.completed.length - 1].tournaments[lyPGAbody.completed[lyPGAbody.completed.length - 1].tournaments.length - 1].tournamentName.toLowerCase()] = lyPGAbody.completed[lyPGAbody.completed.length - 1].tournaments[lyPGAbody.completed[lyPGAbody.completed.length - 1].tournaments.length - 1].purse
+      }
     }
     catch (error) {
-      Log.error(`[MMM-MyStandings] Could not load PGA tournaments data: ${error}`)
+      Log.error(`[MMM-PGA] Could not load PGA tournaments data: ${error} ${new Error().stack}`)
     }
     // The following is an alternative way to get upcoming tournament info.  It is inferior because only a single course is listed, whereas ESPN provides all courses (E.g., Torrey Pines North and South for the Farmer's)
     /* var PGAObj = []
@@ -370,18 +397,22 @@ module.exports = {
 
   getEventLocation: function (event) {
     var courses = []
-    for (let i = 0; i < event.courses.length; i++) {
-      var course = event.courses[i]
+    if (event.courses) {
+      for (let i = 0; i < event.courses.length; i++) {
+        var course = event.courses[i]
 
-      var city = this.setUndefStr(course.address.city)
-      var state = this.setUndefStr(course.address.state)
-      var appendstring = ', '
+        var city = this.setUndefStr(course.address.city)
+        var state = this.setUndefStr(course.address.state)
+        var appendstring = ', '
 
-      if (city.length == 0 || state.length == 0) {
-        appendstring = ''
+        if (city.length == 0 || state.length == 0) {
+          appendstring = ''
+        }
+
+        courses.push(course.name + ' - ' + city + appendstring + state)
       }
-
-      courses.push(course.name + ' - ' + city + appendstring + state)
+    } else {
+      courses.push(event.status.type.description) // status type description
     }
 
     return courses

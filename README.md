@@ -165,8 +165,11 @@ You will need to first install the dev dependencies:
 
 ```bash
 cd ~/MagicMirror/modules/MMM-PGA
+git switch development
 npm install
 ```
+
+Please create all PRs against the `development` branch for testing and eventual merging into `master`.
 
 - `node --run lint` - Run linting checks.
 - `node --run lint:fix` - Fix automatically fixable linting errors.
