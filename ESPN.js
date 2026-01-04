@@ -308,7 +308,7 @@ module.exports = {
       this.currentTourneyPurse[PGAbody.completed[PGAbody.completed.length - 1].tournaments[PGAbody.completed[PGAbody.completed.length - 1].tournaments.length - 1].tournamentName.toLowerCase()] = PGAbody.completed[PGAbody.completed.length - 1].tournaments[PGAbody.completed[PGAbody.completed.length - 1].tournaments.length - 1].purse
     }
     catch (error) {
-      Log.error(`[MMM-MyStandings] Could not load PGA tournaments data: ${error}`)
+      Log.error(`[MMM-PGA] Could not load PGA tournaments data: ${error}`)
     }
     // The following is an alternative way to get upcoming tournament info.  It is inferior because only a single course is listed, whereas ESPN provides all courses (E.g., Torrey Pines North and South for the Farmer's)
     /* var PGAObj = []
