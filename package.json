@@ -16,10 +16,10 @@
   ],
   "author": "mcl8on",
   "contributors": [
-    "mcl8on",
-    "mumblebaj",
-    "dathbe",
-    "mattpclayton"
+    {"name": "mcl8on"},
+    {"name": "mumblebaj"},
+    {"name": "dathbe"},
+    {"name": "mattpclayton"}
   ],
   "scripts": {
     "lint": "eslint",
