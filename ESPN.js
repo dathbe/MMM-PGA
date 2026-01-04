@@ -15,208 +15,208 @@ module.exports = {
     if (this.boardUpdateInterval < configUpdateInterval) {
       this.boardUpdateInterval = configUpdateInterval
     }
-//    try {
-      const response = await fetch(this.url, {
-        method: 'get',
-      })
-      Log.debug(`[MMM-PGA] ${this.url} fetched`)
+    //    try {
+    const response = await fetch(this.url, {
+      method: 'get',
+    })
+    Log.debug(`[MMM-PGA] ${this.url} fetched`)
 
-      const body = await response.json()
+    const body = await response.json()
 
-      var ESPNObj = body.events
+    var ESPNObj = body.events
 
-      var event = null
+    var event = null
 
-      // TODO change eventually to suppourt multiple events at the same time
+    // TODO change eventually to suppourt multiple events at the same time
 
-      // Return the event with the biggest purse that is not canceled
-      var purses = []
-      try {
-        for (let j = 0; j < ESPNObj.length; j++) {
-          if (ESPNObj[j].status.type.name != 'STATUS_CANCELED') {
-            if (ESPNObj[j].purse === undefined) {
-              purses.push(999999999999)
-            }
-            else {
-              purses.push(Number(ESPNObj[j].purse))
-            }
+    // Return the event with the biggest purse that is not canceled
+    var purses = []
+    try {
+      for (let j = 0; j < ESPNObj.length; j++) {
+        if (ESPNObj[j].status.type.name != 'STATUS_CANCELED') {
+          if (ESPNObj[j].purse === undefined) {
+            purses.push(999999999999)
+          }
+          else {
+            purses.push(Number(ESPNObj[j].purse))
           }
         }
-        if (purses.length > 0) {
-          event = ESPNObj[purses.indexOf(Math.max(...purses))]
-        }
-        else {
-          event = ESPNObj[0]
-        }
       }
-      catch {
-        Log.debug('[MMM-PGA] One of the tournaments this week does not have a purse; using the last listed tournament')
-        event = ESPNObj[ESPNObj.length - 1]
+      if (purses.length > 0) {
+        event = ESPNObj[purses.indexOf(Math.max(...purses))]
       }
+      else {
+        event = ESPNObj[0]
+      }
+    }
+    catch {
+      Log.debug('[MMM-PGA] One of the tournaments this week does not have a purse; using the last listed tournament')
+      event = ESPNObj[ESPNObj.length - 1]
+    }
 
-      var tournament = {}
-      var competition = ''
-      if (event.competitions[0].status) {
-        competition = event.competitions[0]
-      }
-      else if (event.competitions[0][0].status) {
-        competition = event.competitions[0][0]
-      }
+    var tournament = {}
+    var competition = ''
+    if (event.competitions[0].status) {
+      competition = event.competitions[0]
+    }
+    else if (event.competitions[0][0].status) {
+      competition = event.competitions[0][0]
+    }
 
-      // Tournament Details
-      tournament.name = event.shortName
-      tournament.date = this.getEventDate(event.date, event.endDate)
-      tournament.location = this.getEventLocation(event)
-      tournament.statusCode = event.status.type.name
-      if (competition.status) {
-        tournament.status = competition.status.type.detail
-      }
-      else {
-        tournament.status = ''
-      }
-      if (event.displayPurse !== undefined) {
-        tournament.purse = event.displayPurse
-      }
-      else {
-        tournament.purse = this.currentTourneyPurse[tournament.name.toLowerCase()]
-      }
-      // tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
-      tournament.currentRound = this.getCurrentRound(event)
-      tournament.playoff = false
-      if (/* true || */ competition.status.type.name === 'STATUS_IN_PROGRESS') {
-        tournament.broadcast = await this.getBroadcasts(skipChannels)
-      }
-      else {
-        tournament.broadcast = []
-        /*       for (let i = 0; i < event.competitions[0].broadcasts.length; i++) {
+    // Tournament Details
+    tournament.name = event.shortName
+    tournament.date = this.getEventDate(event.date, event.endDate)
+    tournament.location = this.getEventLocation(event)
+    tournament.statusCode = event.status.type.name
+    if (competition.status) {
+      tournament.status = competition.status.type.detail
+    }
+    else {
+      tournament.status = ''
+    }
+    if (event.displayPurse !== undefined) {
+      tournament.purse = event.displayPurse
+    }
+    else {
+      tournament.purse = this.currentTourneyPurse[tournament.name.toLowerCase()]
+    }
+    // tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
+    tournament.currentRound = this.getCurrentRound(event)
+    tournament.playoff = false
+    if (/* true || */ competition.status.type.name === 'STATUS_IN_PROGRESS') {
+      tournament.broadcast = await this.getBroadcasts(skipChannels)
+    }
+    else {
+      tournament.broadcast = []
+      /*       for (let i = 0; i < event.competitions[0].broadcasts.length; i++) {
           tournament.broadcast.push([event.competitions[0].broadcasts[i].media.slug, ''])
         } */
-      }
+    }
 
-      // Load the Players for the tournament
-      tournament.players = []
+    // Load the Players for the tournament
+    tournament.players = []
 
-      if (tournament.statusCode != 'STATUS_SCHEDULED') {
-        var espnPlayers = competition.competitors
+    if (tournament.statusCode != 'STATUS_SCHEDULED') {
+      var espnPlayers = competition.competitors
 
-        var firstTeeOff = null
-        for (var i in espnPlayers) {
-          var espnPlayer = espnPlayers[i]
+      var firstTeeOff = null
+      for (var i in espnPlayers) {
+        var espnPlayer = espnPlayers[i]
 
-          if (espnPlayer.status.displayValue.startsWith(moment().year()) && (firstTeeOff === null || moment(espnPlayer.status.displayValue) < firstTeeOff)) {
-            firstTeeOff = moment(espnPlayer.status.displayValue)
-          }
+        if (espnPlayer.status.displayValue.startsWith(moment().year()) && (firstTeeOff === null || moment(espnPlayer.status.displayValue) < firstTeeOff)) {
+          firstTeeOff = moment(espnPlayer.status.displayValue)
+        }
 
-          if (espnPlayer.status.playoff)
-            tournament.playoff = true
+        if (espnPlayer.status.playoff)
+          tournament.playoff = true
 
-          // Adapt for team events
-          if (espnPlayer.athlete) {
-            var name = espnPlayer.athlete.displayName
-            var flagHref = espnPlayer.athlete.flag.href
-            var playerID = espnPlayer.athlete.id
-          }
-          else if (espnPlayer.team.logos[0].href) {
-            name = espnPlayer.team.displayName
-            flagHref = espnPlayer.team.logos[0].href
-            playerID = espnPlayer.id
-          }
-          else if (espnPlayer.team) {
-            name = espnPlayer.team.displayName
-            flagHref = ''
-            playerID = espnPlayer.id
-          }
-          else {
-            name = 'Name not avail.'
-            flagHref = ''
-            playerID = 'n/a'
-          }
+        // Adapt for team events
+        if (espnPlayer.athlete) {
+          var name = espnPlayer.athlete.displayName
+          var flagHref = espnPlayer.athlete.flag.href
+          var playerID = espnPlayer.athlete.id
+        }
+        else if (espnPlayer.team.logos[0].href) {
+          name = espnPlayer.team.displayName
+          flagHref = espnPlayer.team.logos[0].href
+          playerID = espnPlayer.id
+        }
+        else if (espnPlayer.team) {
+          name = espnPlayer.team.displayName
+          flagHref = ''
+          playerID = espnPlayer.id
+        }
+        else {
+          name = 'Name not avail.'
+          flagHref = ''
+          playerID = 'n/a'
+        }
 
-          if (espnPlayer.statistics) {
-            var score = espnPlayer.statistics[0].displayValue
-          }
-          else if (espnPlayer.score) {
-            score = espnPlayer.score.value
-          }
+        if (espnPlayer.statistics) {
+          var score = espnPlayer.statistics[0].displayValue
+        }
+        else if (espnPlayer.score) {
+          score = espnPlayer.score.value
+        }
 
-          if (espnPlayer.status.position) {
-            var position = espnPlayer.status.position.displayName
-            var posId = parseInt(espnPlayer.status.position.id)
-            var sortOrder = espnPlayer.sortOrder
-            var thru = this.getPlayerThru(espnPlayer)
-          }
-          else {
-            position = String(espnPlayer.homeAway).charAt(0).toUpperCase() + String(espnPlayer.homeAway).slice(1)
-            posId = 1
-            sortOrder = 100 - i
-            for (let j = 1; j < event.competitions.length; j++) {
-              if (event.competitions[j][0].status.type.detail != 'Final' || j == event.competitions.length - 1) {
-                if (i == 1) {
-                  thru = event.competitions[j][0].description
+        if (espnPlayer.status.position) {
+          var position = espnPlayer.status.position.displayName
+          var posId = parseInt(espnPlayer.status.position.id)
+          var sortOrder = espnPlayer.sortOrder
+          var thru = this.getPlayerThru(espnPlayer)
+        }
+        else {
+          position = String(espnPlayer.homeAway).charAt(0).toUpperCase() + String(espnPlayer.homeAway).slice(1)
+          posId = 1
+          sortOrder = 100 - i
+          for (let j = 1; j < event.competitions.length; j++) {
+            if (event.competitions[j][0].status.type.detail != 'Final' || j == event.competitions.length - 1) {
+              if (i == 1) {
+                thru = event.competitions[j][0].description
+              }
+              else if (i == 0) {
+                if (event.competitions[j][0].status.type.detail == 'Final') {
+                  thru = 'Play Complete'
                 }
-                else if (i == 0) {
-                  if (event.competitions[j][0].status.type.detail == 'Final') {
-                    thru = "Play Complete"
-                  }
-                  else if (event.competitions[j][0].status.type.detail == 'Scheduled') {
-                    thru = moment(event.competitions[j][0].date, 'YYYY-MM-DDTHH:mmZ').local().format('h:mm a')
-                  }
-                  else {
-                    thru = "In Progress"
-                  }
+                else if (event.competitions[j][0].status.type.detail == 'Scheduled') {
+                  thru = moment(event.competitions[j][0].date, 'YYYY-MM-DDTHH:mmZ').local().format('h:mm a')
+                }
+                else {
+                  thru = 'In Progress'
                 }
               }
             }
           }
-
-          tournament.players.push({
-            name: name,
-            position: position,
-            posId: posId,
-            flagHref: flagHref,
-            score: score,
-            thru: thru,
-            roundScore: this.getRoundScore(espnPlayer, tournament.currentRound),
-            id: playerID,
-            sortOrder: sortOrder,
-            playoff: espnPlayer.status.playoff,
-          })
         }
-      }
 
-      if (event.status.type.name === 'STATUS_FINAL') { // When tournament has finished
-        this.boardUpdateInterval = 4 * 60 * 60 * 1000 // 4 hours
+        tournament.players.push({
+          name: name,
+          position: position,
+          posId: posId,
+          flagHref: flagHref,
+          score: score,
+          thru: thru,
+          roundScore: this.getRoundScore(espnPlayer, tournament.currentRound),
+          id: playerID,
+          sortOrder: sortOrder,
+          playoff: espnPlayer.status.playoff,
+        })
       }
-      else if (event.status.type.name === 'STATUS_SCHEDULED') { // When tournament has not started
-        this.boardUpdateInterval = Math.max(moment(event.date) - moment(), 15 * 60 * 1000) // when tourney "starts" per ESPN (midnight ET on the day the tournament starts) or 15 minutes, whichever is longer
-      }
-      else if (competition.status.type.name === 'STATUS_PLAY_COMPLETE') { // When tournament is done for the day
-        if (firstTeeOff !== null) {
-          if (firstTeeOff - moment() > 4 * 60 * 60 * 1000) {
-            this.boardUpdateInterval = 4 * 60 * 60 * 1000
-          }
-          else if (firstTeeOff - moment() < 15 * 60 * 1000) {
-            this.boardUpdateInterval = 15 * 60 * 1000
-          }
-          else {
-            this.boardUpdateInterval = firstTeeOff - moment()
-          }
+    }
+
+    if (event.status.type.name === 'STATUS_FINAL') { // When tournament has finished
+      this.boardUpdateInterval = 4 * 60 * 60 * 1000 // 4 hours
+    }
+    else if (event.status.type.name === 'STATUS_SCHEDULED') { // When tournament has not started
+      this.boardUpdateInterval = Math.max(moment(event.date) - moment(), 15 * 60 * 1000) // when tourney "starts" per ESPN (midnight ET on the day the tournament starts) or 15 minutes, whichever is longer
+    }
+    else if (competition.status.type.name === 'STATUS_PLAY_COMPLETE') { // When tournament is done for the day
+      if (firstTeeOff !== null) {
+        if (firstTeeOff - moment() > 4 * 60 * 60 * 1000) {
+          this.boardUpdateInterval = 4 * 60 * 60 * 1000
+        }
+        else if (firstTeeOff - moment() < 15 * 60 * 1000) {
+          this.boardUpdateInterval = 15 * 60 * 1000
         }
         else {
-          this.boardUpdateInterval = 15 * 60 * 1000 // 15 minutes
+          this.boardUpdateInterval = firstTeeOff - moment()
         }
       }
-      else { // When tourament is in progress
-        this.boardUpdateInterval = configUpdateInterval // Use the user's desired updateInterval
+      else {
+        this.boardUpdateInterval = 15 * 60 * 1000 // 15 minutes
       }
+    }
+    else { // When tourament is in progress
+      this.boardUpdateInterval = configUpdateInterval // Use the user's desired updateInterval
+    }
 
-      // Function to send SocketNotification with the Tournament Data
-      // Log.debug(tournament)
-      callback(tournament)
-//    }
-//    catch (error) {
-//      Log.error(`[MMM-PGA] Could not load leaderboard data: ${error} ${new Error().stack}`)
-//    }
+    // Function to send SocketNotification with the Tournament Data
+    // Log.debug(tournament)
+    callback(tournament)
+    //    }
+    //    catch (error) {
+    //      Log.error(`[MMM-PGA] Could not load leaderboard data: ${error} ${new Error().stack}`)
+    //    }
   },
 
   async getTournaments(numTournaments, callback) {
@@ -307,7 +307,8 @@ module.exports = {
       this.currentTourneyPurse[PGAbody.upcoming[0].tournaments[0].tournamentName.toLowerCase()] = PGAbody.upcoming[0].tournaments[0].purse
       if (PGAbody.completed.length > 0) {
         this.currentTourneyPurse[PGAbody.completed[PGAbody.completed.length - 1].tournaments[PGAbody.completed[PGAbody.completed.length - 1].tournaments.length - 1].tournamentName.toLowerCase()] = PGAbody.completed[PGAbody.completed.length - 1].tournaments[PGAbody.completed[PGAbody.completed.length - 1].tournaments.length - 1].purse
-      } else {
+      }
+      else {
         var lyPGAbody = await fetch('https://orchestrator.pgatour.com/graphql', {
           credentials: 'omit',
           headers: {
@@ -411,7 +412,8 @@ module.exports = {
 
         courses.push(course.name + ' - ' + city + appendstring + state)
       }
-    } else {
+    }
+    else {
       courses.push(event.status.type.description) // status type description
     }
 
