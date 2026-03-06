@@ -4,14 +4,14 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.3.10](https://github.com/dathbe/MMM-PGA/compare/v2.3.9...v2.3.10) - 2026-01-XX
+## [2.3.10](https://github.com/dathbe/MMM-PGA/compare/v2.3.9...v2.3.10) - 2026-03-06
 
 - Update dependencies
 - Lint
 
 ## [2.3.9](https://github.com/dathbe/MMM-PGA/compare/v2.3.8...v2.3.9) - 2026-01-03
 
-- BUGFIX: Catch canceled tournaments
+- **BUGFIX**: Catch canceled tournaments
 - Update FEDEXCUP.js to comment in the middle of `moment` and avoid dev recommendation
 - Update readme for developers
 - Update dependencies
