@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Update dependencies
 - Lint
+- Format `package.json`
 
 ## [2.3.9](https://github.com/dathbe/MMM-PGA/compare/v2.3.8...v2.3.9) - 2026-01-03
 
