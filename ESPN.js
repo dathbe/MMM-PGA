@@ -25,8 +25,6 @@ module.exports = {
 
     var ESPNObj = body.events
 
-    var event = null
-
     // TODO change eventually to suppourt multiple events at the same time
 
     // Return the event with the biggest purse that is not canceled
@@ -43,7 +41,7 @@ module.exports = {
         }
       }
       if (purses.length > 0) {
-        event = ESPNObj[purses.indexOf(Math.max(...purses))]
+        var event = ESPNObj[purses.indexOf(Math.max(...purses))]
       }
       else {
         event = ESPNObj[0]
@@ -220,7 +218,7 @@ module.exports = {
   },
 
   async getTournaments(numTournaments, callback) {
-    var totalTourn = 0
+    // var totalTourn = 0
 
     var tournaments = []
     try {
@@ -239,7 +237,7 @@ module.exports = {
       })
 
       if (numTournaments > ESPNObj.length) {
-        totalTourn = ESPNObj.length
+        var totalTourn = ESPNObj.length
       }
       else {
         totalTourn = numTournaments
