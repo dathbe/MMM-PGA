@@ -4,6 +4,10 @@ Notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0](https://github.com/dathbe/MMM-PGA/compare/v2.3.11...v3.0.0) - 2026-XX-XX
+
+- Remove `moment-timezone` dependency (replace with built-in `Temporal`) **Possible breaking change.**  Requires Node.js v22.21.1 or higher.
+
 ## [2.3.11](https://github.com/dathbe/MMM-PGA/compare/v2.3.10...v2.3.11) - 2026-04-04
 
 - Update dependencies

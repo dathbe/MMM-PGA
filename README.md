@@ -4,8 +4,7 @@ A [MagicMirror²](https://magicmirror.builders) module to display PGA leaderboar
 
 A configurable leaderboard can be shown with scores for your favorite golfers.
 
-* **NOTE**: from version 2.1.1, an API key is no longer needed!
-* **NOTE**: Running `npm install` (or `npm ci`) during installation and upgrade is is now recommended in the documentation (though not strictly necessary unless the main MagicMirror² code is changed to eliminate the moment-timezone dependency)
+**Version 3.0.0 relies on the built-in `Temporal` API instead of the `moment-timezone` external dependency.  This requires Node.js v22.21.1 or higher.**  This version of Node.js is already a requirement for MagicMirror² v2.34.0 and higher, so if you are already running the latest version of MagicMirror², the module should work without issue.  For that reason, v3.0.0 has set the minimum required MagicMirror² to v2.34.0.
 
 [![Platform](https://img.shields.io/badge/platform-MagicMirror²-informational)](https://MagicMirror.builders)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.md)
@@ -19,21 +18,16 @@ A configurable leaderboard can be shown with scores for your favorite golfers.
 ```bash
 cd ~/MagicMirror/modules
 git clone https://github.com/dathbe/MMM-PGA
-cd MMM-PGA
-npm install --omit=dev
 ```
 
 Dependencies:
-* [moment-timezone](https://www.npmjs.com/package/moment-timezone)
-
-Note:  running `npm install` is not strictly necessary unless the main MagicMirror² code is changed to eliminate the moment-timezone dependency.
+* None!
 
 ## Updating the Module
 
 ```bash
 cd ~/MagicMirror/modules/MMM-PGA
 git pull
-npm install --omit=dev
 ```
 
 ## Configuration

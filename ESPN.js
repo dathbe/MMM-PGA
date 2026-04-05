@@ -1,5 +1,4 @@
 const Log = require('logger')
-const moment = require('moment-timezone')
 
 module.exports = {
   requiresVersion: '2.34.0',
@@ -82,7 +81,7 @@ module.exports = {
     // tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
     tournament.currentRound = this.getCurrentRound(event)
     tournament.playoff = false
-    if (/* true || */ competition.status.type.name === 'STATUS_IN_PROGRESS') {
+    if ( true ||    competition.status.type.name === 'STATUS_IN_PROGRESS') {  
       tournament.broadcast = await this.getBroadcasts(skipChannels)
     }
     else {
@@ -102,9 +101,8 @@ module.exports = {
       for (var i in espnPlayers) {
         var espnPlayer = espnPlayers[i]
 
-        //Log.warn(moment(espnPlayer.status.displayValue))
-        if (espnPlayer.status.displayValue.startsWith(Temporal.Now.plainDateISO().year) && (firstTeeOff === null || moment(espnPlayer.status.displayValue) < firstTeeOff)) {
-          firstTeeOff = moment(espnPlayer.status.displayValue)
+        if (espnPlayer.status.displayValue.startsWith(Temporal.Now.plainDateISO().year) && (firstTeeOff === null || Temporal.Instant.compare(Temporal.Instant.from(espnPlayer.status.displayValue), firstTeeOff) == -1)) {
+          firstTeeOff = Temporal.Instant.from(espnPlayer.status.displayValue)
         }
 
         if (espnPlayer.status.playoff)
@@ -192,14 +190,14 @@ module.exports = {
     }
     else if (competition.status.type.name === 'STATUS_PLAY_COMPLETE') { // When tournament is done for the day
       if (firstTeeOff !== null) {
-        if (firstTeeOff - moment() > 4 * 60 * 60 * 1000) {
+        if (firstTeeOff.since(Temporal.Now.instant()).seconds > 4 * 60 * 60) {
           this.boardUpdateInterval = 4 * 60 * 60 * 1000
         }
-        else if (firstTeeOff - moment() < 15 * 60 * 1000) {
+        else if (firstTeeOff.since(Temporal.Now.instant()).seconds < 15 * 60) {
           this.boardUpdateInterval = 15 * 60 * 1000
         }
         else {
-          this.boardUpdateInterval = firstTeeOff - moment()
+          this.boardUpdateInterval = firstTeeOff.since(Temporal.Now.instant()).seconds * 1000
         }
       }
       else {
@@ -560,7 +558,8 @@ module.exports = {
           broadcast.push(newNetwork)
           alreadyAdded.push(pgaBroadcasts[i].network.networkName)
         }
-        else if (pgaBroadcasts[i].liveStatus === 'UPCOMING' && (broadcast.length === 0 || (broadcast[0]['time'] !== 'live' && broadcast[0]['time'] >= moment(pgaBroadcasts[i].startTime))) && (pgaBroadcasts[i].streamTitle.endsWith('Broadcast') || pgaBroadcasts[i].streamTitle === 'Main Feed')) {
+        else if (pgaBroadcasts[i].liveStatus === 'UPCOMING' && (broadcast.length === 0 || (broadcast[0]['time'] !== 'live' && (broadcast[0]['time'] >= pgaBroadcasts[i].startTime || pgaBroadcasts[i].startTime == undefined))) && (pgaBroadcasts[i].streamTitle.endsWith('Broadcast') || pgaBroadcasts[i].streamTitle === 'Main Feed')) {
+
           newNetwork = { network: pgaBroadcasts[i].network.networkName }
           if (this.broadcastIcons[pgaBroadcasts[i].network.networkName] !== undefined) {
             newNetwork['imageUrl'] = this.broadcastIcons[pgaBroadcasts[i].network.networkName]
