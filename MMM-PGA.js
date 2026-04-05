@@ -5,8 +5,7 @@
 */
 
 Module.register('MMM-PGA', {
-
-  requiresVersion: '2.1.0',
+  requiresVersion: '2.34.0',
 
   // Module config defaults.
   defaults: {
@@ -50,11 +49,6 @@ Module.register('MMM-PGA', {
 
   getStyles: function () {
     return ['MMM-PGA.css']
-  },
-
-  // Define required scripts.
-  getScripts: function () {
-    return ['moment.js']
   },
 
   /* locationIndex: 0, */
@@ -381,7 +375,9 @@ Module.register('MMM-PGA', {
                   broadcastDiv.classList.add(tournament.broadcast[j]['inversion'])
                 }
                 if (tournament.broadcast[j]['time'] !== 'live') {
-                  broadcastDiv.innerHTML += `<br>${moment(tournament.broadcast[j]['time']).format('h:mm a')}`
+                  const epochNanoseconds = BigInt(tournament.broadcast[j]['time']) * 1_000_000n
+                  const zdt = new Temporal.ZonedDateTime(epochNanoseconds, Temporal.Now.timeZoneId())
+                  broadcastDiv.innerHTML += `<br>${zdt.toLocaleString(config.locale, { hour: 'numeric', minute: 'numeric' })}`
                 }
                 broadcastTd.appendChild(broadcastDiv)
               }
@@ -648,7 +644,6 @@ Module.register('MMM-PGA', {
       }
       if (logos.length > 0) {
         logos[(this.logoIndex) % logos.length].style.display = 'block'
-        // logos[moment().unix() % logos.length].style.display = "block"
       }
       this.logoIndex++
       if (this.logoIndex === 17280) {
