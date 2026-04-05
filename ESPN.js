@@ -81,7 +81,7 @@ module.exports = {
     // tournament.defendingChamp = event.defendingChampion ? event.defendingChampion.athlete.displayName : ''
     tournament.currentRound = this.getCurrentRound(event)
     tournament.playoff = false
-    if ( true ||    competition.status.type.name === 'STATUS_IN_PROGRESS') {  
+    if (/* true || */ competition.status.type.name === 'STATUS_IN_PROGRESS') {
       tournament.broadcast = await this.getBroadcasts(skipChannels)
     }
     else {
@@ -559,7 +559,6 @@ module.exports = {
           alreadyAdded.push(pgaBroadcasts[i].network.networkName)
         }
         else if (pgaBroadcasts[i].liveStatus === 'UPCOMING' && (broadcast.length === 0 || (broadcast[0]['time'] !== 'live' && (broadcast[0]['time'] >= pgaBroadcasts[i].startTime || pgaBroadcasts[i].startTime == undefined))) && (pgaBroadcasts[i].streamTitle.endsWith('Broadcast') || pgaBroadcasts[i].streamTitle === 'Main Feed')) {
-
           newNetwork = { network: pgaBroadcasts[i].network.networkName }
           if (this.broadcastIcons[pgaBroadcasts[i].network.networkName] !== undefined) {
             newNetwork['imageUrl'] = this.broadcastIcons[pgaBroadcasts[i].network.networkName]
